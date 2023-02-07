@@ -1,0 +1,6 @@
+*.pyc
+*.db
+*.sql
+env
+venv
+./temp
