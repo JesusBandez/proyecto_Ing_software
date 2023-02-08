@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}<title>Lista de usuarios</title>{% endblock %}
+{% block title %}<title>User's list</title>{% endblock %}
 {% block body %}
 <div class="container">
     <h2 class="text-center mb-4 mt-3">User's list </h2>
@@ -29,7 +29,7 @@
                   <form class="text-center" method="post">
                     <button method="post" class="btn btn-danger" 
                             name="id" value="{{user.username}}" 
-                            formaction="{{'users_list/delete'}}">
+                            formaction="{{url_for('delete_user')}}">
                         <i class="fa fa-trash" aria-hidden="true"></i>
                     </button>
                   </form>

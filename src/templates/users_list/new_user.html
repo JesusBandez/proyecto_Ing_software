@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}<title>Register New User</title>{% endblock %}
+{% block body %}
+<div style="max-width: 600px; margin:auto; margin-top:60px; border: 1px solid black; border-radius: 10px">
+    <div id="register" style="margin: 15px 0px">        
+        <div class="container">
+            <div id="register-row" class="row justify-content-center align-items-center">
+                <div id="register-column" class="col-md-6">
+                    <div id="register-box" class="col-md-12">
+                        <form id="register-form" class="form" action="{{url_for('add_new_user')}}" method="post">
+                            <h3 class="text-center">Register New User</h3>
+                            <div class="form-group">
+                                <label for="username">Username</label><br>
+                                <input type="text" name="username" id="username" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label><br>
+                                <input type="text" name="password" id="password" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="permissions">Permissions</label><br>
+                                    <select name="permissions" required>
+                                        <option value="admin">admin</option>
+                                        <option value="user">user</option>                                        
+                                    </select>
+                            </div>
+                            <div class="form-group">                                
+                                <input type="submit" name="submit" class="btn btn-info btn-md mt-2" value="submit">
+                            </div>                          
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
