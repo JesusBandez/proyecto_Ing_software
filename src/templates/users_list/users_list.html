@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}<title>Lista de usuarios</title>{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+      <div class="col-12">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>              
+              <th scope="col">Username</th>
+              <th scope="col">Permissions</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bootstrap 4 CDN and Starter Template</td>
+              <td>User</td>
+              <td>
+                <button type="button" class="btn btn-primary"></button>
+                <button type="button" class="btn btn-success"></button>
+                <button type="button" class="btn btn-danger"></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

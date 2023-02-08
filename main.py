@@ -5,8 +5,8 @@ from src.models import db
 app = Flask(__name__, template_folder='src/templates')
 app.config.from_object(DevConfig)
 
-from src.routes import routes
+from src.routes import login, users_list
 
 db.init_app(app)
 if __name__== '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=7070)
