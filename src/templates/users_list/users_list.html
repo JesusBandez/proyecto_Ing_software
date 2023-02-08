@@ -2,7 +2,11 @@
 {% block title %}<title>User's list</title>{% endblock %}
 {% block body %}
 <div class="container">
-    <h2 class="text-center mb-4 mt-3">User's list </h2>
+    <h2 class="text-center mb-3 mt-3">User's list </h2>
+    <div class="container-sm mb-2" style="text-align: right;">
+      <a href="{{url_for('new_user')}}" class="btn btn-info">Register new user</a>
+    </div>
+    
     <div class="row">
       <div class="col-12">
         <table class="table table-bordered table-striped">
