@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 from src.models.User import User
 from . import app
 
@@ -11,6 +11,7 @@ def users_lists():
 
 @app.route('/users_list/delete', methods=['GET', 'POST'])
 def delete_user():
+    user_id = request.form['id']
     # Eliminar al usuario de la base
     # TODO
     return redirect(url_for('users_lists'))
