@@ -8,9 +8,9 @@
         <table class="table table-bordered table-striped">
           <thead>
             <tr>              
-              <th scope="col">Username</th>
-              <th scope="col">Permissions</th>
-              <th scope="col">Actions</th>
+              <th scope="col" style="width: 65%">Username</th>
+              <th scope="col" style="width: 25%">Permissions</th>
+              <th scope="col" style="width: 10%">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -19,14 +19,16 @@
                 <td>{{user.username}}</td>
                 <td>User</td>
                 <td>
-                  <form method="post">
-                    <button method="post" class="btn btn-danger" name="id" value="{{user.username}}" formaction="{{'users_list/delete'}}">
+                  <form class="text-center" method="post">
+                    <button method="post" class="btn btn-danger" 
+                            name="id" value="{{user.username}}" 
+                            formaction="{{'users_list/delete'}}">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
                   </form>
                 </td>
-              </tr>
-            
+              </tr>            
             {% endfor %}
-
           </tbody>
         </table>
       </div>
