@@ -4,7 +4,11 @@
 <div class="container">
     <h2 class="text-center mb-3 mt-3">User's list </h2>
     <div class="container-sm mb-2" style="text-align: right;">
+      {% if not session.get('user') or session['user'].role == 'user'%}
+      <a class="btn btn-info disabled" disabled>Register new user</a>
+      {% else %}
       <a href="{{url_for('new_user')}}" class="btn btn-info">Register new user</a>
+      {% endif %}
     </div>
     
     <div class="row">
@@ -31,11 +35,17 @@
                 <td>{{user.role}}</td>
                 <td>
                   <form class="text-center" method="post">
+                    {% if not session.get('user') or session['user'].role == 'user'%}
                     <button method="post" class="btn btn-danger" 
                             name="id" value="{{user.id}}" 
-                            formaction="{{url_for('delete_user')}}">
+                            formaction="{{url_for('delete_user')}}" disabled>
                         <i class="fa fa-trash" aria-hidden="true"></i>
                     </button>
+                    {% else %}
+                    <button method="post" class="btn btn-danger">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                    {% endif %}
                   </form>
                 </td>
               </tr>            
