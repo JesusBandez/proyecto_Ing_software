@@ -40,12 +40,16 @@ def add_new_user():
 
         user = db.session.query(User).filter_by(username=username).first()
         if user:
-            error = f'User {username} is already registered.'
+            error = f'Username "{username}" is already taken.'
+
+        if error:
+            flash(error)
+            return redirect(url_for('new_user'))
 
         if error is None:
             user = User(username, generate_password_hash(password), role, False)
             db.session.add(user)
-            db.session.commit()
+            db.session.commit()       
         
 
     return redirect(url_for('users_lists'))
