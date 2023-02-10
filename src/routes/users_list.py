@@ -46,5 +46,6 @@ def add_new_user():
             user = User(username, generate_password_hash(password), role, False)
             db.session.add(user)
             db.session.commit()
+        
 
     return redirect(url_for('users_lists'))

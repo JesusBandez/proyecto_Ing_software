@@ -25,5 +25,6 @@ def log_user():
 
         if error is None:
             return redirect(url_for('users_lists'))
+        flash(error)
 
     return redirect(url_for('login'))
