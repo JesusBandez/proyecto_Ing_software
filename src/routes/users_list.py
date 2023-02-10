@@ -1,7 +1,9 @@
 from flask import render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash
+from src.routes.auth import has_role 
 from src.models.User import User
 from src.models import db
+
 from . import app
 
 @app.route('/users_list')
@@ -14,6 +16,9 @@ def users_lists():
 
 @app.route('/users_list/delete', methods=['GET', 'POST'])
 def delete_user():
+    if not has_role('admin'):
+        return redirect(url_for('users_lists'))
+        
     user_id = request.form['id']
     user = db.session.query(User).filter_by(id=user_id).first()
 
@@ -23,32 +28,34 @@ def delete_user():
 
 @app.route('/users_list/new_user')
 def new_user():
+    if not has_role('admin'):
+        return redirect(url_for('users_lists'))
+
     return render_template('users_list/new_user.html')
 
 @app.route('/users_list/add_new_user', methods=['POST'])
-def add_new_user():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        role = request.form['permissions']
-        error = None
+def add_new_user():    
+    username = request.form['username']
+    password = request.form['password']
+    role = request.form['permissions']
+    error = None
 
-        if not username:
-            error = 'Username is required.'
-        elif not password:
-            error = 'Password is required.'
+    if not username:
+        error = 'Username is required.'
+    elif not password:
+        error = 'Password is required.'
 
-        user = db.session.query(User).filter_by(username=username).first()
-        if user:
-            error = f'Username "{username}" is already taken.'
+    user = db.session.query(User).filter_by(username=username).first()
+    if user:
+        error = f'Username "{username}" is already taken.'
 
-        if error:
-            flash(error)
-            return redirect(url_for('new_user'))
+    if error:
+        flash(error)
+        return redirect(url_for('new_user'))
 
-        if error is None:
-            user = User(username, generate_password_hash(password), role, False)
-            db.session.add(user)
-            db.session.commit()       
+    if error is None:
+        user = User(username, generate_password_hash(password), role, False)
+        db.session.add(user)
+        db.session.commit()       
         
     return redirect(url_for('users_lists'))
