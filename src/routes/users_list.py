@@ -39,7 +39,7 @@ def add_new_user():
             error = 'Password is required.'
 
         user = db.session.query(User).filter_by(username=username).first()
-        if user is not None:
+        if user:
             error = f'User {username} is already registered.'
 
         if error is None:
