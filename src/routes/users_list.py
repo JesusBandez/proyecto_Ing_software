@@ -1,12 +1,12 @@
 from flask import render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash
-from src.models import User
+from src.models.User import User
 from src.models import db
 from . import app
 
 @app.route('/users_list')
 def users_lists():
-    users = User.User.query.all()
+    users = db.session.query(User).all()
     return render_template(
         'users_list/users_list.html',
         users=users
@@ -15,8 +15,8 @@ def users_lists():
 @app.route('/users_list/delete', methods=['GET', 'POST'])
 def delete_user():
     user_id = request.form['id']
-    user = db.session.query(User.User).filter_by(id=user_id).first()
-    print(user)
+    user = db.session.query(User).filter_by(id=user_id).first()
+
     db.session.delete(user)
     db.session.commit()
     return redirect(url_for('users_lists'))

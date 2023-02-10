@@ -17,7 +17,9 @@ def log_user():
         error = None
 
         logged_user = db.session.query(User).filter_by(username=username).first()
-
+        print(logged_user)
+        print(password)
+        print(check_password_hash(logged_user.password, password))
         if logged_user is None:
             error = 'Username does not exist.'
         elif not check_password_hash(logged_user.password, password):
@@ -25,6 +27,7 @@ def log_user():
 
         if error is None:
             return redirect(url_for('users_lists'))
+
         flash(error)
 
     return redirect(url_for('login'))
