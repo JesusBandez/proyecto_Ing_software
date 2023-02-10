@@ -1,4 +1,5 @@
-from main import app, db, User
+from main import app, db
+from src.models.User import User
 
 @app.shell_context_processor
 def make_shell_context():
