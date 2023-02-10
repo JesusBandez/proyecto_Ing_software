@@ -5,12 +5,13 @@ from src.models.User import User
 from werkzeug.security import check_password_hash
 from . import app
 
-@app.route('/login')
-def login():
-    return render_template('login/login.html')
 
 @app.route('/login', methods=('GET', 'POST'))
-def log_user():
+def login():
+    # If there is a user already loged in, redirect to users lists
+    if session.get('user'):
+        return redirect(url_for('users_lists'))
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -36,5 +37,15 @@ def log_user():
             return redirect(url_for('users_lists'))
 
         flash(error)
+    return render_template('login/login.html')
 
+
+@app.route('/logout')
+def logout():
+    db.session.query(User).filter_by(
+        username=session['user']['username']
+        ).update( {'status' : False})
+    db.session.commit()
+    session.pop('user')
+    
     return redirect(url_for('login'))
