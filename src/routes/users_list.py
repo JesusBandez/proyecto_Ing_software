@@ -15,9 +15,10 @@ def users_lists():
 
 @app.route('/users_list/delete', methods=['GET', 'POST'])
 def delete_user():
-    user_id = request.form['id']
-    # Eliminar al usuario de la base de datos
-    # TODO
+    user_username = request.form['username']
+    user = db.session.query(User.User).filter_by(username=user_username).first()
+    db.session.delete(user)
+    db.session.commit()
     return redirect(url_for('users_lists'))
 
 @app.route('/users_list/new_user')

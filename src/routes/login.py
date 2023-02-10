@@ -1,26 +1,32 @@
-from flask import render_template, request, session
+from flask import render_template, request, session, redirect, url_for, flash
 from sqlalchemy import select
 from src.models import db
 from src.models import User
 from werkzeug.security import check_password_hash
 from . import app
 
-@app.route('/login', methods=('GET', 'POST'))
+@app.route('/login')
 def login():
+    return render_template('login/login.html')
+
+@app.route('/login', methods=('GET', 'POST'))
+def log_user():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         error = None
 
-        user = User.query.filter_by(username=username).all()
+        logged_user = db.session.query(User.User).filter_by(username=username).first()
+        print(logged_user)
+        print(logged_user.password)
+        print(check_password_hash(logged_user.password, password))
 
-        if user is None:
+        if logged_user is None:
             error = 'Incorrect username.'
-        elif not check_password_hash(user.password, password):
+        elif not check_password_hash(logged_user.password, password):
             error = 'Incorrect password.'
 
         if error is None:
-            session.clear()
-            session['user_id'] = user['id']
+            redirect(url_for('users_lists'))
 
-    return render_template('login/login.html')
+    return redirect(url_for('users_lists'))
