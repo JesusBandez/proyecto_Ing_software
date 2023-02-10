@@ -16,10 +16,7 @@ def log_user():
         password = request.form['password']
         error = None
 
-        logged_user = User.User.query.filter_by(username=username).first()
-        print(logged_user)
-        print(logged_user.password)
-        print(check_password_hash(logged_user.password, password))
+        logged_user = db.session.query(User).filter_by(username=username).first()
 
         if logged_user is None:
             error = 'Incorrect username.'
