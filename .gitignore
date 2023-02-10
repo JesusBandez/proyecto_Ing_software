@@ -6,3 +6,5 @@ venv
 ./temp
 instance
 __pycache__/
+.DS_STORE
+flask_session/
