@@ -10,7 +10,6 @@ def users_lists():
     return render_template(
         'users_list/users_list.html',
         users=users
-        # , users=[User("Coronao", "123", "User", True), User("Chang", "123", "User", True), ] # Aqui va la lista de usuarios de la base de datos. Deberiamos agregar paginacion???   
     )
 
 @app.route('/users_list/delete', methods=['GET', 'POST'])
@@ -38,9 +37,15 @@ def add_new_user():
         elif not password:
             error = 'Password is required.'
 
+        user = db.session.query(User).filter_by(username=username).first()
+        if user is not None:
+            error = f'User {username} is already registered.'
+
         if error is None:
             user = User(username, generate_password_hash(password), role, False)
             db.session.add(user)
             db.session.commit()
+
+        
 
     return redirect(url_for('users_lists'))

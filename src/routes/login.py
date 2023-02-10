@@ -1,7 +1,7 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from sqlalchemy import select
 from src.models import db
-from src.models import User
+from src.models.User import User
 from werkzeug.security import check_password_hash
 from . import app
 
@@ -16,10 +16,7 @@ def log_user():
         password = request.form['password']
         error = None
 
-        logged_user = db.session.query(User.User).filter_by(username=username).first()
-        print(logged_user)
-        print(logged_user.password)
-        print(check_password_hash(logged_user.password, password))
+        logged_user = db.session.query(User).filter_by(username=username).first()
 
         if logged_user is None:
             error = 'Incorrect username.'
@@ -27,6 +24,6 @@ def log_user():
             error = 'Incorrect password.'
 
         if error is None:
-            redirect(url_for('users_lists'))
+            return redirect(url_for('users_lists'))
 
-    return redirect(url_for('users_lists'))
+    return redirect(url_for('login'))
