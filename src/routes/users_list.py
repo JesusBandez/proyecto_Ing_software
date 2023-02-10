@@ -51,5 +51,4 @@ def add_new_user():
             db.session.add(user)
             db.session.commit()       
         
-
     return redirect(url_for('users_lists'))

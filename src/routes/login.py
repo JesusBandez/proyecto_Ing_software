@@ -15,17 +15,24 @@ def log_user():
         username = request.form['username']
         password = request.form['password']
         error = None
+        query = db.session.query(User).filter_by(username=username)
 
-        logged_user = db.session.query(User).filter_by(username=username).first()
-        print(logged_user)
-        print(password)
-        print(check_password_hash(logged_user.password, password))
+        logged_user = query.first()
+
         if logged_user is None:
             error = 'Username does not exist.'
         elif not check_password_hash(logged_user.password, password):
             error = 'Incorrect password.'
 
         if error is None:
+            query.update(
+                {'status' : True}
+            )
+            db.session.commit()
+            session['user'] = {
+                'username' : username,
+                'role' : logged_user.role
+            }
             return redirect(url_for('users_lists'))
 
         flash(error)
