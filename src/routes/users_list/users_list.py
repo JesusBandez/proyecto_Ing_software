@@ -3,7 +3,6 @@ from werkzeug.security import generate_password_hash
 from src.routes.auth import has_role 
 from src.models.User import User
 from src.models import db
-
 from . import app
 
 @app.route('/users_list')

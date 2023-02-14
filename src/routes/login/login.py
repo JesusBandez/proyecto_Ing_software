@@ -1,5 +1,4 @@
 from flask import render_template, request, session, redirect, url_for, flash
-from sqlalchemy import select
 from src.models import db
 from src.models.User import User
 from werkzeug.security import check_password_hash
