@@ -29,7 +29,7 @@ class tests(unittest.TestCase):
         browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
         browser.get('http://127.0.0.1:5000/login')
         browser.find_element('id', 'username').send_keys("1")
-        browser.find_element('id', 'password').send_keys("Contrasenia Inexistente jaja")
+        browser.find_element('id', 'password').send_keys("Contrasenia Inexistente")
         sleep(1)
         browser.find_element('name', 'submit').click()
         self.assertEqual(browser.title, 'Login' )
@@ -37,8 +37,6 @@ class tests(unittest.TestCase):
         browser.quit()
     
     def test_c_login(self):
-        '''Esta prueba requiere que exista un usuario con nombre 1
-        y contrasenia 1 en la base de datos'''
         print("Login y logout correcto")
         browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
         browser.get('http://127.0.0.1:5000/login')
@@ -54,8 +52,6 @@ class tests(unittest.TestCase):
         
 
     def test_d_delete_user_admin(self):
-        '''Esta prueba requiere que exista un usuario con nombre 1,
-        contrasenia 1 y rol admin en la base de datos, y un usuario de nombre 3'''
         print("Borrar usuario")
         browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
         browser.get('http://127.0.0.1:5000/login')
@@ -71,8 +67,6 @@ class tests(unittest.TestCase):
         browser.quit()
 
     def test_e_add_user_admin(self):
-        '''Esta prueba requiere que exista un usuario con nombre 1,
-        contrasenia 1 y rol admin en la base de datos, y un usuario de nombre 3'''
         print("Agregar usuario borrado")
         browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
         browser.get('http://127.0.0.1:5000/login')
@@ -93,8 +87,6 @@ class tests(unittest.TestCase):
         browser.quit()
 
     def test_f_non_admin_user(self):
-        '''Esta prueba requiere que exista un usuario con nombre 1,
-        contrasenia 1 y rol admin en la base de datos, y un usuario de nombre 3'''
         print("Login usuario comun")
         browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
         browser.get('http://127.0.0.1:5000/login')
