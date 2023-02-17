@@ -52,7 +52,7 @@ class tests(unittest.TestCase):
         browser.find_element('id', 'password').send_keys("1")        
         browser.find_element('name', 'submit').click()
         self.assertEqual(browser.title, 'User\'s list' )        
-        browser.find_element(By.XPATH, r"// td[ text() = '3' ]/..").find_element(By.CSS_SELECTOR, r'button').click()        
+        browser.find_element(By.XPATH, r'//button[@name="id" and @value="5"]').click()        
         browser.find_element(By.CSS_SELECTOR, 'div.container-fluid>a.btn').click()
         browser.quit()
 
