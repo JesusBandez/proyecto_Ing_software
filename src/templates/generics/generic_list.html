@@ -1,3 +1,20 @@
+{# Lista generica para usar en varias partes de la pagina.
+La lista debe recibir un parametro "list_context que debe ser un dict.
+El dict debe contener dos claves: "list_header" y "list_body".
+    list_header: Es un arreglo de dicts. Los dicts deben contener
+        dos claves: "label" y "style"
+            label: El texto que se muestra en el header de la pagina
+            style: Stilo que mostrara la columna de la pagina
+    list_body: Arreglo de objetos que contienen la informacion de las
+        filas. Los objetos son dicts que tienen dos claves: data y
+        action.
+            data: Arreglo con string que tienen la informacion a mostrar en las celdas
+                de una fila.
+            action: Codigo jinja con los botones y las acciones que debe
+                ejecutar el boton
+
+#}
+
 <div class="row">
     <div class="col-12">
         <table class="table table-bordered table-striped">
