@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-12">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    {% for item in list_context['list_header']%}
+                    <th scope="col" style="{{item['style']}}">{{item['label']}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% if list_context['list_body']| length == 0 -%}
+                <tr>
+                    <td>Empty list</td>
+                </tr>
+                {% else -%}
+                {% for item in list_context['list_body'] %}
+                <tr>
+                    {% for data in item['data'] %}
+                    <td> {{data}}</td>
+                    {% endfor%}
+                    <td>
+                        {% for action in item['actions']%}
+                        {{action | safe}}
+                        {% endfor%}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>

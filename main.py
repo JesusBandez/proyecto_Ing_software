@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from src.config import DevConfig
 from src.models import db
 
@@ -12,4 +12,8 @@ from src.routes.Logger import logger
 
 db.init_app(app)
 if __name__== '__main__':
-    app.run(host="0.0.0.0", port=7070)
+    app.run()
+
+@app.route('/')
+def root():        
+    return redirect(url_for('login'))
