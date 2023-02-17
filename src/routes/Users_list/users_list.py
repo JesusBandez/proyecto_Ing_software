@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash
 from src.routes.auth import has_role 
 from src.models.User import User
 from src.models import db
+from src.lib.generate_action import generate_action
 from . import app
 
 @app.route('/users_list')
@@ -12,38 +13,30 @@ def users_lists():
         {'label': 'Permissions', 'style': 'width: 25%'},
         {'label': 'Actions', 'style': 'width: 10%'}
     ]
+    
     users = db.session.query(User).all()
     users_list_body = []
     for user in users:
         if not session.get('user') or session['user']['role'] == 'user':
-            delete = f"""
-            <form class="text-center" method="post">
-                <button method="post" class="btn btn-danger" disabled>
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>
-            </form>
-            """
+            delete = generate_action(
+                button_class='btn btn-danger', text_class='fa fa-trash', 
+                disabled=True)
+          
         else:
-            delete = f"""
-            <form class="text-center" method="post">
-                <button method="post" class="btn btn-danger"
-                    name="id" value="{user.id}" 
-                    formaction="{url_for('delete_user')}">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>
-            </form>
-            """
+            delete = generate_action(user.id, 'delete_user',
+                button_class='btn btn-danger', text_class='fa fa-trash')
+
         users_list_body.append({
                 'data' : [user.username,user.role],               
                 'actions' : [delete]})
 
-    list_context= {
-        'list_header': users_list_header,
-        'list_body' : users_list_body,
-    }
+
     return render_template(
         'users_list/users_list.html',
-        list_context=list_context,        
+        list_context= {
+            'list_header': users_list_header,
+            'list_body' : users_list_body,
+        }       
     )
 
 @app.route('/users_list/delete', methods=['GET', 'POST'])
