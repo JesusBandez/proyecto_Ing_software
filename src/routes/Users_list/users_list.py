@@ -9,25 +9,27 @@ from . import app
 @app.route('/users_list')
 def users_lists():
     users_list_header = [
-        {'label': 'Username', 'style': 'width: 65%'},
+        {'label': 'Id', 'style': 'width: 5%'},
+        {'label': 'Username', 'style': 'width: 60%'},
         {'label': 'Permissions', 'style': 'width: 25%'},
         {'label': 'Actions', 'style': 'width: 10%'}
     ]
-    
+
     users = db.session.query(User).all()
     users_list_body = []
     for user in users:
+        # Mostrar boton de accion desabilitado si el usuario no tiene
+        # permisos
         if not session.get('user') or session['user']['role'] == 'user':
             delete = generate_action(
                 button_class='btn btn-danger', text_class='fa fa-trash', 
-                disabled=True)
-          
+                disabled=True)          
         else:
             delete = generate_action(user.id, 'delete_user',
                 button_class='btn btn-danger', text_class='fa fa-trash')
 
         users_list_body.append({
-                'data' : [user.username,user.role],               
+                'data' : [user.id, user.username,user.role],               
                 'actions' : [delete]})
 
 

@@ -21,7 +21,7 @@ El dict debe contener dos claves: "list_header" y "list_body".
             <thead>
                 <tr>
                     {% for item in list_context['list_header']%}
-                    <th scope="col" style="{{item['style']}}">{{item['label']}}</th>
+                    <th scope="col" class="text-center" style="{{item['style']}}">{{item['label']}}</th>
                     {% endfor %}
                 </tr>
             </thead>
