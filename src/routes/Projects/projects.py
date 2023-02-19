@@ -1,6 +1,6 @@
 from flask import render_template, request, session, redirect, url_for, flash
+from src.routes.auth import has_role
 from src.models import db
-
 from . import app
 
 
@@ -14,6 +14,7 @@ def projects():
         {'label': 'Actions', 'style': 'width: 25%'},        
     ]
     return render_template('projects/projects.html',
+        has_role=has_role,
         list_context= {
                 'list_header': users_list_header,
                 'list_body' : [], # Meterle los datos

@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request, flash, session
-from src.routes.auth import has_role 
+from src.routes.auth import has_role
 from src.models.User import User
 from src.models import db
 from src.lib.generate_action import generate_action
@@ -21,14 +21,15 @@ def users_lists():
     for user in users:
         # Mostrar boton de accion desabilitado si el usuario no tiene
         # permisos
-        if not session.get('user') or session['user']['role'] == 'user':
+        if has_role('admin'):
+            delete = generate_action(user.id, 'delete_user', 'post',
+                button_class='btn btn-danger', text_class='fa fa-trash')
+            
+                    
+        else:
             delete = generate_action(
                 button_class='btn btn-danger', text_class='fa fa-trash', 
-                disabled=True)          
-        else:
-            delete = generate_action(user.id, 'delete_user',
-                button_class='btn btn-danger', text_class='fa fa-trash')
-
+                disabled=True)  
 
         users_list_body.append({
                 'data' : [user.id, user.username, user.first_name, 
@@ -37,6 +38,7 @@ def users_lists():
 
     return render_template(
         'users_list/users_list.html',
+        has_role=has_role,
         list_context= {
             'list_header': users_list_header,
             'list_body' : users_list_body,

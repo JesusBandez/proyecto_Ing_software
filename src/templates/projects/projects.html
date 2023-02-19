@@ -4,7 +4,7 @@
 <div class="container">
     <h2 class="text-center mb-3 mt-3">Project's List</h2>
     <div class="container-sm mb-2" style="text-align: right;">
-      {% if not session.get('user') or session['user'].role == 'user'%}
+      {% if not has_role('admin')%}
       <a class="btn btn-info disabled" disabled>Add new project</a>
       {% else %}
       <a href="{{url_for('new_project')}}" class="btn btn-info">Add new project</a>
