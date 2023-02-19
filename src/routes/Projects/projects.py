@@ -24,33 +24,34 @@ def projects_list():
     for project in projects:
     
         generate = generate_action(project['id'],
-            'generate_project', button_class='btn btn-sm btn-info',
-            text_class='fa-regular fa-rectangle-list', 
+            'generate_project', button_class='btn btn-sm btn-info w-100',
+            text_class='fa-regular fa-rectangle-list',
+            title="Generate project",
             disabled=not project['available'])
 
         edit = generate_action(project['id'],
-            'edit_project', button_class='btn btn-sm btn-info',
-            
+            'edit_project', button_class='btn btn-sm btn-info w-100',
+            title="Edit project",
             text_class='fa-solid fa-pencil',
             disabled=not project['available'])
 
         remove = generate_action(project['id'],
-            'remove_project', button_class='btn btn-sm btn-danger',
-            
+            'remove_project', button_class='btn btn-sm btn-danger w-100',
+            title="Remove project",
             text_class='fa-solid fa-trash',
             disabled=not project['available'])
 
         toggle_availability = generate_action(project['id'],
             'toggle_project_availability',
-            text_class= 'fa-solid fa-ban' if project['available'] else 'fa-solid fa-play', 
-            
-            button_class='btn btn-sm btn-info')
+            text_class= 'fa-solid fa-ban' if project['available'] else 'fa-solid fa-play',
+            title="Disable project" if project['available'] else "Enable project",
+            button_class='btn btn-sm btn-info w-100')
 
         print_project = generate_action(project['id'],            
             'print_project', 
             text_class='fa-solid fa-print',
-            
-            button_class='btn btn-sm btn-info')         
+            title="Print project",
+            button_class='btn btn-sm btn-info w-100')         
      
 
     return render_template('projects/projects.html',
@@ -58,8 +59,8 @@ def projects_list():
         list_context= {
                 'list_header': users_list_header,
                 'list_body' : [{'data': ['1', '1', '1', '1'],
-                    'actions': [generate, edit, remove, 
-                                toggle_availability, print_project]}], # Meterle los datos
+                    'actions': [generate, edit, toggle_availability, 
+                                print_project, remove]}], # Meterle los datos
             })
 
 # Agregar proyectos

@@ -23,17 +23,15 @@ def users_lists():
     for user in users:
         # Mostrar boton de accion desabilitado si el usuario no tiene
         # permisos
-        if has_role('admin'):
-            delete = generate_action(user.id, 'delete_user', 'post', 
-                button_class='btn btn-danger', text_class='fa fa-trash')           
-                    
-        else:
-            delete = generate_action(
-                button_class='btn btn-danger', text_class='fa fa-trash', 
-                disabled=True) 
 
+        delete = generate_action(user.id, 'delete_user', 'post', 
+            button_class='btn btn-danger w-100', text_class='fa fa-trash',
+            title="Delete user",
+            disabled=not has_role('admin'))           
+        
         see_projects = generate_action(user.id, 'user_projects', 
-                button_class='btn btn-info', text_class="fa-solid fa-eye") 
+                button_class='btn btn-info w-100', text_class="fa-solid fa-eye",
+                title="View the projects associated with the user") 
 
         users_list_body.append({
                 'data' : [user.id, user.username, user.first_name, 
