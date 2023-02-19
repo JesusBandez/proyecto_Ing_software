@@ -9,11 +9,11 @@ from . import app
 def users_lists():
     users_list_header = [
         {'label': 'Id', 'style': 'width: 5%'},
-        {'label': 'Login', 'style': 'width: 20%'},
-        {'label': 'First name', 'style': 'width: 17%'},
-        {'label': 'Last name', 'style': 'width: 17%'},
+        {'label': 'Login', 'style': 'width: 19%'},
+        {'label': 'First name', 'style': 'width: 15%'},
+        {'label': 'Last name', 'style': 'width: 15%'},
         {'label': 'Role', 'style': 'width: 21%'},
-        {'label': 'Actions', 'style': 'width: 10%'}
+        {'label': 'Actions', 'style': 'width: 15%'}
     ]
 
     users = db.session.query(User).all()
@@ -23,18 +23,20 @@ def users_lists():
         # permisos
         if has_role('admin'):
             delete = generate_action(user.id, 'delete_user', 'post',
-                button_class='btn btn-danger', text_class='fa fa-trash')
-            
+                button_class='btn btn-danger', text_class='fa fa-trash')           
                     
         else:
             delete = generate_action(
                 button_class='btn btn-danger', text_class='fa fa-trash', 
-                disabled=True)  
+                disabled=True) 
+
+        see_projects = generate_action(user.id, 'user_projects', 
+                button_class='btn btn-info', text_class="fa-solid fa-eye") 
 
         users_list_body.append({
                 'data' : [user.id, user.username, user.first_name, 
                           user.last_name, user.job],               
-                'actions' : [delete]})
+                'actions' : [delete, see_projects]})
 
     return render_template(
         'users_list/users_list.html',

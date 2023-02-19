@@ -17,7 +17,7 @@ def generate_action(value=None, redirect_function=None, method="get", **kwargs):
         """
 
     return f"""
-    <form class="text-center" method="{method}">
+    <form class="text-center col" method="{method}">
         {button}
     </form>
     """
