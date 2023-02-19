@@ -4,6 +4,7 @@ from src.models import db
 from . import app
 
 
+# Proyectos del sistema
 @app.route('/projects/list', methods=('GET', 'POST'))
 def projects_list():
     "Renderiza la lista con todos los proyectos del sistema"
@@ -22,7 +23,27 @@ def projects_list():
                 'list_body' : [], # Meterle los datos
             })
 
+# Agregar proyectos
+@app.route('/projects/new_project')
+def new_project():  
+    "Muestra el formulario para agregar nuevo proyecto"   
+    return render_template('projects/new_project.html')
 
+@app.route('/projects/new_project/add', methods=['POST'])
+def add_new_project():
+    """Obtiene los datos para agregar un nuevo proyecto y 
+        lo agrega al sistema"""
+
+    description = request.form['description']
+    start_date = request.form['s_date']
+    close_date = request.form['c_date']
+    print(description)
+    print(start_date)
+    print(close_date)
+        
+    return redirect(url_for('projects_list'))
+
+# Proyectos de un usuario
 @app.route('/projects/user_projects')
 def user_projects():
     """Renderiza la vista con la lista de proyectos de un usuario.
@@ -47,22 +68,3 @@ def user_projects():
                 'list_header': users_projects_list_header,
                 'list_body' : [], # Meterle los datos
             })
-
-@app.route('/projects/new_project')
-def new_project():  
-    "Muestra el formulario para agregar nuevo proyecto"   
-    return render_template('projects/new_project.html')
-
-@app.route('/projects/new_project/add', methods=['POST'])
-def add_new_project():
-    """Obtiene los datos para agregar un nuevo proyecto y 
-        lo agrega al sistema"""
-
-    description = request.form['description']
-    start_date = request.form['s_date']
-    close_date = request.form['c_date']
-    print(description)
-    print(start_date)
-    print(close_date)
-        
-    return redirect(url_for('projects_list'))
