@@ -9,8 +9,10 @@ from . import app
 def users_lists():
     users_list_header = [
         {'label': 'Id', 'style': 'width: 5%'},
-        {'label': 'Username', 'style': 'width: 60%'},
-        {'label': 'Permissions', 'style': 'width: 25%'},
+        {'label': 'Login', 'style': 'width: 20%'},
+        {'label': 'First name', 'style': 'width: 17%'},
+        {'label': 'Last name', 'style': 'width: 17%'},
+        {'label': 'Role', 'style': 'width: 21%'},
         {'label': 'Actions', 'style': 'width: 10%'}
     ]
 
@@ -27,10 +29,11 @@ def users_lists():
             delete = generate_action(user.id, 'delete_user',
                 button_class='btn btn-danger', text_class='fa fa-trash')
 
-        users_list_body.append({
-                'data' : [user.id, user.username,user.role],               
-                'actions' : [delete]})
 
+        users_list_body.append({
+                'data' : [user.id, user.username, user.first_name, 
+                          user.last_name, user.job],               
+                'actions' : [delete]})
 
     return render_template(
         'users_list/users_list.html',
