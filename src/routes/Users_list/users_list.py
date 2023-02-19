@@ -1,5 +1,4 @@
 from flask import render_template, redirect, url_for, request, flash, session
-from werkzeug.security import generate_password_hash
 from src.routes.auth import has_role 
 from src.models.User import User
 from src.models import db
@@ -81,7 +80,7 @@ def add_new_user():
         return redirect(url_for('new_user'))
 
     if error is None:
-        user = User(username, generate_password_hash(password), role, False)
+        user = User(username, password, role, False)
         db.session.add(user)
         db.session.commit()       
         
