@@ -64,11 +64,14 @@ def new_user():
 
 @app.route('/users_list/add_new_user', methods=['POST'])
 def add_new_user():    
+    f_name = request.form['f_name']
+    l_name = request.form['l_name']
+    job = request.form['job']
     username = request.form['username']
     password = request.form['password']
     role = request.form['permissions']
-    error = None
 
+    error = None
     if not username:
         error = 'Username is required.'
     elif not password:
@@ -83,7 +86,7 @@ def add_new_user():
         return redirect(url_for('new_user'))
 
     if error is None:
-        user = User(username, password, role, False)
+        user = User(f_name, l_name,username, password, role, job, False)
         db.session.add(user)
         db.session.commit()       
         

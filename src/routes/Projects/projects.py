@@ -18,3 +18,15 @@ def projects():
                 'list_header': users_list_header,
                 'list_body' : [], # Meterle los datos
             })
+
+
+@app.route('/projects/new_project', methods=('GET', 'POST'))
+def new_project():     
+    return render_template('projects/new_project.html')
+
+@app.route('/projects/add_new_project', methods=['POST'])
+def add_new_project():    
+    dummy = request.form['Dummy']
+    print(dummy)   
+        
+    return redirect(url_for('projects'))
