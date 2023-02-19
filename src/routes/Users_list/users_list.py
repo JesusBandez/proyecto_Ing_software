@@ -8,12 +8,12 @@ from . import app
 @app.route('/users_list')
 def users_lists():
     users_list_header = [
-        {'label': 'Id', 'style': 'width: 5%'},
-        {'label': 'Login', 'style': 'width: 19%'},
-        {'label': 'First name', 'style': 'width: 15%'},
-        {'label': 'Last name', 'style': 'width: 15%'},
-        {'label': 'Role', 'style': 'width: 21%'},
-        {'label': 'Actions', 'style': 'width: 15%'}
+        {'label': 'Id', 'class': 'col-1'},
+        {'label': 'Login', 'class': 'col-2'},
+        {'label': 'First name', 'class': 'col-2'},
+        {'label': 'Last name', 'class': 'col-2'},
+        {'label': 'Role', 'class': 'col-2'},
+        {'label': 'Actions', 'class': 'col-2'}
     ]
 
     users = db.session.query(User).all()

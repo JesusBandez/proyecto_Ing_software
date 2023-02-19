@@ -21,7 +21,7 @@ El dict debe contener dos claves: "list_header" y "list_body".
             <thead>
                 <tr>
                     {% for item in list_context['list_header']%}
-                    <th scope="col" class="text-center {{item['class']}}" style="{{item['style']}}">{{item['label']}}</th>
+                    <th scope="col" class="text-center {{item['class']}}">{{item['label']}}</th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -37,10 +37,12 @@ El dict debe contener dos claves: "list_header" y "list_body".
                     <td> {{data}}</td>
                     {% endfor%}
                     {% if item['actions']%}
-                    <td class="row">
-                        {% for action in item['actions']%}
-                        {{action | safe}}
-                        {% endfor%}
+                    <td>
+                        <div class="row">
+                            {% for action in item['actions']%}
+                            {{action | safe}}
+                            {% endfor%}
+                        </div>
                     </td>
                     {% endif%}
                 </tr>

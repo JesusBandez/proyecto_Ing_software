@@ -7,12 +7,12 @@ from . import app
 @app.route('/event_logger', methods=('GET', 'POST'))
 def logger():
     users_list_header = [
-        {'label': 'Id', 'style': 'width: 5%'},
-        {'label': 'Event', 'style': 'width: 20%'},
-        {'label': 'Module', 'style': 'width: 20%'},
-        {'label': 'Date', 'style': 'width: 20%'},
-        {'label': 'Hour', 'style': 'width: 15%'},
-        {'label': 'Actions', 'style': 'width: 15%'},
+        {'label': 'Id', 'class': 'col-1'},
+        {'label': 'Event', 'class': 'col-3'},
+        {'label': 'Module', 'class': 'col-1'},
+        {'label': 'Date', 'class': 'col-2'},
+        {'label': 'Hour', 'class': 'col-1'},
+        {'label': 'Actions', 'class': 'col-2'},
     ]
     return render_template('logger/logger.html',
         list_context= {

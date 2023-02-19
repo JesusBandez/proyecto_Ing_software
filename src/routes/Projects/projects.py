@@ -9,11 +9,11 @@ def projects_list():
     "Renderiza la lista con todos los proyectos del sistema"
 
     users_list_header = [
-        {'label': 'Id', 'style': 'width: 5%'},
-        {'label': 'Description', 'style': 'width: 35%'},
-        {'label': 'Start', 'style': 'width: 15%'},
-        {'label': 'End', 'style': 'width: 15%'},
-        {'label': 'Actions', 'style': 'width: 25%'},        
+        {'label': 'Id', 'class': 'col-1'},
+        {'label': 'Description', 'class': 'col-3'},
+        {'label': 'Start', 'class': 'col-2'},
+        {'label': 'End', 'class': 'col-2'},
+        {'label': 'Actions', 'class': 'col-3'},        
     ]
     return render_template('projects/projects.html',
         has_role=has_role,
@@ -30,10 +30,10 @@ def user_projects():
 
     print(request.args.get("id"))
     users_projects_list_header = [
-        {'label': 'Id', 'style': 'width: 5%'},
-        {'label': 'Description', 'style': 'width: 65%'},
-        {'label': 'Start', 'style': 'width: 15%'},
-        {'label': 'End', 'style': 'width: 15%'}        
+        {'label': 'Id', 'class': 'col-1'},
+        {'label': 'Description', 'class': 'col-6'},
+        {'label': 'Start', 'class': 'col-2'},
+        {'label': 'End', 'class': 'col-2'}        
     ]
     return render_template('projects/user_projects.html',        
         list_context= {
