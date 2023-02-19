@@ -8,7 +8,7 @@ from . import app
 @app.route('/users_list')
 def users_lists():
     "Muestra la lista de usuarios del sistema"
-    
+
     users_list_header = [
         {'label': 'Id', 'class': 'col-1'},
         {'label': 'Login', 'class': 'col-2'},
@@ -24,7 +24,7 @@ def users_lists():
         # Mostrar boton de accion desabilitado si el usuario no tiene
         # permisos
         if has_role('admin'):
-            delete = generate_action(user.id, 'delete_user', 'post',
+            delete = generate_action(user.id, 'delete_user', 'post', 
                 button_class='btn btn-danger', text_class='fa fa-trash')           
                     
         else:

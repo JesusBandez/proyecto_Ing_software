@@ -26,16 +26,23 @@ def projects_list():
 @app.route('/projects/user_projects')
 def user_projects():
     """Renderiza la vista con la lista de proyectos de un usuario.
-        El Id del usuario se obtiener por url args"""
-
-    print(request.args.get("id"))
+        El Id del usuario se obtiene por url args"""
+    
     users_projects_list_header = [
         {'label': 'Id', 'class': 'col-1'},
         {'label': 'Description', 'class': 'col-6'},
         {'label': 'Start', 'class': 'col-2'},
         {'label': 'End', 'class': 'col-2'}        
     ]
-    return render_template('projects/user_projects.html',        
+
+    
+    #TODO: Se busca en la base de datos el usuario por su id. 
+    # Mostrar error en caso de que no exista
+    print(request.args.get("id"))
+    user = {'username': 'dummy'}
+
+    return render_template('projects/user_projects.html',
+        username=user['username'],   
         list_context= {
                 'list_header': users_projects_list_header,
                 'list_body' : [], # Meterle los datos

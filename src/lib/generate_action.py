@@ -1,6 +1,7 @@
 from flask import url_for
-def generate_action(value=None, redirect_function=None, method="get", **kwargs):
-    
+def generate_action(value=None, redirect_function=None, method="get", col_size='', **kwargs):
+    if col_size:
+        col_size = f'-{col_size}'
     if kwargs.get('disabled'):
         button = f"""
             <button method="post" class="{kwargs.get('button_class')}" disabled>
@@ -17,7 +18,7 @@ def generate_action(value=None, redirect_function=None, method="get", **kwargs):
         """
 
     return f"""
-    <form class="text-center col" method="{method}">
+    <form class="text-center col{col_size}" method="{method}">
         {button}
     </form>
     """

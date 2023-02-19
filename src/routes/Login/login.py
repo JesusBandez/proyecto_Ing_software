@@ -33,7 +33,7 @@ def login():
                 'username' : username,
                 'role' : logged_user.role
             }
-            return redirect(url_for('users_lists'))
+            return redirect(url_for('user_projects', id=logged_user.id))
 
         flash(error)
     return render_template('login/login.html')
