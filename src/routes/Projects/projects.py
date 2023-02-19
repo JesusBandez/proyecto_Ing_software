@@ -26,7 +26,11 @@ def new_project():
 
 @app.route('/projects/add_new_project', methods=['POST'])
 def add_new_project():    
-    dummy = request.form['Dummy']
-    print(dummy)   
+    description = request.form['description']
+    start_date = request.form['s_date']
+    close_date = request.form['c_date']
+    print(description)
+    print(start_date)
+    print(close_date)
         
     return redirect(url_for('projects'))

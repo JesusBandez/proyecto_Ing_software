@@ -10,8 +10,18 @@
                         <form id="register-form" class="form" action="{{url_for('add_new_project')}}" method="post">
                             <h3 class="text-center">Add New Project</h3>
                             <div class="form-group">
-                                <label for="Dummy">Dummy</label><br>
-                                <input type="text" name="Dummy" id="Dummy" class="form-control" required>
+                                <label for="description">Project description</label><br>
+                                <textarea type="text" name="description" id="description" class="form-control" required></textarea>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="s_date">Start Date</label>
+                                        <input id="s_date" name="s_date" class="form-control" type="date" />
+                                    </div>
+                                    <div class="col">
+                                        <label for="c_date">Close Date</label>
+                                        <input id="c_date" name="c_date" class="form-control" type="date" />
+                                    </div>
+                                </div>
                             </div>                            
                             <div class="form-group">                                
                                 <input type="submit" name="submit" class="btn btn-info btn-md mt-4" value="submit">
