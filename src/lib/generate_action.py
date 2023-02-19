@@ -18,7 +18,9 @@ def generate_action(value=None, redirect_function=None, method="get", col_size='
         """
 
     return f"""
-    <form class="text-center col{col_size}" method="{method}">
-        {button}
-    </form>
+    <div class="col{col_size}">
+        <form method="{method}">            
+            {button}        
+        </form>
+    </div>
     """
