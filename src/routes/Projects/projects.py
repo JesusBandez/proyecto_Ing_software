@@ -20,7 +20,7 @@ def projects():
             })
 
 
-@app.route('/projects/new_project', methods=('GET', 'POST'))
+@app.route('/projects/new_project')
 def new_project():     
     return render_template('projects/new_project.html')
 
