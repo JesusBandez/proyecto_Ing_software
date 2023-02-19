@@ -7,6 +7,8 @@ from . import app
 
 @app.route('/users_list')
 def users_lists():
+    "Muestra la lista de usuarios del sistema"
+    
     users_list_header = [
         {'label': 'Id', 'class': 'col-1'},
         {'label': 'Login', 'class': 'col-2'},
@@ -49,6 +51,8 @@ def users_lists():
 
 @app.route('/users_list/delete', methods=['GET', 'POST'])
 def delete_user():
+    "Elimina a un usuario del sistema"
+
     if not has_role('admin'):
         return redirect(url_for('users_lists'))
         
@@ -61,13 +65,17 @@ def delete_user():
 
 @app.route('/users_list/new_user')
 def new_user():
+    "Renderiza el formulario de registro de nuevo usuario"
+
     if not has_role('admin'):
         return redirect(url_for('users_lists'))
 
     return render_template('users_list/new_user.html')
 
 @app.route('/users_list/add_new_user', methods=['POST'])
-def add_new_user():    
+def add_new_user():
+    "Agrega un nuevo usuario al sistema"
+
     f_name = request.form['f_name']
     l_name = request.form['l_name']
     job = request.form['job']
