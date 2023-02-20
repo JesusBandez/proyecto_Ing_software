@@ -18,10 +18,12 @@ def projects_list():
         {'label': 'Actions', 'class': 'col-4'},        
     ]
 
-    # TODO: Obtener los proyectos del sistema.
-    projects = [{'available': True, 'id': '1'}]
+    # TODO: Obtener los proyectos de la base de datos y arreglar
+    # el codigo de debajo
+    # CODIGO DE PRUEBA
+    PROJECTS = [{'available': True, 'id': '1'}]
     projects_list_body = []
-    for project in projects:
+    for project in PROJECTS:
     
         generate = generate_action(project['id'],
             'generate_project', button_class='btn btn-sm btn-info w-100',
@@ -30,7 +32,8 @@ def projects_list():
             disabled=not project['available'])
 
         edit = generate_action(project['id'],
-            'edit_project', button_class='btn btn-sm btn-info w-100',
+            'edit_project', method='post', 
+            button_class='btn btn-sm btn-info w-100',
             title="Edit project",
             text_class='fa-solid fa-pencil',
             disabled=not project['available'])
@@ -60,26 +63,41 @@ def projects_list():
                 'list_header': users_list_header,
                 'list_body' : [{'data': ['1', '1', '1', '1'],
                     'actions': [generate, edit, toggle_availability, 
-                                print_project, remove]}], # Meterle los datos
+                                print_project, remove]}], # TODO: Meterle los datos reales
             })
 
 # Agregar proyectos
 @app.route('/projects/new_project')
 def new_project():  
-    "Muestra el formulario para agregar nuevo proyecto"   
-    return render_template('projects/new_project.html')
+    "Muestra el formulario para agregar o editar un proyecto"
+    return render_template('projects/new_project.html', 
+        project_to_edit=request.args.get('project_to_edit'))
 
 @app.route('/projects/new_project/add', methods=['POST'])
 def add_new_project():
     """Obtiene los datos para agregar un nuevo proyecto y 
         lo agrega al sistema"""
 
+    id_project_to_edit = request.form.get('id_project')
     description = request.form['description']
     start_date = request.form['s_date']
     close_date = request.form['c_date']
+    print("id:" + str(id_project_to_edit))
     print(description)
     print(start_date)
     print(close_date)
+
+    # TODO: Agregar el proyecto a la base de datos
+    if not id_project_to_edit:
+        # TODO: Agregar nuevo proyecto
+        pass
+
+    else:
+        # TODO: Editar el proyecto existente con la nueva 
+        # info
+        pass
+        
+
         
     return redirect(url_for('projects_list'))
 
@@ -87,33 +105,38 @@ def add_new_project():
 @app.route('/projects/list/generate_project', methods=['GET', 'POST'])
 def generate_project():
     "Generar proyecto"
+    # TODO
     print("Generando")
     return redirect(url_for('projects_list'))
 
-@app.route('/projects/list/edit_project', methods=['GET', 'POST'])
+@app.route('/projects/list/edit_project', methods=['POST'])
 def edit_project():
     "Editar proyecto"
-    print("Editando")
-    return redirect(url_for('projects_list'))
+    # TODO
+    print(request.form['id'])    
+    return redirect(url_for('new_project', 
+        project_to_edit=request.form['id']))
 
 @app.route('/projects/list/remove_project', methods=['GET', 'POST'])
 def remove_project():
     "Eliminar proyecto"
+    # TODO
     print("Eliminando")
     return redirect(url_for('projects_list'))
 
 @app.route('/projects/list/toggle_project_availability', methods=['GET', 'POST'])
 def toggle_project_availability():
     "Habilitar/desabilitar proyecto"
+    # TODO
     print("hab/dehab")
     return redirect(url_for('projects_list'))
 
 @app.route('/projects/list/print_project', methods=['GET', 'POST'])
 def print_project():
     "Imprimir proyecto"
+    # TODO
     print("impr")
     return redirect(url_for('projects_list'))
-
 
 
 # Proyectos de un usuario
@@ -139,5 +162,5 @@ def user_projects():
         username=user['username'],   
         list_context= {
                 'list_header': users_projects_list_header,
-                'list_body' : [], # Meterle los datos
+                'list_body' : [], #TODO: Meterle los datos reales
             })
