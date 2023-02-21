@@ -5,11 +5,13 @@ class Project(db.Model):
     description = db.Column(db.String(255))
     start = db.Column(db.DateTime())
     finish = db.Column(db.DateTime())
+    available = db.Column(db.Boolean)
 
-    def __init__(self, description, start, finish):
+    def __init__(self, description, start, finish, available=True):
         self.description = description
         self.start = start
         self.finish = finish
+        self.available = available
 
     def __repr__(self):
         return f"Project id: {self.id}, Description: {self.description}."

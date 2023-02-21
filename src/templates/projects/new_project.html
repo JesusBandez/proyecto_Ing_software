@@ -15,18 +15,20 @@
                             {% endif %}
                             <div class="form-group">
                                 {% if project_to_edit%}
-                                <input id="id_project" name="id_project" type="hidden" value="{{project_to_edit}}">
+                                <input id="id_project" name="id_project" type="hidden" value="{{project_to_edit['id']}}">
                                 {% endif %}
                                 <label for="description">Project description</label><br>
-                                <textarea type="text" name="description" id="description" class="form-control" required></textarea>
+                                <textarea type="text" name="description" id="description" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
                                 <div class="row">
                                     <div class="col">
                                         <label for="s_date">Start Date</label>
-                                        <input id="s_date" name="s_date" class="form-control" type="date" />
+                                        <input id="s_date" name="s_date" class="form-control" 
+                                            type="date" value="{{ project_to_edit.start if project_to_edit else '' }}">
                                     </div>
                                     <div class="col">
                                         <label for="c_date">Close Date</label>
-                                        <input id="c_date" name="c_date" class="form-control" type="date" />
+                                        <input id="c_date" name="c_date" class="form-control" 
+                                        type="date" value="{{ project_to_edit.finish if project_to_edit else '' }}" />
                                     </div>
                                 </div>
                             </div>                            
