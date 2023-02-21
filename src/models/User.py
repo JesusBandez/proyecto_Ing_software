@@ -1,4 +1,5 @@
 from werkzeug.security import generate_password_hash
+from src.models.Associations import user_project
 from . import db
 
 class User(db.Model):
