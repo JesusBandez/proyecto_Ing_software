@@ -2,6 +2,8 @@ from flask import render_template, request, session, redirect, url_for, flash
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
 from src.models import db
+from src.models.Project import Project
+from datetime import datetime
 from . import app
 
 
@@ -70,8 +72,7 @@ def projects_list():
 @app.route('/projects/new_project')
 def new_project():  
     "Muestra el formulario para agregar o editar un proyecto"
-    return render_template('projects/new_project.html', 
-        project_to_edit=request.args.get('project_to_edit'))
+    return render_template('projects/new_project.html')
 
 @app.route('/projects/new_project/add', methods=['POST'])
 def add_new_project():
@@ -80,25 +81,19 @@ def add_new_project():
 
     id_project_to_edit = request.form.get('id_project')
     description = request.form['description']
-    start_date = request.form['s_date']
-    close_date = request.form['c_date']
-    print("id:" + str(id_project_to_edit))
-    print(description)
-    print(start_date)
-    print(close_date)
-
-    # TODO: Agregar el proyecto a la base de datos
+    start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
+    close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
+    
     if not id_project_to_edit:
-        # TODO: Agregar nuevo proyecto
-        pass
+        project = Project(description, start_date, close_date)        
+        db.session.add(project)
+        db.session.commit()
 
     else:
         # TODO: Editar el proyecto existente con la nueva 
         # info
         pass
-        
-
-        
+                
     return redirect(url_for('projects_list'))
 
 
@@ -114,8 +109,8 @@ def edit_project():
     "Editar proyecto"
     # TODO
     print(request.form['id'])    
-    return redirect(url_for('new_project', 
-        project_to_edit=request.form['id']))
+    return render_template('projects/new_project.html', 
+        project_to_edit=request.form['id'])
 
 @app.route('/projects/list/remove_project', methods=['GET', 'POST'])
 def remove_project():
