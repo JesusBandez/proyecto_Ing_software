@@ -184,7 +184,7 @@ def print_project():
 
 
 # Proyectos de un usuario
-@app.route('/projects/user_projects',  methods=['POST'])
+@app.route('/projects/user_projects')
 def user_projects():
     """Renderiza la vista con la lista de proyectos de un usuario.
         El Id del usuario se obtiene por url args"""
@@ -196,7 +196,7 @@ def user_projects():
         {'label': 'End', 'class': 'col-2'}        
     ]
 
-    user_id = request.form['id']
+    user_id = request.args['id']
     user = db.session.query(User).filter_by(id=user_id).first()
     projects = db.session.query(Project).all()
     projects_user_is = []
