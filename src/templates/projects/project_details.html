@@ -2,26 +2,46 @@
 {% block title %}<title>Project Details</title>{% endblock %}
 {% block body %}
 <div class="container">
+  <div class="row">
     <h2 class="text-center mb-3 mt-3">Project '{{context['id']}}' details</h2>
-    <div class="row">
-        <div class="col d-flex justify-content-center">
-            <h3>Description:</h3>
+    <div class="col-sm-2 mt-3">
+      <div class="row">
+        <div class="col">
+          <h3>Description</h3>
+        </div>
+      </div>
+      <p>{{context['description']}}</p>
+      <div class="row">
+        <div class="col">
+          <h4>Start date</h4>
+          <h6>{{context['start_date']}}</h6>
+        </div>
+        <div class="col">
+          <h4>Finnish date</h4>
+          <h6>{{context['finish_date']}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="row">
+        <div class="col">
+          <h3>Active Users</h3>  
+        </div>
+        <div class="col">          
+          <div class="container-sm mb-2" style="text-align: right;">            
+            {% if not has_role('admin')%}
+            <a class="btn btn-info disabled" disabled>Add Users</a>
+            <a class="btn btn-info disabled" disabled>Remove Users</a>
+            {% else %}
+            <a href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-info">Add Users</a>
+            <a href="{{url_for('manage_project', id=context['id'], mode='Remove')}}" class="btn btn-danger">Remove Users</a>
+            {% endif %}
           </div>
-    </div>
-    <p>{{context['description']}}</p>
-    <div class="row mt-5">
-      <div class="col d-flex justify-content-center">
-        <h4>Start date: {{context['start_date']}}</h3>
+        </div>
       </div>
-      <div class="col d-flex justify-content-center">
-        <h4>Finnish date: {{context['finish_date']}}</h3>
-      </div>
-    </div>
-    <div class="mt-3">
-      <div class="d-flex justify-content-center">
-        <h2>User's list</h2>
-      </div>
-    {% include  'generics/generic_list.html' %}  
+        {% include 'generics/generic_list.html' %}
+
     </div>
   </div>
+</div>
 {% endblock %}
