@@ -8,7 +8,7 @@ from datetime import datetime
 import pdfkit
 from . import app
 
-# Proyectos de un usuario
+
 @app.route('/users_list/user_details')
 def user_details():
     """Renderiza la vista con la lista de proyectos de un usuario.
@@ -18,18 +18,25 @@ def user_details():
         {'label': 'Id', 'class': 'col-1'},
         {'label': 'Description', 'class': 'col-6'},
         {'label': 'Start', 'class': 'col-2'},
-        {'label': 'End', 'class': 'col-2'}        
+        {'label': 'End', 'class': 'col-2'},
+        {'label' : 'actions', 'class': 'col-1'} 
     ]
 
     user_id = request.args['id']
     user = db.session.query(User).filter_by(id=user_id).first()
-    projects = db.session.query(Project).all()
+    projects = db.session.query(Project).all()    
     projects_user_is = []
     for p in projects :
         for u in p.users:
+            
+            see_project = generate_action(p.id, 'project_details', 
+                button_class='btn btn-info w-100',
+                text_class="fa-solid fa-eye",
+                title="View project details")
             if (u.id == user.id):
                 projects_user_is.append({
-                    'data' : [p.id, p.description, p.start.strftime(f'%m-%d-%Y'), p.finish.strftime(f'%m-%d-%Y')]
+                    'data' : [p.id, p.description, p.start.strftime(f'%m-%d-%Y'), p.finish.strftime(f'%m-%d-%Y')],
+                    'actions' : [see_project]
                 })
 
     return render_template('users_list/user_details.html',

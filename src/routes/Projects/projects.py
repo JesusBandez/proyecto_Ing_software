@@ -1,6 +1,7 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
+from src.routes.Projects import project_details
 from src.models import db
 from src.models.Project import Project
 from src.models.User import User
@@ -126,9 +127,9 @@ def add_new_project():
 @app.route('/projects/list/generate_project', methods=['GET', 'POST'])
 def generate_project():
     "Generar proyecto"
-    # TODO: No se que hace esta vaina
+    # TODO: No se que hace esta vaina pero la voy a usar para los detalles
     print("Generando")
-    return redirect(url_for('projects_list'))
+    return redirect(url_for('project_details', id=request.args['id']))
 
 @app.route('/projects/list/edit_project', methods=['POST'])
 def edit_project():
