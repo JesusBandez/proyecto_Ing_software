@@ -3,6 +3,7 @@ from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
 from src.models import db
 from src.models.Project import Project
+from src.models.User import User
 from datetime import datetime
 from . import app
 
@@ -17,6 +18,7 @@ def projects_list():
         {'label': 'Description', 'class': 'col-3'},
         {'label': 'Start', 'class': 'col-2'},
         {'label': 'End', 'class': 'col-2'},
+        {'label': 'Users in project', 'class': 'col-3'},
         {'label': 'Actions', 'class': 'col-4'},        
     ]
 
@@ -40,11 +42,11 @@ def projects_list():
             text_class='fa-solid fa-pencil',
             disabled=not project.available)
 
-        remove = generate_action(project.id,
-            'remove_project', button_class='btn btn-sm btn-danger w-100',
+        remove = generate_action(project.id, 'remove_project', 'post',
+            button_class='btn btn-sm btn-danger w-100',
             title="Remove project",
             text_class='fa-solid fa-trash',
-            disabled=not project.available)
+            disabled=not has_role('admin'))
 
         toggle_availability = generate_action(project.id,
             'toggle_project_availability', method='post',
@@ -61,7 +63,7 @@ def projects_list():
         
         projects_list_body.append({
             'data' : [project.id, project.description, 
-                    project.start.strftime(f'%m-%d-%Y'), project.finish.strftime(f'%m-%d-%Y')],
+                    project.start.strftime(f'%m-%d-%Y'), project.finish.strftime(f'%m-%d-%Y'), project.users],
             'actions' : [generate, edit, toggle_availability, print_project, remove]
             })
      
@@ -89,9 +91,15 @@ def add_new_project():
     description = request.form['description']
     start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
+    project_users = request.form['p_users']
+    project_users = project_users.split(", ")
     
     if not id_project_to_edit:
-        project = Project(description, start_date, close_date)        
+        project = Project(description, start_date, close_date)
+        for pu in project_users:
+            user = db.session.query(User).filter_by(username=pu).first()
+            if (user != None):
+                project.users.append(user)
         db.session.add(project)
         db.session.commit()
 
@@ -133,8 +141,14 @@ def edit_project():
 @app.route('/projects/list/remove_project', methods=['GET', 'POST'])
 def remove_project():
     "Eliminar proyecto"
-    # TODO
-    print("Eliminando")
+    if not has_role('admin'):
+        return redirect(url_for('projects_lists'))
+        
+    project_id = request.form['id']
+    project = db.session.query(Project).filter_by(id=project_id).first()
+
+    db.session.delete(project)
+    db.session.commit()
     return redirect(url_for('projects_list'))
 
 @app.route('/projects/list/toggle_project_availability', methods=['POST'])
@@ -155,7 +169,7 @@ def print_project():
 
 
 # Proyectos de un usuario
-@app.route('/projects/user_projects')
+@app.route('/projects/user_projects',  methods=['POST'])
 def user_projects():
     """Renderiza la vista con la lista de proyectos de un usuario.
         El Id del usuario se obtiene por url args"""
@@ -167,15 +181,20 @@ def user_projects():
         {'label': 'End', 'class': 'col-2'}        
     ]
 
-    
-    #TODO: Se busca en la base de datos el usuario por su id. 
-    # Mostrar error en caso de que no exista
-    print(request.args.get("id"))
-    user = {'username': 'dummy'}
+    user_id = request.form['id']
+    user = db.session.query(User).filter_by(id=user_id).first()
+    projects = db.session.query(Project).all()
+    projects_user_is = []
+    for p in projects :
+        for u in p.users:
+            if (u.id == user.id):
+                projects_user_is.append({
+                    'data' : [p.id, p.description, p.start.strftime(f'%m-%d-%Y'), p.finish.strftime(f'%m-%d-%Y')]
+                })
 
     return render_template('projects/user_projects.html',
-        username=user['username'],   
+        username=user,   
         list_context= {
                 'list_header': users_projects_list_header,
-                'list_body' : [], #TODO: Meterle los datos reales
+                'list_body' : projects_user_is
             })

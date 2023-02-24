@@ -29,7 +29,7 @@ def users_lists():
             title="Delete user",
             disabled=not has_role('admin'))           
         
-        see_projects = generate_action(user.id, 'user_projects', 
+        see_projects = generate_action(user.id, 'user_projects', 'post',
                 button_class='btn btn-info w-100', text_class="fa-solid fa-eye",
                 title="View the projects associated with the user") 
 

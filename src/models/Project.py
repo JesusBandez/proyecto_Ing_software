@@ -15,4 +15,4 @@ class Project(db.Model):
         self.available = available
 
     def __repr__(self):
-        return f"Project id: {self.id}, Description: {self.description}."
+        return f"Project id: {self.id}, Description: {self.description}, Users: {self.users}"
