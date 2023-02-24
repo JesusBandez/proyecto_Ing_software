@@ -38,7 +38,7 @@ El dict debe contener dos claves: "list_header" y "list_body".
                     {% endfor%}
                     {% if item['actions']%}
                     <td>
-                        <div class="row">
+                        <div class="row g-1">
                             {% for action in item['actions']%}
                             {{action | safe}}
                             {% endfor%}

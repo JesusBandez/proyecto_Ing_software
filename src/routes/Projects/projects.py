@@ -208,7 +208,7 @@ def user_projects():
                 })
 
     return render_template('projects/user_projects.html',
-        username=user,   
+        username=user.last_name,   
         list_context= {
                 'list_header': users_projects_list_header,
                 'list_body' : projects_user_is
