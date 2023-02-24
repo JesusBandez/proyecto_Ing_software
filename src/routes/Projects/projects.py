@@ -167,19 +167,42 @@ def toggle_project_availability():
     db.session.commit()
     return redirect(url_for('projects_list'))
 
-@app.route('/projects/list/print_project', methods=['GET', 'POST'])
-def print_project():
-    "Imprimir proyecto"
+@app.route('/projects/print_project', methods=['POST'])
+def print_project():  
+    "Muestra el formulario para agregar o editar un proyecto"
     project_id = request.form['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
+    show_project = {
+        'id' : project.id,
+        'description' : project.description,
+        'start' : project.start.date(),
+        'finish' : project.finish.date(),
+        'users' : project.users
+    }
+    return render_template('print_project/print_project.html', 
+        project=show_project)
+
+@app.route('/projects/print_project', methods=['GET', 'POST'])
+def generate_pdf():
+    "Imprimir proyecto"
+    project_id = request.args['id']
+    project = db.session.query(Project).filter_by(id=project_id).first()
+    show_project = {
+        'id' : project.id,
+        'description' : project.description,
+        'start' : project.start.date(),
+        'finish' : project.finish.date(),
+        'users' : project.users
+    }
+    """ project = db.session.query(Project).filter_by(id=project_id).first()
     string_to_print = ''
     string_to_print += 'Data for project ' + str(project.id) + '\n'
     string_to_print += 'Description: ' + project.description + '\n'
     string_to_print += 'Start date: ' + str(project.start.date()) + '\n'
     string_to_print += 'Finish date: ' + str(project.finish.date()) + '\n'
-    string_to_print += 'Users working in project: ' + str(project.users)
-    
-    pdfkit.from_string(string_to_print, f'./{project_id}.pdf')
+    string_to_print += 'Users working in project: ' + str(project.users) """
+    rendered = render_template('print_project/print_project.html', project=show_project)
+    pdfkit.from_file(rendered, f'./printed/{project_id}.pdf')
     return redirect(url_for('projects_list'))
 
 
