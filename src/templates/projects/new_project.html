@@ -34,7 +34,8 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="p_users">Users in project</label>
-                                        <input type="text" name="p_users" id="p_users" class="form-control" required>
+                                        <input type="text" name="p_users" id="p_users" class="form-control" 
+                                        value="{{ project_to_edit.users if project_to_edit else '' }}" required>
                                     </div>
                                 </div>
                             </div>                            

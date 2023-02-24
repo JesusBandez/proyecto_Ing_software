@@ -5,6 +5,7 @@ from src.models import db
 from src.models.Project import Project
 from src.models.User import User
 from datetime import datetime
+import pdfkit
 from . import app
 
 
@@ -35,6 +36,7 @@ def projects_list():
             title="Generate project",
             disabled=not project.available)
 
+        # ready
         edit = generate_action(project.id,
             'edit_project', method='post', 
             button_class='btn btn-sm btn-info w-100',
@@ -42,20 +44,23 @@ def projects_list():
             text_class='fa-solid fa-pencil',
             disabled=not project.available)
 
+        # ready
         remove = generate_action(project.id, 'remove_project', 'post',
             button_class='btn btn-sm btn-danger w-100',
             title="Remove project",
             text_class='fa-solid fa-trash',
             disabled=not has_role('admin'))
 
+        # ready
         toggle_availability = generate_action(project.id,
             'toggle_project_availability', method='post',
             text_class= 'fa-solid fa-ban' if project.available else 'fa-solid fa-play',
             title="Disable project" if project.available else "Enable project",
             button_class='btn btn-sm btn-info w-100')
 
+        # semi-ready
         print_project = generate_action(project.id,            
-            'print_project', 
+            'print_project', 'post',
             text_class='fa-solid fa-print',
             title="Print project",
             button_class='btn btn-sm btn-info w-100')
@@ -108,7 +113,8 @@ def add_new_project():
         changes = {
             'description' : description,
             'start' : start_date,
-            'finish' : close_date
+            'finish' : close_date,
+            'users' : project_users
             }
         project = db.session.query(Project).filter_by(
             id=id_project_to_edit).update(changes)
@@ -133,7 +139,8 @@ def edit_project():
         'id' : project.id,
         'description': project.description,
         'start' : project.start.date(),
-        'finish' : project.finish.date()
+        'finish' : project.finish.date(),
+        'users' : project.users
     }
     return render_template('projects/new_project.html', 
         project_to_edit=edit_context)
@@ -163,8 +170,16 @@ def toggle_project_availability():
 @app.route('/projects/list/print_project', methods=['GET', 'POST'])
 def print_project():
     "Imprimir proyecto"
-    # TODO
-    print("impr")
+    project_id = request.form['id']
+    project = db.session.query(Project).filter_by(id=project_id).first()
+    string_to_print = ''
+    string_to_print += 'Data for project ' + str(project.id) + '\n'
+    string_to_print += 'Description: ' + project.description + '\n'
+    string_to_print += 'Start date: ' + str(project.start.date()) + '\n'
+    string_to_print += 'Finish date: ' + str(project.finish.date()) + '\n'
+    string_to_print += 'Users working in project: ' + str(project.users)
+    
+    pdfkit.from_string(string_to_print, f'./{project_id}.pdf')
     return redirect(url_for('projects_list'))
 
 
