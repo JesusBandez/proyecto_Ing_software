@@ -1,6 +1,7 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
+from src.routes.Projects import project_details
 from src.models import db
 from src.models.Project import Project
 from src.models.User import User
@@ -126,9 +127,9 @@ def add_new_project():
 @app.route('/projects/list/generate_project', methods=['GET', 'POST'])
 def generate_project():
     "Generar proyecto"
-    # TODO: No se que hace esta vaina
+    # TODO: No se que hace esta vaina pero la voy a usar para los detalles
     print("Generando")
-    return redirect(url_for('projects_list'))
+    return redirect(url_for('project_details', id=request.args['id']))
 
 @app.route('/projects/list/edit_project', methods=['POST'])
 def edit_project():
@@ -204,35 +205,3 @@ def generate_pdf():
     rendered = render_template('print_project/print_project.html', project=show_project)
     pdfkit.from_file(rendered, f'./printed/{project_id}.pdf')
     return redirect(url_for('projects_list'))
-
-
-# Proyectos de un usuario
-@app.route('/projects/user_projects')
-def user_projects():
-    """Renderiza la vista con la lista de proyectos de un usuario.
-        El Id del usuario se obtiene por url args"""
-    
-    users_projects_list_header = [
-        {'label': 'Id', 'class': 'col-1'},
-        {'label': 'Description', 'class': 'col-6'},
-        {'label': 'Start', 'class': 'col-2'},
-        {'label': 'End', 'class': 'col-2'}        
-    ]
-
-    user_id = request.args['id']
-    user = db.session.query(User).filter_by(id=user_id).first()
-    projects = db.session.query(Project).all()
-    projects_user_is = []
-    for p in projects :
-        for u in p.users:
-            if (u.id == user.id):
-                projects_user_is.append({
-                    'data' : [p.id, p.description, p.start.strftime(f'%m-%d-%Y'), p.finish.strftime(f'%m-%d-%Y')]
-                })
-
-    return render_template('projects/user_projects.html',
-        username=user.last_name,   
-        list_context= {
-                'list_header': users_projects_list_header,
-                'list_body' : projects_user_is
-            })

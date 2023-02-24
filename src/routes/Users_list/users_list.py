@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, request, flash, session
 from src.routes.auth import has_role
+from src.routes.Users_list import user_details
 from src.models.User import User
 from src.models import db
 from src.lib.generate_action import generate_action
@@ -29,7 +30,7 @@ def users_lists():
             title="Delete user",
             disabled=not has_role('admin'))           
         
-        see_projects = generate_action(user.id, 'user_projects', 'get',
+        see_projects = generate_action(user.id, 'user_details', 'get',
                 button_class='btn btn-info w-100', text_class="fa-solid fa-eye",
                 title="View the projects associated with the user") 
 
