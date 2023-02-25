@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block title %}<title>Project Details</title>{% endblock %}
 {% block body %}
-<div class="container-fluid">
+<div class="container">
   <div class="row" >
     <h1 class="text-center mb-3 mt-3">Project '{{context['id']}}' details</h1>
-    <div class="col-md-2">
+
       <div class="row">
         <div class="col">
           <h3>Description</h3>
@@ -20,28 +20,24 @@
           <h4>Finnish date</h4>
           <h6>{{context['finish_date']}}</h6>
         </div>
-      </div>
-    </div>
-    <div class="col-md">
-      <div class="row">
-        <div class="col">
-          <h3>Active Users</h3>  
-        </div>
-        <div class="col">          
-          <div class="container-sm mb-2" style="text-align: right;">            
-            {% if not has_role('admin')%}
-            <a class="btn btn-info disabled" disabled>Add Users</a>
-            <a class="btn btn-danger disabled" disabled>Remove Users</a>
-            {% else %}
-            <a href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-info">Add Users</a>
-            <a href="{{url_for('manage_project', id=context['id'], mode='Remove')}}" class="btn btn-danger">Remove Users</a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-        {% include 'generics/generic_list.html' %}
-
+      </div>        
+  </div>
+</div>
+<div class="row container-fluid mt-1 mx-auto">
+  <div class="col">
+    <h3>Users in project</h3>  
+  </div>
+  <div class="col">          
+    <div class="container-sm mb-2" style="text-align: right;">            
+      {% if not has_role('admin')%}
+      <a class="btn btn-info disabled" disabled>Add Users</a>
+      <a class="btn btn-danger disabled" disabled>Remove Users</a>
+      {% else %}
+      <a href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-info">Add Users</a>
+      <a href="{{url_for('manage_project', id=context['id'], mode='Remove')}}" class="btn btn-danger">Remove Users</a>
+      {% endif %}
     </div>
   </div>
+  {% include 'generics/generic_list.html' %}
 </div>
 {% endblock %}

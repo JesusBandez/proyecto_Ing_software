@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% block title %}<title>Projects list</title>{% endblock %}
 {% block body %}
-<div class="container">
-    <h2 class="text-center mb-3 mt-3">Project's List</h2>
-    <div class="container-sm mb-2" style="text-align: right;">
+<div class="fluid-container">
+    <h1 class="text-center mb-3 mt-3">Project's List</h1>
+    <div class="mb-2 mx-2" style="text-align: right;">
       {% if not has_role('admin')%}
       <a class="btn btn-info disabled" disabled>Add new project</a>
       {% else %}
       <a href="{{url_for('new_project')}}" class="btn btn-info">Add new project</a>
       {% endif %}
     </div>
+    
     {% include  'generics/generic_list.html' %}  
   </div>
 {% endblock %}

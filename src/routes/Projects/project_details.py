@@ -16,8 +16,9 @@ def project_details():
     
     users_projects_list_header = [
         {'label': 'Id', 'class': 'col-1'},
-        {'label': 'First name', 'class': 'col-6'},
-        {'label': 'Last name', 'class': 'col-2'},
+        {'label': 'First name', 'class': 'col-3'},
+        {'label': 'Last name', 'class': 'col-3'},
+        {'label' : 'job', 'class' : 'col-3'},
         {'label' : 'actions', 'class': 'col-1'} 
     ]
 
@@ -33,7 +34,7 @@ def project_details():
             title="View user details")
 
         users_list_body.append({
-            'data' : [user.id, user.first_name, user.last_name],
+            'data' : [user.id, user.first_name, user.last_name, user.job],
             'actions' : [see_user]
         })
 

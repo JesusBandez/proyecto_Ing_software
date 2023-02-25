@@ -42,8 +42,9 @@ def user_details():
     return render_template('users_list/user_details.html',
         context={
             'username' : user.username,
-             'fname' : user.first_name,
-             'lname' : user.last_name
+            'fname' : user.first_name,
+            'lname' : user.last_name,
+            'job' : user.job
         },   
         list_context= {
                 'list_header': users_projects_list_header,

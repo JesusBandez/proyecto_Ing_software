@@ -17,11 +17,10 @@ def projects_list():
 
     users_list_header = [
         {'label': 'Id', 'class': 'col-1'},
-        {'label': 'Description', 'class': 'col-3'},
+        {'label': 'Description', 'class': 'col'},
         {'label': 'Start', 'class': 'col-2'},
-        {'label': 'End', 'class': 'col-2'},
-        {'label': 'Users in project', 'class': 'col-3'},
-        {'label': 'Actions', 'class': 'col-4'},        
+        {'label': 'End', 'class': 'col-2'},        
+        {'label': 'Actions', 'class': 'col-2'},        
     ]
 
     PROJECTS = db.session.query(Project).all()
@@ -66,7 +65,7 @@ def projects_list():
         
         projects_list_body.append({
             'data' : [project.id, project.description, 
-                    project.start.strftime(f'%m-%d-%Y'), project.finish.strftime(f'%m-%d-%Y'), project.users],
+                    project.start.strftime(f'%m-%d-%Y'), project.finish.strftime(f'%m-%d-%Y')],
             'actions' : [generate, edit, toggle_availability, print_project, remove]
             })
      
@@ -94,31 +93,27 @@ def add_new_project():
     description = request.form['description']
     start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
-    project_users = request.form['p_users']
-    project_users = project_users.split(", ")
     
     if not id_project_to_edit:
-        project = Project(description, start_date, close_date)
-        for pu in project_users:
-            user = db.session.query(User).filter_by(username=pu).first()
-            if (user != None):
-                project.users.append(user)
+        project = Project(description, start_date, close_date)               
         db.session.add(project)
-        db.session.commit()
-
-    else:
-        print(f"A editar {id_project_to_edit}")
+        db.session.flush()
+        db.session.refresh(project)
+        id = project.id
+        
+    else:        
         changes = {
             'description' : description,
             'start' : start_date,
-            'finish' : close_date,
-            'users' : project_users
+            'finish' : close_date,            
             }
         project = db.session.query(Project).filter_by(
             id=id_project_to_edit).update(changes)
-        db.session.commit()
-                
-    return redirect(url_for('projects_list'))
+        id = id_project_to_edit
+            
+    db.session.commit()
+
+    return redirect(url_for('project_details', id=id))
 
 
 @app.route('/projects/list/generate_project', methods=['GET', 'POST'])
