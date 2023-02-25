@@ -120,8 +120,8 @@ def add_new_project():
         hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
         log = Logger('Editing project', date, hour)
         db.session.add(log)
-        db.session.commit()
-                
+        
+    db.session.commit()        
     return redirect(url_for('project_details', id=id))
 
 
