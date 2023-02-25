@@ -54,8 +54,10 @@ def project_details():
 
 @app.route('/projects/manage_project_users')
 def manage_project():
-    """Agregar o eliminar usuarios del prouecto """
-    
+    """Agregar o eliminar usuarios del proyecto """
+    if not has_role('admin'):
+        return redirect(url_for('projects_list'))
+
     users_projects_list_header = [
         {'label': 'Id', 'class': 'col-1'},
         {'label': 'First name', 'class': 'col-6'},
@@ -106,6 +108,9 @@ def manage_project():
 @app.route('/projects/manage_project_users/add', methods=["POST"])
 def add_user_to_project():
     "Agrega un usuario al proyecto"
+    if not has_role('admin'):
+        return redirect(url_for('projects_list'))
+        
     project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
     user = db.session.query(User).filter_by(id=request.form['id']).first()
     project.users.append(user)
@@ -115,6 +120,9 @@ def add_user_to_project():
 @app.route('/projects/manage_project_users/remove',  methods=["POST"])
 def remove_user_from_project():
     "Elimina un usuairo del proyecto"
+    if not has_role('admin'):
+        return redirect(url_for('projects_list'))
+
     project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
     user = db.session.query(User).filter_by(id=request.form['id']).first()
     project.users.remove(user)

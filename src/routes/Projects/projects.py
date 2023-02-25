@@ -34,35 +34,37 @@ def projects_list():
             title="Generate project",
             disabled=not project.available)
 
-        # ready
+        
         edit = generate_action(project.id,
             'edit_project', method='post', 
             button_class='btn btn-sm btn-info w-100',
             title="Edit project",
             text_class='fa-solid fa-pencil',
-            disabled=not project.available)
+            disabled= not project.available or not has_role('admin'))
 
-        # ready
+        
         remove = generate_action(project.id, 'remove_project', 'post',
             button_class='btn btn-sm btn-danger w-100',
             title="Remove project",
             text_class='fa-solid fa-trash',
-            disabled=not has_role('admin'))
+            disabled= not has_role('admin'))
 
-        # ready
+        
         toggle_availability = generate_action(project.id,
             'toggle_project_availability', method='post',
             text_class= 'fa-solid fa-ban' if project.available else 'fa-solid fa-play',
             title="Disable project" if project.available else "Enable project",
-            button_class='btn btn-sm btn-info w-100')
+            button_class='btn btn-sm btn-info w-100', 
+            disabled = not has_role('admin'))
 
         # semi-ready
         print_project = generate_action(project.id,            
             'print_project', 'post',
             text_class='fa-solid fa-print',
             title="Print project",
-            button_class='btn btn-sm btn-info w-100')
-
+            button_class='btn btn-sm btn-info w-100', 
+            disabled = not has_role('user'))
+        
         
         projects_list_body.append({
             'data' : [project.id, project.description, 
@@ -80,7 +82,9 @@ def projects_list():
 
 # Agregar proyectos
 @app.route('/projects/new_project')
-def new_project():  
+def new_project():
+    if not has_role('admin'):
+        return redirect(url_for())    
     "Muestra el formulario para agregar o editar un proyecto"
     return render_template('projects/new_project.html', 
         project_to_edit=None)
@@ -89,7 +93,8 @@ def new_project():
 def add_new_project():
     """Obtiene los datos para agregar un nuevo proyecto y 
         lo agrega al sistema"""
-
+    if not has_role('admin'):
+        return redirect(url_for()) 
     id_project_to_edit = request.form.get('id_project')
     description = request.form['description']
     start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
@@ -135,6 +140,8 @@ def generate_project():
 @app.route('/projects/list/edit_project', methods=['POST'])
 def edit_project():
     "Editar proyecto"
+    if not has_role('admin'):
+        return redirect(url_for()) 
     project = db.session.query(Project).filter_by(
         id=request.form['id']).first()
     edit_context = {
@@ -151,7 +158,7 @@ def edit_project():
 def remove_project():
     "Eliminar proyecto"
     if not has_role('admin'):
-        return redirect(url_for('projects_lists'))
+        return redirect(url_for('projects_list'))
         
     project_id = request.form['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
@@ -168,6 +175,9 @@ def remove_project():
 @app.route('/projects/list/toggle_project_availability', methods=['POST'])
 def toggle_project_availability():
     "Habilitar/desabilitar proyecto"
+    if not has_role('admin'):
+        return redirect(url_for('projects_list'))
+
     project = db.session.query(Project).filter_by(
             id=request.form['id']).first()
     project.available = not project.available
@@ -176,7 +186,10 @@ def toggle_project_availability():
 
 @app.route('/projects/print_project', methods=['POST'])
 def print_project():  
-    "Muestra el formulario para agregar o editar un proyecto"
+    "Imprime un proyecto"
+    if not has_role('user'):
+        return redirect(url_for('projects_list'))
+
     project_id = request.form['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
     show_project = {
@@ -192,6 +205,9 @@ def print_project():
 @app.route('/projects/print_project', methods=['GET', 'POST'])
 def generate_pdf():
     "Imprimir proyecto"
+    if not has_role('user'):
+        return redirect(url_for('projects_list'))
+
     project_id = request.args['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
     show_project = {
