@@ -2,8 +2,10 @@ from flask import render_template, redirect, url_for, request, flash, session
 from src.routes.auth import has_role
 from src.routes.Users_list import user_details
 from src.models.User import User
+from src.models.Logger import Logger
 from src.models import db
 from src.lib.generate_action import generate_action
+from datetime import datetime
 from . import app
 
 @app.route('/users_list')
@@ -57,7 +59,12 @@ def delete_user():
         
     user_id = request.form['id']
     user = db.session.query(User).filter_by(id=user_id).first()
+    time_data = datetime.now()
+    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+    log = Logger('Deleting user', date, hour)
 
+    db.session.add(log)
     db.session.delete(user)
     db.session.commit()
     return redirect(url_for('users_lists'))
@@ -98,6 +105,12 @@ def add_new_user():
 
     if error is None:
         user = User(f_name, l_name,username, password, role, job, False)
+        time_data = datetime.now()
+        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+        log = Logger('Adding user', date, hour)
+
+        db.session.add(log)
         db.session.add(user)
         db.session.commit()       
         

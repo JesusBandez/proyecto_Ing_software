@@ -1,10 +1,11 @@
-from flask import render_template, request, session, redirect, url_for, flash
+from flask import render_template, request, session, redirect, url_for, flash, send_from_directory
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
 from src.routes.Projects import project_details
 from src.models import db
 from src.models.Project import Project
 from src.models.User import User
+from src.models.Logger import Logger
 from datetime import datetime
 import pdfkit
 from . import app
@@ -95,7 +96,11 @@ def add_new_project():
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
     
     if not id_project_to_edit:
-        project = Project(description, start_date, close_date)               
+        project = Project(description, start_date, close_date)        
+        time_data = datetime.now()
+        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+        log = Logger('Adding project', start_date, hour)
+        db.session.add(log)
         db.session.add(project)
         db.session.flush()
         db.session.refresh(project)
@@ -110,9 +115,13 @@ def add_new_project():
         project = db.session.query(Project).filter_by(
             id=id_project_to_edit).update(changes)
         id = id_project_to_edit
-            
-    db.session.commit()
-
+        time_data = datetime.now()
+        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+        log = Logger('Editing project', date, hour)
+        db.session.add(log)
+        db.session.commit()
+                
     return redirect(url_for('project_details', id=id))
 
 
@@ -146,7 +155,12 @@ def remove_project():
         
     project_id = request.form['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
+    time_data = datetime.now()
+    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+    log = Logger('Editing project', date, hour)
 
+    db.session.add(log)
     db.session.delete(project)
     db.session.commit()
     return redirect(url_for('projects_list'))
@@ -187,13 +201,13 @@ def generate_pdf():
         'finish' : project.finish.date(),
         'users' : project.users
     }
-    """ project = db.session.query(Project).filter_by(id=project_id).first()
-    string_to_print = ''
-    string_to_print += 'Data for project ' + str(project.id) + '\n'
-    string_to_print += 'Description: ' + project.description + '\n'
-    string_to_print += 'Start date: ' + str(project.start.date()) + '\n'
-    string_to_print += 'Finish date: ' + str(project.finish.date()) + '\n'
-    string_to_print += 'Users working in project: ' + str(project.users) """
     rendered = render_template('print_project/print_project.html', project=show_project)
     pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
-    return redirect(url_for('projects_list'))
+    time_data = datetime.now()
+    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+    log = Logger('Printing project', date, hour)
+    db.session.add(log)
+    db.session.commit()
+    return render_template('print_project/download.html', 
+        project=show_project)

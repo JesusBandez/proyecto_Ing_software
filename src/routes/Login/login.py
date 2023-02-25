@@ -1,7 +1,9 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from src.models import db
 from src.models.User import User
+from src.models.Logger import Logger
 from werkzeug.security import check_password_hash
+from datetime import date, datetime
 from . import app
 
 
@@ -28,6 +30,11 @@ def login():
             query.update(
                 {'status' : True}
             )
+            time_data = datetime.now()
+            date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+            hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+            log = Logger('Login', date, hour)
+            db.session.add(log)
             db.session.commit()
             session['user'] = {
                 'username' : username,
@@ -44,6 +51,7 @@ def logout():
     db.session.query(User).filter_by(
         username=session['user']['username']
         ).update( {'status' : False})
+    db.session.query(Logger).delete()
     db.session.commit()
     session.pop('user')
     

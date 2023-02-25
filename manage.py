@@ -2,6 +2,7 @@ from main import app, db
 from datetime import date, timedelta
 from src.models.User import User
 from src.models.Project import Project
+from src.models.Logger import Logger
 
 
 @app.shell_context_processor
