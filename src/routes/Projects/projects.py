@@ -1,4 +1,4 @@
-from flask import render_template, request, session, redirect, url_for, flash
+from flask import render_template, request, session, redirect, url_for, flash, send_from_directory
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
 from src.routes.Projects import project_details
@@ -195,13 +195,9 @@ def generate_pdf():
         'finish' : project.finish.date(),
         'users' : project.users
     }
-    """ project = db.session.query(Project).filter_by(id=project_id).first()
-    string_to_print = ''
-    string_to_print += 'Data for project ' + str(project.id) + '\n'
-    string_to_print += 'Description: ' + project.description + '\n'
-    string_to_print += 'Start date: ' + str(project.start.date()) + '\n'
-    string_to_print += 'Finish date: ' + str(project.finish.date()) + '\n'
-    string_to_print += 'Users working in project: ' + str(project.users) """
     rendered = render_template('print_project/print_project.html', project=show_project)
-    pdfkit.from_file(rendered, f'./printed/{project_id}.pdf')
+    pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
+    """ file_to_print = f'./printed/{project_id}.pdf'
+    send_from_directory('./', file_to_print) """
     return redirect(url_for('projects_list'))
+
