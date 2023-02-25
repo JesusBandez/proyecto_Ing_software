@@ -24,9 +24,6 @@ def projects_list():
         {'label': 'Actions', 'class': 'col-4'},        
     ]
 
-    # TODO: Obtener los proyectos de la base de datos y arreglar
-    # el codigo de debajo
-
     PROJECTS = db.session.query(Project).all()
     projects_list_body = []
     for project in PROJECTS:
@@ -203,5 +200,5 @@ def generate_pdf():
     string_to_print += 'Finish date: ' + str(project.finish.date()) + '\n'
     string_to_print += 'Users working in project: ' + str(project.users) """
     rendered = render_template('print_project/print_project.html', project=show_project)
-    pdfkit.from_file(rendered, f'./printed/{project_id}.pdf')
+    pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
     return redirect(url_for('projects_list'))
