@@ -5,6 +5,7 @@ from src.routes.Projects import project_details
 from src.models import db
 from src.models.Project import Project
 from src.models.User import User
+from src.models.Logger import Logger
 from datetime import datetime
 import pdfkit
 from . import app
@@ -106,6 +107,10 @@ def add_new_project():
             user = db.session.query(User).filter_by(username=pu).first()
             if (user != None):
                 project.users.append(user)
+        time_data = datetime.now()
+        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+        log = Logger('Adding project', start_date, hour)
+        db.session.add(log)
         db.session.add(project)
         db.session.commit()
 
@@ -119,6 +124,11 @@ def add_new_project():
             }
         project = db.session.query(Project).filter_by(
             id=id_project_to_edit).update(changes)
+        time_data = datetime.now()
+        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+        log = Logger('Editing project', date, hour)
+        db.session.add(log)
         db.session.commit()
                 
     return redirect(url_for('projects_list'))
@@ -154,7 +164,12 @@ def remove_project():
         
     project_id = request.form['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
+    time_data = datetime.now()
+    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+    log = Logger('Editing project', date, hour)
 
+    db.session.add(log)
     db.session.delete(project)
     db.session.commit()
     return redirect(url_for('projects_list'))
@@ -197,7 +212,11 @@ def generate_pdf():
     }
     rendered = render_template('print_project/print_project.html', project=show_project)
     pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
-    """ file_to_print = f'./printed/{project_id}.pdf'
-    send_from_directory('./', file_to_print) """
-    return redirect(url_for('projects_list'))
-
+    time_data = datetime.now()
+    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+    log = Logger('Printing project', date, hour)
+    db.session.add(log)
+    db.session.commit()
+    return render_template('print_project/download.html', 
+        project=show_project)
