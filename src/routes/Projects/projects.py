@@ -185,39 +185,91 @@ def toggle_project_availability():
     return redirect(url_for('projects_list'))
 
 @app.route('/projects/print_project', methods=['POST'])
-def print_project():  
-    "Imprime un proyecto"
-    if not has_role('user'):
-        return redirect(url_for('projects_list'))
-
+def print_project():
+    users_projects_list_header = [
+        {'label': 'Id', 'class': 'col-1'},
+        {'label': 'First name', 'class': 'col-3'},
+        {'label': 'Last name', 'class': 'col-3'},
+        {'label' : 'job', 'class' : 'col-3'}
+    ]
     project_id = request.form['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
     show_project = {
         'id' : project.id,
         'description' : project.description,
-        'start' : project.start.date(),
-        'finish' : project.finish.date(),
-        'users' : project.users
+        'start_date' : project.start.strftime(f'%m-%d-%Y'),
+        'finish_date' : project.finish.strftime(f'%m-%d-%Y')
     }
-    return render_template('print_project/print_project.html', 
+    
+    users_list_body = []
+    for user in project.users:
+        users_list_body.append({
+            'data' : [user.id, user.first_name, user.last_name, user.job]
+        })
+
+    rendered = render_template('print_project/print_project.html',
+                               context=show_project,
+                               list_context= {
+                                    'list_header': users_projects_list_header,
+                                    'list_body' : users_list_body
+                                })
+    
+    pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
+    time_data = datetime.now()
+    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+    log = Logger('Printing project', date, hour)
+    db.session.add(log)
+    db.session.commit()
+
+    return render_template('print_project/download.html', 
         project=show_project)
+
+    """ return render_template('print_project/print_project.html',
+        context={
+            'id' : project.id,
+            'description' : project.description,
+            'start_date' : project.start.strftime(f'%m-%d-%Y'),
+            'finish_date' : project.finish.strftime(f'%m-%d-%Y')
+        },   
+        list_context= {
+                'list_header': users_projects_list_header,
+                'list_body' : users_list_body
+            }) """
+
+
 
 @app.route('/projects/print_project', methods=['GET', 'POST'])
 def generate_pdf():
     "Imprimir proyecto"
-    if not has_role('user'):
-        return redirect(url_for('projects_list'))
+    """ if not has_role('user'):
+        return redirect(url_for('projects_list')) """
 
+    users_projects_list_header = [
+        {'label': 'Id', 'class': 'col-1'},
+        {'label': 'First name', 'class': 'col-3'},
+        {'label': 'Last name', 'class': 'col-3'},
+        {'label' : 'job', 'class' : 'col-3'}
+    ]
     project_id = request.args['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
     show_project = {
         'id' : project.id,
         'description' : project.description,
-        'start' : project.start.date(),
-        'finish' : project.finish.date(),
-        'users' : project.users
+        'start_date' : project.start.strftime(f'%m-%d-%Y'),
+        'finish_date' : project.finish.strftime(f'%m-%d-%Y')
     }
-    rendered = render_template('print_project/print_project.html', project=show_project)
+    users_list_body = []
+    for user in project.users:
+        users_list_body.append({
+            'data' : [user.id, user.first_name, user.last_name, user.job]
+        })
+    rendered = render_template('print_project/print_project.html',
+                               context=show_project,
+                               list_context= {
+                                    'list_header': users_projects_list_header,
+                                    'list_body' : users_list_body
+                                })
     pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
     time_data = datetime.now()
     date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')

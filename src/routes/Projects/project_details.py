@@ -4,6 +4,7 @@ from src.routes.auth import has_role
 from src.models import db
 from src.models.Project import Project
 from src.models.User import User
+from src.models.Logger import Logger
 from datetime import datetime
 import pdfkit
 from . import app
@@ -114,6 +115,12 @@ def add_user_to_project():
     project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
     user = db.session.query(User).filter_by(id=request.form['id']).first()
     project.users.append(user)
+    time_data = datetime.now()
+    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+    log = Logger('Adding user', date, hour)
+
+    db.session.add(log)
     db.session.commit()
     return redirect(url_for('manage_project', mode='Add', id=request.form['project_id']))
 
@@ -125,6 +132,12 @@ def remove_user_from_project():
 
     project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
     user = db.session.query(User).filter_by(id=request.form['id']).first()
+    time_data = datetime.now()
+    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+    log = Logger('Deleting user', date, hour)
+
+    db.session.add(log)
     project.users.remove(user)
     db.session.commit()
     return redirect(url_for('manage_project', mode='Remove', id=request.form['project_id']))
