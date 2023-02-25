@@ -2,13 +2,13 @@
 {% block title %}<title>User details</title>{% endblock %}
 {% block body %}
 <div class="container">
-    <h2 class="text-center mb-3 mt-3">User '{{context['username']}}' details</h2>
+    <h1 class="text-center my-4">User '{{context['username']}}' details</h1>
     <div class="row">
       <div class="col d-flex justify-content-center">
-        <h3>First name: {{context['fname']}}</h3>
+        <h4>First name: {{context['fname']}}</h4>
       </div>
       <div class="col d-flex justify-content-center">
-        <h3>Last name: {{context['lname']}}</h3>
+        <h4>Last name: {{context['lname']}}</h4>
       </div>
     </div>
     <div class="mt-3">
