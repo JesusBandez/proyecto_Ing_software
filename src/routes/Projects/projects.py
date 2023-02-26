@@ -244,11 +244,12 @@ def print_project():
 
 
 
-""" @app.route('/projects/print_project', methods=['GET', 'POST'])
+""" 
+@app.route('/projects/print_project', methods=['GET', 'POST'])
 def generate_pdf():
     "Imprimir proyecto"
-    """ if not has_role('user'):
-        return redirect(url_for('projects_list')) """
+     if not has_role('user'):
+        return redirect(url_for('projects_list')) 
 
     users_projects_list_header = [
         {'label': 'Id', 'class': 'col-1'},
