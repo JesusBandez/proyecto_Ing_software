@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}<title>Project Details</title>{% endblock %}
+{% block navbar%}{% endblock%}
 {% block body %}
 <div class="container">
   <div class="row" >
@@ -24,15 +25,8 @@
   </div>
 </div>
 <div class="row container-fluid mt-1 mx-auto">
-  <div class="col">
     <h3>Users in project</h3>  
-  </div>
-  <div class="col">          
-    <div class="container-sm mb-2" style="text-align: right;">            
-      <a href="{{url_for('generate_pdf', id=context['id'])}}" class="btn btn-info">Print project</a>
-      <a href="{{url_for('projects_list')}}" class="btn btn-danger">Go back</a>
-    </div>
-  </div>
   {% include 'generics/generic_list.html' %}
 </div>
 {% endblock %}
+{% block footer%}{% endblock%}

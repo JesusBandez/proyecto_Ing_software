@@ -1,4 +1,4 @@
-from flask import render_template, request, session, redirect, url_for, flash, send_from_directory
+from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
 from src.routes.Projects import project_details
@@ -220,10 +220,15 @@ def print_project():
     hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
     log = Logger('Printing project', date, hour)
     db.session.add(log)
-    db.session.commit()
+    db.session.commit()   
 
-    return render_template('print_project/download.html', 
-        project=show_project)
+    @after_this_request
+    def remove_file(response):
+        import os
+        os.remove(f'./printed/{project_id}.pdf')
+        return response
+
+    return send_file(f'./printed/{project_id}.pdf', as_attachment=True)
 
     """ return render_template('print_project/print_project.html',
         context={
