@@ -244,7 +244,7 @@ def print_project():
 
 
 
-@app.route('/projects/print_project', methods=['GET', 'POST'])
+""" @app.route('/projects/print_project', methods=['GET', 'POST'])
 def generate_pdf():
     "Imprimir proyecto"
     """ if not has_role('user'):
@@ -284,3 +284,4 @@ def generate_pdf():
     db.session.commit()
     return render_template('print_project/download.html', 
         project=show_project)
+ """
