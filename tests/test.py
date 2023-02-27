@@ -74,12 +74,31 @@ class tests(unittest.TestCase):
         with session(user=self.user1_params) as d:
           self.assertEqual(d.title, 'User details' )
 
+    #agregar realmente un proyecto
+    #agregar usuarios a un proyecto
+
     def test_create_project(self):
         print("Creacion de proyecto")
         with session(user=self.user1_params) as d:
           d.get(f'{home_page}/projects/list')
           d.find_element(By.XPATH, r"//a[@id='addButton']").click()
           self.assertEqual(d.title, 'Add New Project')
+          d.find_element('id', 'description').send_keys('Project 1')
+          self.assertEqual(d.title, 'Add New Project' )
+
+    def test_add_user_to_project(self):
+        print("Se agregan usuarios al proyecto")
+        with session(user=self.user1_params) as d:
+          d.get(f'{home_page}/projects/project_details?id=1')
+          d.find_element(By.XPATH, r"//a[@id='addUser']").click()
+          self.assertEqual(d.title, 'Manage project')
+
+    def test_delete_user_in_project(self):
+        print("Se eliminan usuarios del proyecto")
+        with session(user=self.user1_params) as d:
+          d.get(f'{home_page}/projects/project_details?id=1')
+          d.find_element(By.XPATH, r"//a[@id='removeUser']").click()
+          self.assertEqual(d.title, 'Manage project' )
 
     def test_delete_project(self):
         print("Eliminar proyecto de usuario")

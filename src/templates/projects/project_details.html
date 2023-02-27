@@ -33,8 +33,8 @@
       <a class="btn btn-info disabled" disabled>Add Users</a>
       <a class="btn btn-danger disabled" disabled>Remove Users</a>
       {% else %}
-      <a href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-info">Add Users</a>
-      <a href="{{url_for('manage_project', id=context['id'], mode='Remove')}}" class="btn btn-danger">Remove Users</a>
+      <a id="addUser" href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-info">Add Users</a>
+      <a id="removeUser" href="{{url_for('manage_project', id=context['id'], mode='Remove')}}" class="btn btn-danger">Remove Users</a>
       {% endif %}
     </div>
   </div>
