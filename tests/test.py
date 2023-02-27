@@ -1,91 +1,137 @@
-from sqlalchemy import create_engine, text
+import os
+import sys
+sys.path.append(os.path.abspath('..'))
+from sqlalchemy import create_engine
 import unittest
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from time import sleep
+
+from src.models import db
+from main import app
+from manage import init_db
+
 
 engine = create_engine("sqlite:///instance/database.db")
+home_page = "http://127.0.0.1:5000"
+
+class driver():
+  def __init__(self,browser = 'firefox',**kwargs) -> None:
+      self.browser_name = browser
+      self.kwargs       = kwargs
+  def __enter__(self):
+      if (self.browser_name == 'edge'):
+        self.driver = webdriver.Edge(**self.kwargs)
+      if (self.browser_name == 'chrome'):
+        self.driver = webdriver.Chrome(**self.kwargs)
+      if (self.browser_name == 'firefox'):
+        self.driver = webdriver.Firefox(**self.kwargs)
+      return self.driver
+
+  def __exit__(self,*args):
+      self.driver.implicitly_wait(5)
+      self.driver.quit()
+
+class session():
+    def __init__(self,user,**kwargs) -> None:
+      self.user   = user
+      self.kwargs = kwargs
+    def __enter__(self):
+      self.d = driver(**self.kwargs).__enter__()
+      self.d.get(f'{home_page}/login')
+      self.d.find_element('id', 'username').send_keys(self.user['username'])
+      self.d.find_element('id', 'password').send_keys(self.user['password'])        
+      self.d.find_element('name', 'submit').click()
+      return self.d
+
+    def __exit__(self,*args):
+      self.d.__exit__(*args)
 
 unittest.TestLoader.sortTestMethodsUsing = None
-# Estas pruebas son realizadas con el navegador Firefox. Se necesita
+# Estas pruebas son realizadas con el navegador Edge. Se necesita
 # selenium y el driver geckodriver para poder iniciarlas
 
 class tests(unittest.TestCase):
 
-    def test_a_non_existent_user(self):
-        print("Usuario no existente")
-        browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
-        browser.get('http://127.0.0.1:5000/login')
-        browser.find_element('id', 'username').send_keys("NOEXISTO")        
-        browser.find_element('name', 'submit').click()
-        self.assertEqual(browser.title, 'Login' )        
-        browser.quit()
+    def setUp(self):
+        self.user1_params = {
+          'first_name': 'fadmin',
+          'last_name': 'ladmin',
+          'username': '1',
+          'password': '1',
+          'role': 'admin',
+          'job': 'Enginer', 
+        }
 
-    def test_b_bad_password(self):
-        print("Contrasenia equivocada")
-        browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
-        browser.get('http://127.0.0.1:5000/login')
-        browser.find_element('id', 'username').send_keys("1")
-        browser.find_element('id', 'password').send_keys("Contrasenia Inexistente")        
-        browser.find_element('name', 'submit').click()
-        self.assertEqual(browser.title, 'Login' )        
-        browser.quit()
-    
+        with app.app_context():
+          init_db()
+
+    def tearDown(self):
+        with app.app_context():
+          db.drop_all()
+
     def test_c_login(self):
         print("Login y logout correcto")
-        browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
-        browser.get('http://127.0.0.1:5000/login')
-        browser.find_element('id', 'username').send_keys("1")
-        browser.find_element('id', 'password').send_keys("1")        
-        browser.find_element('name', 'submit').click()
-        self.assertEqual(browser.title, 'User\'s list' )        
-        browser.find_element(By.CSS_SELECTOR, 'div.container-fluid>a.btn').click()        
-        browser.quit()
-        
+        with session(user=self.user1_params) as d:
+          self.assertEqual(d.title, 'User details' )
 
-    def test_d_delete_user_admin(self):
+    def test_create_project(self):
+        print("Creacion de proyecto")
+        with session(user=self.user1_params) as d:
+          d.get(f'{home_page}/projects/list')
+          d.find_element(By.XPATH, r"//a[@id='addButton']").click()
+          self.assertEqual(d.title, 'Add New Project')
+
+    def test_delete_project(self):
+        print("Eliminar proyecto de usuario")
+        with session(user=self.user1_params) as d:
+          d.get(f'{home_page}/projects/list')
+          d.find_element(By.XPATH, r"//button[@title='Remove project']")
+          self.assertEqual(d.title, 'Projects list' ) 
+
+    def test_b_bad_password(self):
+        print("Contrasena equivocada")
+        with driver() as d:
+          d.get(f'{home_page}/login')
+          d.find_element('id', 'username').send_keys(self.user1_params['username'])
+          d.find_element('id', 'password').send_keys(f'{self.user1_params["password"]}5')        
+          d.find_element('name', 'submit').click()
+          self.assertEqual(d.title, 'Login' )
+
+    def test_a_non_existent_user(self):
+      print("Usuario no existente")
+      with driver() as d:
+        d.get(f'{home_page}/login')
+        d.find_element('id', 'username').send_keys('nonexistent')
+        d.find_element('id', 'password').send_keys('1')        
+        d.find_element('name', 'submit').click()
+        self.assertEqual(d.title, 'Login' )       
+    
+    def test_d_delete_user(self):
         print("Borrar usuario")
-        browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
-        browser.get('http://127.0.0.1:5000/login')
-        browser.find_element('id', 'username').send_keys("1")
-        browser.find_element('id', 'password').send_keys("1")        
-        browser.find_element('name', 'submit').click()
-        self.assertEqual(browser.title, 'User\'s list' )        
-        browser.find_element(By.XPATH, r'//button[@name="id" and @value="4"]').click()        
-        browser.find_element(By.CSS_SELECTOR, 'div.container-fluid>a.btn').click()
-        browser.quit()
+        with session(user=self.user1_params) as d:
+           d.get(f'{home_page}/users_list')
+           button = d.find_elements(By.NAME,'id')[-1]
+           value = button.get_attribute('value')
+           button.click()
+           new_values = [b.get_attribute('value') for b in d.find_elements(By.NAME,'id')]
+           self.assertNotIn(value,new_values)
 
     def test_e_add_user_admin(self):
-        print("Agregar usuario borrado")
-        browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
-        browser.get('http://127.0.0.1:5000/login')
-        browser.find_element('id', 'username').send_keys("1")
-        browser.find_element('id', 'password').send_keys("1")
-        browser.find_element('name', 'submit').click()
-        self.assertEqual(browser.title, 'User\'s list' )
-        browser.find_element(By.CSS_SELECTOR, 'div.container-sm>a').click()        
-        browser.find_element('id', 'username').send_keys("4")
-        browser.find_element('id', 'password').send_keys("4")
-        browser.find_element('id', 'f_name').send_keys("4")
-        browser.find_element('id', 'l_name').send_keys("4")
-        browser.find_element('id', 'job').send_keys("4")    
-        browser.find_element('name', 'submit').click()
-        self.assertEqual(browser.title, 'User\'s list' )        
-        browser.find_element(By.CSS_SELECTOR, 'div.container-fluid>a.btn').click()
-        browser.quit()
-
-    def test_f_non_admin_user(self):
-        print("Login usuario comun")
-        browser = webdriver.Firefox(executable_path="./drivers/geckodriver")
-        browser.get('http://127.0.0.1:5000/login')
-        browser.find_element('id', 'username').send_keys("4")
-        browser.find_element('id', 'password').send_keys("4")        
-        browser.find_element('name', 'submit').click()
-        self.assertEqual(browser.title, 'User\'s list' )        
-        browser.get("http://127.0.0.1:5000/users_list/new_user")        
-        browser.find_element(By.CSS_SELECTOR, 'div.container-fluid>a.btn').click()
-        browser.quit()
+        print("Agregar usuario")
+        with session(user=self.user1_params) as d:
+          d.get(f'{home_page}/users_list')
+          number_users_before = len(d.find_elements(By.CSS_SELECTOR, 'tr'))
+          self.assertNotEqual(number_users_before,0)
+          d.get(f'{home_page}/users_list/new_user')
+          d.find_element('id', 'username').send_keys("10")
+          d.find_element('id', 'password').send_keys("10")
+          d.find_element('id', 'f_name').send_keys("10")
+          d.find_element('id', 'l_name').send_keys("10")
+          d.find_element('id', 'job').send_keys("10")   
+          d.find_element('name', 'submit').click()
+          d.get(f'{home_page}/users_list')
+          number_users_after = len(d.find_elements(By.CSS_SELECTOR, 'tr'))
+          self.assertLess(number_users_before,number_users_after)
 
 if __name__ == "__main__":
     unittest.main()
