@@ -7,7 +7,7 @@
       {% if not has_role('admin')%}
       <a class="btn btn-info disabled" disabled>Add new project</a>
       {% else %}
-      <a href="{{url_for('new_project')}}" class="btn btn-info">Add new project</a>
+      <a id="addButton" href="{{url_for('new_project')}}" class="btn btn-info">Add new project</a>
       {% endif %}
     </div>
     
