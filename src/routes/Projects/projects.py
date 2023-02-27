@@ -218,10 +218,10 @@ def print_project():
     if (os.name == 'nt') :
         pathToWkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
         config = pdfkit.configuration(wkhtmltopdf=pathToWkhtmltopdf)
-        pdfkit.from_string(rendered, f'./printed/{project_id}.pdf', configuration=config)
+        pdfkit.from_string(rendered, f'.\printed\{project_id}.pdf', configuration=config)
     else :
         pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
-        
+
     time_data = datetime.now()
     date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
     hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
@@ -231,7 +231,11 @@ def print_project():
 
     @after_this_request
     def remove_file(response):
-        os.remove(f'./printed/{project_id}.pdf')
+        if (os.name == 'nt') :
+            # os.remove(f'.\printed\{project_id}.pdf')
+            pass
+        else:
+            os.remove(f'./printed/{project_id}.pdf')
         return response
 
     return send_file(f'./printed/{project_id}.pdf', as_attachment=True)
