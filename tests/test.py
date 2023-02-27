@@ -15,7 +15,7 @@ engine = create_engine("sqlite:///instance/database.db")
 home_page = "http://127.0.0.1:5000"
 
 class driver():
-  def __init__(self,browser = 'firefox',**kwargs) -> None:
+  def __init__(self,browser = 'chrome',**kwargs) -> None:
       self.browser_name = browser
       self.kwargs       = kwargs
   def __enter__(self):
