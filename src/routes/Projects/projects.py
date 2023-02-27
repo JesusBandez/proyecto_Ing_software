@@ -8,6 +8,7 @@ from src.models.User import User
 from src.models.Logger import Logger
 from datetime import datetime
 import pdfkit
+import os
 from . import app
 
 
@@ -214,7 +215,13 @@ def print_project():
                                     'list_body' : users_list_body
                                 })
     
-    pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
+    if (os.name == 'nt') :
+        pathToWkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+        config = pdfkit.configuration(wkhtmltopdf=pathToWkhtmltopdf)
+        pdfkit.from_string(rendered, f'./printed/{project_id}.pdf', configuration=config)
+    else :
+        pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
+        
     time_data = datetime.now()
     date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
     hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
@@ -224,7 +231,6 @@ def print_project():
 
     @after_this_request
     def remove_file(response):
-        import os
         os.remove(f'./printed/{project_id}.pdf')
         return response
 
