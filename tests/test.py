@@ -74,9 +74,6 @@ class tests(unittest.TestCase):
         with session(user=self.user1_params) as d:
           self.assertEqual(d.title, 'User details' )
 
-    #agregar realmente un proyecto
-    #agregar usuarios a un proyecto
-
     def test_create_project(self):
         print("Creacion de proyecto")
         with session(user=self.user1_params) as d:
