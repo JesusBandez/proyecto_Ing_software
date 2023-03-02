@@ -6,7 +6,6 @@ from src.models.Project import Project
 from src.models.User import User
 from src.models.Logger import Logger
 from datetime import datetime
-import pdfkit
 from . import app
 
 
@@ -25,7 +24,7 @@ def project_details():
 
     project_id = request.args['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
-    
+
     users_list_body = []
     
     for user in project.users:    
@@ -39,13 +38,20 @@ def project_details():
             'actions' : [see_user]
         })
 
+    manager = db.session.query(User).filter_by(id=project.manager_id).first()
+    if manager:
+        project_manager = ' '.join([manager.first_name, manager.last_name])
+    else:
+        project_manager = 'None'
+    
     return render_template('projects/project_details.html',
         has_role=has_role,
         context={
             'id' : project.id,
             'description' : project.description,
             'start_date' : project.start.strftime(f'%m-%d-%Y'),
-            'finish_date' : project.finish.strftime(f'%m-%d-%Y')
+            'finish_date' : project.finish.strftime(f'%m-%d-%Y'),
+            'manager': project_manager,
         },   
         list_context= {
                 'list_header': users_projects_list_header,
@@ -68,7 +74,10 @@ def manage_project():
     mode = request.args['mode']
     project_id = request.args['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
-    if mode == 'Add':
+
+    if mode == 'Edit_manager':
+        users = db.session.query(User).all()
+    elif mode == 'Add':
         all_users = db.session.query(User).all()
         users = [user for user in all_users if user not in project.users]
     else:
@@ -77,7 +86,13 @@ def manage_project():
     users_list_body = []    
     for user in users:
         input_hidden = [{'name' : 'project_id', 'data' : project_id}]
-        if mode == 'Add':
+        if mode == 'Edit_manager':
+            button = generate_action(user.id, 'edit_manager', 'post',
+                button_class='btn btn-info w-100',
+                text_class="fa-solid fa-check",
+                title="Select as manager", hiddens=input_hidden)
+
+        elif mode == 'Add':
             button = generate_action(user.id, 'add_user_to_project', 'post',
                 button_class='btn btn-info w-100',
                 text_class="fa-solid fa-plus",
@@ -126,7 +141,7 @@ def add_user_to_project():
 
 @app.route('/projects/manage_project_users/remove',  methods=["POST"])
 def remove_user_from_project():
-    "Elimina un usuairo del proyecto"
+    "Elimina un usuario del proyecto"
     if not has_role('admin'):
         return redirect(url_for('projects_list'))
 
@@ -141,3 +156,14 @@ def remove_user_from_project():
     project.users.remove(user)
     db.session.commit()
     return redirect(url_for('manage_project', mode='Remove', id=request.form['project_id']))
+
+@app.route('/projects/manage_project_users/select_manager',  methods=["POST"])
+def edit_manager():
+    "Selecciona el gerente para el proyecto"
+    if not has_role('admin'):
+        return redirect(url_for('projects_list'))
+    project = db.session.query(Project).filter_by(id=request.form['project_id']).first()    
+    project.manager_id = request.form['id']
+
+    db.session.commit()
+    return redirect(url_for('project_details', id=request.form['project_id']))
