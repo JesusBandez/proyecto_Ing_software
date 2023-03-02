@@ -42,7 +42,7 @@ def project_details():
     if manager:
         project_manager = ' '.join([manager.first_name, manager.last_name])
     else:
-        project_manager = 'None'
+        project_manager = None
     
     return render_template('projects/project_details.html',
         has_role=has_role,
@@ -167,3 +167,14 @@ def edit_manager():
 
     db.session.commit()
     return redirect(url_for('project_details', id=request.form['project_id']))
+
+@app.route('/projects/manage_project_users/remove_manager')
+def remove_manager():
+    "Elimina el gerente actual para el proyecto"
+    if not has_role('admin'):
+        return redirect(url_for('projects_list'))
+    project = db.session.query(Project).filter_by(id=request.args['id']).first()    
+    project.manager_id = None
+
+    db.session.commit()
+    return redirect(url_for('project_details', id=request.args['id']))

@@ -2,50 +2,63 @@
 {% block title %}<title>Project Details</title>{% endblock %}
 {% block body %}
 <div class="container">
-  <div class="row" >
+  <div class="row">
     <h1 class="text-center mb-3 mt-3">Project '{{context['id']}}' details</h1>
-
-      <div class="row">
-        <div class="col">
-          <h3>Description</h3>
+    <div class="row">
+      <div class="col">
+        <h3>Description</h3>
+      </div>
+    </div>
+    <p>{{context['description']}}</p>
+    <div class="row">
+      <div class="col">
+        <h4>Start date</h4>
+        <h6>{{context['start_date']}}</h6>
+      </div>
+      <div class="col">
+        <h4>Finish date</h4>
+        <h6>{{context['finish_date']}}</h6>
+      </div>
+    </div>
+    <div class="row">
+      <div class="d-flex flex-row" style="margin: 0; padding: 0;">
+        <div class="p-2">
+          <h4>Managed by</h4>
+        </div>
+        <div class="p-2">
+          {% if context['manager']%}
+          <a id="editManager" class="btn btn-info"
+            href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}"> Edit</a>
+          <a id="removeManager" class="btn btn-danger" href="{{url_for('remove_manager', id=context['id'])}}">
+            Remove</a>
+          {% else %}
+          <a id="editManager" class="btn btn-info"
+            href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}"> Select</a>
+          {% endif%}
         </div>
       </div>
-      <p>{{context['description']}}</p>
-      <div class="row">
-        <div class="col">
-          <h4>Start date</h4>
-          <h6>{{context['start_date']}}</h6>
-        </div>
-        <div class="col">
-          <h4>Finish date</h4>
-          <h6>{{context['finish_date']}}</h6>
-        </div>
-      </div>  
-      <div class="row">
-        <div class="col-sm">
-          <h4>Managed by</h4>
-          <h6>{{context['manager']}}</h6>
-        </div>
-        <div class="col-sm-2">
-          <div style="text-align: right;">
-            <a id="editManager" class="btn btn-danger" href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}"> Edit manager </a>
-          </div>
-        </div>
-      </div>      
+      {% if context['manager']%}
+      <h6>{{context['manager']}}</h6>
+      {% else %}
+      <h6>Without manager assigned</h6>
+      {% endif%}
+    </div>
   </div>
 </div>
 <div class="row container-fluid mt-1 mx-auto">
   <div class="col">
-    <h3>Users in project</h3>  
+    <h3>Users in project</h3>
   </div>
-  <div class="col">          
-    <div class="container-sm mb-2" style="text-align: right;">            
+  <div class="col">
+    <div class="container-sm mb-2" style="text-align: right;">
       {% if not has_role('admin')%}
       <a class="btn btn-info disabled" disabled>Add Users</a>
       <a class="btn btn-danger disabled" disabled>Remove Users</a>
       {% else %}
-      <a id="addUser" href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-info">Add Users</a>
-      <a id="removeUser" href="{{url_for('manage_project', id=context['id'], mode='Remove')}}" class="btn btn-danger">Remove Users</a>
+      <a id="addUser" href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-info">Add
+        Users</a>
+      <a id="removeUser" href="{{url_for('manage_project', id=context['id'], mode='Remove')}}"
+        class="btn btn-danger">Remove Users</a>
       {% endif %}
     </div>
   </div>
