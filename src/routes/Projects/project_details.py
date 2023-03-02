@@ -1,6 +1,6 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from src.lib.generate_action import generate_action
-from src.routes.auth import has_role
+from src.routes.auth import has_role, is_project_manager
 from src.models import db
 from src.models.Project import Project
 from src.models.User import User
@@ -25,6 +25,7 @@ def project_details():
     project_id = request.args['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
 
+    has_permissions = has_role('admin') or is_project_manager(project)
     users_list_body = []
     
     for user in project.users:    
@@ -44,14 +45,14 @@ def project_details():
     else:
         project_manager = None
     
-    return render_template('projects/project_details.html',
-        has_role=has_role,
+    return render_template('projects/project_details.html',        
         context={
             'id' : project.id,
             'description' : project.description,
             'start_date' : project.start.strftime(f'%m-%d-%Y'),
             'finish_date' : project.finish.strftime(f'%m-%d-%Y'),
             'manager': project_manager,
+            'has_permissions' : has_permissions,
         },   
         list_context= {
                 'list_header': users_projects_list_header,
@@ -62,8 +63,9 @@ def project_details():
 @app.route('/projects/manage_project_users')
 def manage_project():
     """Agregar o eliminar usuarios del proyecto """
-    if not has_role('admin'):
-        return redirect(url_for('projects_list'))
+    project = db.session.query(Project).filter_by(id=request.args['id']).first()
+    if not has_role('admin') and not is_project_manager(project):
+        return redirect(url_for('error'))
 
     users_projects_list_header = [
         {'label': 'Id', 'class': 'col-1'},
@@ -111,7 +113,6 @@ def manage_project():
         })
 
     return render_template('projects/manage_project_users.html',
-        has_role=has_role,
         context={
             'id' : project.id,
             'mode' : mode,
@@ -124,10 +125,11 @@ def manage_project():
 @app.route('/projects/manage_project_users/add', methods=["POST"])
 def add_user_to_project():
     "Agrega un usuario al proyecto"
-    if not has_role('admin'):
-        return redirect(url_for('projects_list'))
-        
+
     project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
+    if not has_role('admin') and not is_project_manager(project):
+        return redirect(url_for('error'))       
+    
     user = db.session.query(User).filter_by(id=request.form['id']).first()
     project.users.append(user)
     time_data = datetime.now()
@@ -142,10 +144,11 @@ def add_user_to_project():
 @app.route('/projects/manage_project_users/remove',  methods=["POST"])
 def remove_user_from_project():
     "Elimina un usuario del proyecto"
-    if not has_role('admin'):
-        return redirect(url_for('projects_list'))
 
     project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
+    if not has_role('admin') and not is_project_manager(project):
+        return redirect(url_for('error'))
+
     user = db.session.query(User).filter_by(id=request.form['id']).first()
     time_data = datetime.now()
     date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
@@ -160,20 +163,25 @@ def remove_user_from_project():
 @app.route('/projects/manage_project_users/select_manager',  methods=["POST"])
 def edit_manager():
     "Selecciona el gerente para el proyecto"
-    if not has_role('admin'):
-        return redirect(url_for('projects_list'))
-    project = db.session.query(Project).filter_by(id=request.form['project_id']).first()    
+
+    project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
+    if not has_role('admin') and not is_project_manager(project):
+        return redirect(url_for('error'))
+
     project.manager_id = request.form['id']
 
     db.session.commit()
     return redirect(url_for('project_details', id=request.form['project_id']))
+    
 
 @app.route('/projects/manage_project_users/remove_manager')
 def remove_manager():
     "Elimina el gerente actual para el proyecto"
-    if not has_role('admin'):
-        return redirect(url_for('projects_list'))
-    project = db.session.query(Project).filter_by(id=request.args['id']).first()    
+
+    project = db.session.query(Project).filter_by(id=request.args['id']).first()
+    if not has_role('admin') and not is_project_manager(project):
+        return redirect(url_for('error'))
+
     project.manager_id = None
 
     db.session.commit()

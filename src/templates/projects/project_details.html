@@ -25,15 +25,16 @@
         <div class="p-2">
           <h4>Managed by</h4>
         </div>
+        {% set x = ''%}
         <div class="p-2">
           {% if context['manager']%}
-          <a id="editManager" class="btn btn-info"
-            href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}"> Edit</a>
-          <a id="removeManager" class="btn btn-danger" href="{{url_for('remove_manager', id=context['id'])}}">
-            Remove</a>
+          <a id="editManager" class="btn btn-info {{ 'disabled' if not context['has_permissions'] else '' }}"
+            href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}">Edit</a>
+          <a id="removeManager" class="btn btn-danger {{ 'disabled' if not context['has_permissions'] else '' }}" 
+            href="{{url_for('remove_manager', id=context['id'])}}">Remove</a>
           {% else %}
-          <a id="editManager" class="btn btn-info"
-            href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}"> Select</a>
+          <a id="editManager" class="btn btn-info {{ 'disabled' if not context['has_permissions'] else '' }}"
+            href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}">Select</a>
           {% endif%}
         </div>
       </div>
@@ -51,7 +52,7 @@
   </div>
   <div class="col">
     <div class="container-sm mb-2" style="text-align: right;">
-      {% if not has_role('admin')%}
+      {% if not context['has_permissions']%}
       <a class="btn btn-info disabled" disabled>Add Users</a>
       <a class="btn btn-danger disabled" disabled>Remove Users</a>
       {% else %}

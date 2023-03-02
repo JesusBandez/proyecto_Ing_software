@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, render_template, url_for
 from src.config import DevConfig
 from src.models import db
 
@@ -17,3 +17,7 @@ if __name__== '__main__':
 @app.route('/')
 def root():        
     return redirect(url_for('login'))
+
+@app.route('/error')
+def error():
+    return render_template('generics/generic_error.html')

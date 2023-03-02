@@ -37,6 +37,7 @@ def login():
             db.session.add(log)
             db.session.commit()
             session['user'] = {
+                'id' : logged_user.id,
                 'username' : username,
                 'role' : logged_user.role
             }
