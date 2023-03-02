@@ -77,9 +77,7 @@ def manage_project():
     project_id = request.args['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
 
-    if mode == 'Edit_manager':
-        users = db.session.query(User).all()
-    elif mode == 'Add':
+    if mode == 'Add':
         all_users = db.session.query(User).all()
         users = [user for user in all_users if user not in project.users]
     else:
