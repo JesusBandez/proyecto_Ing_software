@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash
 from src.models.Associations import user_project
+
 from . import db
 
 class User(db.Model):
@@ -11,6 +12,7 @@ class User(db.Model):
     role = db.Column(db.String(5)) 
     job = db.Column(db.String(255)) 
     status = db.Column(db.Boolean, default=False)
+    managed_projects = db.relationship('Project', backref='manager', lazy=True)
 
     def __init__(self, first_name, last_name, username, password, role, job, status=False):
         self.first_name = first_name
