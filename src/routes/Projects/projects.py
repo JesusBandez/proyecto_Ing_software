@@ -6,11 +6,23 @@ from src.models import db
 from src.models.Project import Project
 from src.models.User import User
 from src.models.Logger import Logger
+
+from src.models.Client import Client
+from src.models.Car import Car
+
 from datetime import datetime
 import pdfkit
 import os
 from . import app
 
+#PRUEBA crear cliente y crear carro
+'''log = Client('14254785', "pedro", "perez","17/11/1978","pedro@mail.com","04142547856","Una direccion")
+db.session.add(log)
+db.session.commit()
+
+car = Car(1237483,"mazda","miata",2006,138844,"verde","no enciende",log.ci)
+db.session.add(car)
+db.session.commit()'''
 
 # Proyectos del sistema
 @app.route('/projects/list', methods=('GET', 'POST'))
