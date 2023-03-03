@@ -7,6 +7,7 @@ Comandos:
 		pip install -r requirements.txt
 		flask --app manage shell
 		init_db()
-		flask --app main run
+		flask --app main --debug run 
+
 
 

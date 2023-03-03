@@ -1,68 +1,86 @@
 {% extends "base.html" %}
 {% block title %}<title>Project Details</title>{% endblock %}
 {% block body %}
+
+<div class="card border-light mb-3">
+  <div class="card-header">
+    <h3 class="text-center my-4">Project '{{context['id']}}' details</h3>
+  </div>
+  <div class="card-body" style="background-color: #36494E;">
+  </div>
+</div>
+
 <div class="container">
   <div class="row">
-    <h1 class="text-center mb-3 mt-3">Project '{{context['id']}}' details</h1>
-    <div class="row">
-      <div class="col">
-        <h3>Description</h3>
-      </div>
-    </div>
-    <p>{{context['description']}}</p>
-    <div class="row">
-      <div class="col">
-        <h4>Start date</h4>
-        <h6>{{context['start_date']}}</h6>
-      </div>
-      <div class="col">
-        <h4>Finish date</h4>
-        <h6>{{context['finish_date']}}</h6>
-      </div>
-    </div>
-    <div class="row">
-      <div class="d-flex flex-row" style="margin: 0; padding: 0;">
-        <div class="p-2">
-          <h4>Managed by</h4>
-        </div>
-        {% set x = ''%}
-        <div class="p-2">
-          {% if context['manager']%}
-          <a id="editManager" class="btn btn-info {{ 'disabled' if not context['has_permissions'] else '' }}"
-            href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}">Edit</a>
-          <a id="removeManager" class="btn btn-danger {{ 'disabled' if not context['has_permissions'] else '' }}" 
-            href="{{url_for('remove_manager', id=context['id'])}}">Remove</a>
-          {% else %}
-          <a id="editManager" class="btn btn-info {{ 'disabled' if not context['has_permissions'] else '' }}"
-            href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}">Select</a>
-          {% endif%}
-        </div>
-      </div>
-      {% if context['manager']%}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Description</th>
+          <td>{{context['description']}}</td>
+        </tr>
+        <tr>
+          <th>Start Date</th>
+          <td>{{context['start_date']}}</td>
+        </tr>
+        <tr>
+          <th>Finish Date</th>
+          <td>{{context['finish_date']}}</td>
+        </tr>
+        <tr>
+          <th>Managed by:</th>
+          <td>
+            {% set x = ''%}
+            <div class="p-2">
+              {% if context['manager']%}
+              <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
+                href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;">Edit</a>
+              <a id="removeManager" class="btn btn-danger {{ 'disabled' if not context['has_permissions'] else '' }}" 
+                href="{{url_for('remove_manager', id=context['id'])}}" style="background-color: #2A4494; color:#f0f0f0;">Remove</a>
+              {% else %}
+              <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
+                href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;">Select</a>
+              {% endif%}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>Manager:</th>
+          <td>{% if context['manager']%}
       <h6>{{context['manager']}}</h6>
       {% else %}
       <h6>Without manager assigned</h6>
-      {% endif%}
-    </div>
+      {% endif%}</td>
+        </tr>
+
+      </tbody>
+    </table>
   </div>
 </div>
-<div class="row container-fluid mt-1 mx-auto">
-  <div class="col">
-    <h3>Users in project</h3>
-  </div>
+
+<div class="row container-fluid mt-1 mx-auto" style="display: flex;">
   <div class="col">
     <div class="container-sm mb-2" style="text-align: right;">
       {% if not context['has_permissions']%}
-      <a class="btn btn-info disabled" disabled>Add Users</a>
-      <a class="btn btn-danger disabled" disabled>Remove Users</a>
+      <a class="btn btn-light disabled" disabled style="background-color: #2A4494; color:#f0f0f0;"
+      title="Add Users"><i class="fa-solid fa-plus"></i></a>
+      <a class="btn btn-danger disabled" disabled title ="Remove Users"><i class="fa-solid fa-minus"></i></a>
       {% else %}
-      <a id="addUser" href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-info">Add
-        Users</a>
+      <a id="addUser" href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;" title="Add Users"><i class="fa-solid fa-plus"></i></a>
       <a id="removeUser" href="{{url_for('manage_project', id=context['id'], mode='Remove')}}"
-        class="btn btn-danger">Remove Users</a>
+        class="btn btn-danger"title ="Remove Users"><i class="fa-solid fa-minus"></i></a>
       {% endif %}
     </div>
   </div>
-  {% include 'generics/generic_list.html' %}
+
+  
 </div>
+{% include 'generics/generic_list.html' %}
 {% endblock %}

@@ -21,12 +21,12 @@ def logger():
     events_list_body = []
     for event in EVENTS:
         remove = generate_action(event.id, 'remove_event', 'post',
-            button_class='btn btn-sm btn-danger w-100',
+            button_class='btn btn-sm btn-outline-danger w-100',
             title="Remove event",
             text_class='fa-solid fa-trash')
 
         foo = generate_action(event.id,
-            'foo_event', button_class='btn btn-sm btn-info w-100',
+            'foo_event', button_class='btn btn-sm btn-outline-primary w-100',
             title="Foo event",
             text_class='fa-solid fa-table-list')
         

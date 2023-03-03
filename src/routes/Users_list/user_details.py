@@ -30,7 +30,7 @@ def user_details():
         for u in p.users:
             
             see_project = generate_action(p.id, 'project_details', 
-                button_class='btn btn-info w-100',
+                button_class='btn btn-outline-primary',
                 text_class="fa-solid fa-eye",
                 title="View project details")
             if (u.id == user.id):

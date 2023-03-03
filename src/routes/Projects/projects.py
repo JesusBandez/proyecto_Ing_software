@@ -42,7 +42,7 @@ def projects_list():
     for project in PROJECTS:
     
         generate = generate_action(project.id,
-            'generate_project', button_class='btn btn-sm btn-info w-100',
+            'generate_project', button_class='btn btn-sm btn-outline-primary',
             text_class='fa-regular fa-rectangle-list',
             title="Generate project",
             disabled=not project.available)
@@ -50,14 +50,14 @@ def projects_list():
         
         edit = generate_action(project.id,
             'edit_project', method='post', 
-            button_class='btn btn-sm btn-info w-100',
+            button_class='btn btn-sm btn-outline-success',
             title="Edit project",
             text_class='fa-solid fa-pencil',
             disabled= not project.available or not has_role('admin'))
 
         
         remove = generate_action(project.id, 'remove_project', 'post',
-            button_class='btn btn-sm btn-danger w-100',
+            button_class='btn btn-sm btn-outline-danger',
             title="Remove project",
             text_class='fa-solid fa-trash',
             disabled= not has_role('admin'))
@@ -67,7 +67,7 @@ def projects_list():
             'toggle_project_availability', method='post',
             text_class= 'fa-solid fa-ban' if project.available else 'fa-solid fa-play',
             title="Disable project" if project.available else "Enable project",
-            button_class='btn btn-sm btn-info w-100', 
+            button_class='btn btn-sm btn-outline-primary', 
             disabled = not has_role('admin'))
 
         # semi-ready
@@ -75,7 +75,7 @@ def projects_list():
             'print_project', 'post',
             text_class='fa-solid fa-print',
             title="Print project",
-            button_class='btn btn-sm btn-info w-100', 
+            button_class='btn btn-sm btn-outline-primary', 
             disabled = not has_role('user'))
         
         

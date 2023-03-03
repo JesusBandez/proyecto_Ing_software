@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}<title>Login</title>{% endblock %}
 {% block body %}
-<div style="max-width: 600px; margin:auto; margin-top:60px; border: 1px solid black; border-radius: 10px">
+<div style="max-width: 600px; margin:auto; margin-top:60px; border-radius: 10px;">
     <div id="login" style="margin: 15px 0px">        
         <div class="container">
             <div id="login-row" class="row justify-content-center align-items-center">
@@ -18,7 +18,8 @@
                                 <input type="password" name="password" id="password" class="form-control">
                             </div>
                             <div class="form-group">                                
-                                <input type="submit" name="submit" class="btn btn-info btn-md mt-2" value="submit">
+                                <input type="submit" name="submit" class="btn btn-light btn-md mt-4" 
+                                style="background-color: #2A4494; color:#f0f0f0;" value="Enter">
                             </div> 
                             {% with messages = get_flashed_messages() %}
                             {% if messages %}                                

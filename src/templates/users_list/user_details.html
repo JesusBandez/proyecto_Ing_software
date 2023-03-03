@@ -2,7 +2,11 @@
 {% block title %}<title>User details</title>{% endblock %}
 {% block body %}
 <div class="container">
+    <div class="card border-light mb-3" style="margin-top: 20px;">
+  <div class="card-header">
     <h1 class="text-center my-4">User '{{context['username']}}' details</h1>
+  </div>
+  <div class="card-body" style="background-color: #A9CEF4;">
     <div class="row">
       <div class="col d-flex justify-content-center">
         <h4>First name: {{context['fname']}}</h4>
@@ -14,6 +18,10 @@
         <h4>Role: {{context['job']}}</h4>
       </div>
     </div>
+  </div>
+  <div class="card-footer" style="background-color: #36494E;"></div>
+</div>    
+    
     <div class="mt-3">
       <div class="d-flex justify-content-center">
         <h2>Project's list</h2>

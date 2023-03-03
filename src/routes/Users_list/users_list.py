@@ -28,12 +28,12 @@ def users_lists():
         # permisos
 
         delete = generate_action(user.id, 'delete_user', 'post', 
-            button_class='btn btn-danger w-100', text_class='fa fa-trash',
+            button_class='btn btn-outline-danger', text_class='fa fa-trash',
             title="Delete user",
             disabled=not has_role('admin'))           
         
         see_projects = generate_action(user.id, 'user_details', 'get',
-                button_class='btn btn-info w-100', text_class="fa-solid fa-eye",
+                button_class='btn btn-outline-primary', text_class="fa-solid fa-eye",
                 title="View the projects associated with the user") 
 
         users_list_body.append({

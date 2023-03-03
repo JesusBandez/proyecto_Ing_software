@@ -2,14 +2,41 @@
 {% block title %}<title>Projects list</title>{% endblock %}
 {% block body %}
 <div class="fluid-container">
-    <h1 class="text-center mb-3 mt-3">Project's List</h1>
-    <div class="mb-2 mx-2" style="text-align: right;">
-      {% if not has_role('admin')%}
-      <a class="btn btn-info disabled" disabled>Add new project</a>
-      {% else %}
-      <a id="addButton" href="{{url_for('new_project')}}" class="btn btn-info">Add new project</a>
-      {% endif %}
+
+  <div class="card border-light mb-3">
+  <div class="card-header">
+    <h1 class="text-center my-4">Project's List</h1>
+  </div>
+  <div class="card-body" style="background-color: #36494E;">
+  </div>
+</div>
+
+    <div style="text-align: right;">
+    <div class="container-fluid" style="width:50%;display: flex;">
+        <form class="input-group mb-3">
+          <input
+            type="search"
+            class="form-control rounded"
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="search-addon"
+          />
+        </form>
+      <div>
+      <a id="addButton" href="{{url_for('new_project')}}" class="btn btn-light" 
+      style="background-color: #2A4494; color:#f0f0f0;margin-left: 10px;"><i class="fas fa-search"></i></a>
+      </div>
+
+      <div class="mb-2 mx-2" style="text-align: right;">
+        {% if not has_role('admin')%}
+        <a class="btn btn-secondary disabled" disabled><i class="fa-solid fa-plus"></i></a>
+        {% else %}
+        <a id="addButton" href="{{url_for('new_project')}}" class="btn btn-light" 
+        style="background-color: #2A4494; color:#f0f0f0;"><i class="fa-sharp fa-solid fa-plus"></i></a>
+        {% endif %}
+      </div>
     </div>
+  </div>
     
     {% include  'generics/generic_list.html' %}  
   </div>

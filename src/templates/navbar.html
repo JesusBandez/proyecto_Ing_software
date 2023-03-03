@@ -1,11 +1,39 @@
-<nav class="navbar navbar-expand-lg bg-info" >  
+<div class="offcanvas offcanvas-start w-25" tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false" 
+style="background-color: #122C34;color:white;">
+    <div class="offcanvas-header" >
+        <h2 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h2>
+        <button type="button" class="btn-close text-reset" style="border-color: white;" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body px-0">
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
+            <li class="nav-item">
+              <a class="nav-link text-truncate link-light" href="{{url_for('users_lists')}}" style="font-size: 20px;">
+                <i class="fa-solid fa-user"></i> User's List</a>
+            </li>
+            <li>
+              <a class="nav-link text-truncate link-light" href="{{url_for('projects_list')}}" style="font-size: 20px;">
+                <i class="fa-solid fa-list-check"></i> Projects</a>
+            </li>
+            <li>
+              <a class="nav-link text-truncate link-light" href="{{url_for('logger')}}" style="font-size: 20px;">
+                <i class="fa-solid fa-calendar-days"></i>  Event Logger</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #7EA0B7;" >  
   <div class="container-fluid" style="width: 95%;">
-    
+
+    <button class="btn float-end btn-light" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
     <div class="dropdown">
-      <button class="btn dropdown-toggle border-dark" type="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn dropdown-toggle btn-light" style="background-color: transparent;border-color: transparent;color:#f0f0f0;" type="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
         Menu
       </button>
-      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
         <li><a class="dropdown-item" href="{{url_for('users_lists')}}">User's List</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{{url_for('projects_list')}}">Projects</a></li>
@@ -14,11 +42,12 @@
       </ul>
     </div>
     {% if session.get('user') %}
-    <a class="navbar-brand">Bienvenido {{session['user'].username}}</a>
-    <a class="btn btn-danger" style="background-color: #c41212;" 
+    <a class="navbar-brand" style="color:#f0f0f0;">Bienvenido {{session['user'].username}}</a>
+    <a class="btn btn-black" style="background-color: #2A4494;color:#f0f0f0;" 
       href="{{url_for('logout')}}">Logout</a>      
     {% else %}
-    <a class="btn border-dark navbar-brand" href="{{url_for('login')}}">Login</a>
+    <a class="btn btn-black" style="background-color: #2A4494;color:#f0f0f0;"
+    href="{{url_for('login')}}">Login</a>
     {% endif %}
 
   </div>

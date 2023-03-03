@@ -30,7 +30,7 @@ def project_details():
     
     for user in project.users:    
         see_user = generate_action(user.id, 'user_details', 
-            button_class='btn btn-info w-100',
+            button_class='btn btn-outline-primary',
             text_class="fa-solid fa-eye",
             title="View user details")
 
@@ -88,19 +88,19 @@ def manage_project():
         input_hidden = [{'name' : 'project_id', 'data' : project_id}]
         if mode == 'Edit_manager':
             button = generate_action(user.id, 'edit_manager', 'post',
-                button_class='btn btn-info w-100',
+                button_class='btn btn-outline-primary',
                 text_class="fa-solid fa-check",
                 title="Select as manager", hiddens=input_hidden)
 
         elif mode == 'Add':
             button = generate_action(user.id, 'add_user_to_project', 'post',
-                button_class='btn btn-info w-100',
+                button_class='btn btn-outline-primary',
                 text_class="fa-solid fa-plus",
                 title="Add user", hiddens=input_hidden)
 
         else:
             button = generate_action(user.id, 'remove_user_from_project', 'post', 
-                button_class='btn btn-danger w-100',
+                button_class='btn btn-outline-danger',
                 text_class="fa fa-trash",
                 title="Remove user", hiddens=input_hidden)
 
