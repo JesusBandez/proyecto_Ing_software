@@ -15,7 +15,7 @@
                             {% endif %}
                             <div class="form-group">
                                 {% if project_to_edit%}
-                                <input id="id_project" name="id_project" type="hidden" value="{{project_to_edit['id']}}">
+                                <input id="id_project" name="id_project" type="text" value="{{project_to_edit['id']}}">
                                 {% endif %}
                                 <label for="description">Project description</label><br>
                                 <textarea type="text" name="description" id="description" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>

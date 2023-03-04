@@ -1,16 +1,18 @@
 from . import db
 
 class Car(db.Model):
-    serial_car = db.Column(db.Integer, primary_key=True)
+    license_plate = db.Column(db.String(10), primary_key=True)
     brand = db.Column(db.String(100))
     model = db.Column(db.String(100)) 
     year = db.Column(db.Integer)
-    serial_engine = db.Column(db.Integer)
+    serial_car = db.Column(db.String(250))
+    serial_engine = db.Column(db.String(250))
     color = db.Column(db.String(100))
     issue = db.Column(db.String(200))
-    owner = db.Column(db.Integer, db.ForeignKey('client.ci'), nullable=False)
+    owner = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
 
-    def __init__(self, serial_car, brand, model, year, serial_engine, color, issue,owner):
+    def __init__(self, license_plate, brand, model, year, serial_car, serial_engine, color, issue, owner):
+        self.license_plate = license_plate
         self.serial_engine = serial_engine
         self.serial_car = serial_car
         self.brand = brand

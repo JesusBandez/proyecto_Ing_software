@@ -8,6 +8,7 @@ from src.routes.Login import login
 from src.routes.Users_list import users_list
 from src.routes.Projects import projects
 from src.routes.Logger import logger
+from src.routes.Clients import clients
 
 
 db.init_app(app)
