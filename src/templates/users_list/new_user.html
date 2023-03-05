@@ -1,43 +1,44 @@
 {% extends "base.html" %}
 {% block title %}<title>Register New User</title>{% endblock %}
 {% block body %}
-<div style="max-width: 600px; margin:auto; margin-top:60px; border: 1px solid black; border-radius: 10px">
+<div style="max-width: 800px; margin:auto; margin-top:60px; border-radius: 10px">
     <div id="register" style="margin: 15px 0px">        
-        <div class="container">
+        <div class="container pt-3 b-1 bg-light border rounded">
             <div id="register-row" class="row justify-content-center align-items-center">
                 <div id="register-column" class="col-md-6">
                     <div id="register-box" class="col-md-12">
                         <form id="register-form" class="form" action="{{url_for('add_new_user')}}" method="post">
                             <h3 class="text-center">Register New User</h3>
                             <div class="form-group">
-                                <label for="username">Username</label><br>
+                                <label style="font-weight:bold;" for="username">Username: </label><br>
                                 <input type="text" name="username" id="username" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="f_name">First Name</label><br>
+                                <label style="font-weight:bold;" for="f_name">First Name: </label><br>
                                 <input type="text" name="f_name" id="f_name" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="l_name">Last Name</label><br>
+                                <label style="font-weight:bold;" for="l_name">Last Name: </label><br>
                                 <input type="text" name="l_name" id="l_name" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="job">Job</label><br>
+                                <label style="font-weight:bold;" for="job">Job: </label><br>
                                 <input type="text" name="job" id="job" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="password">Password</label><br>
+                                <label style="font-weight:bold;" for="password">Password: </label><br>
                                 <input type="password" name="password" id="password" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="permissions">Permissions</label><br>
-                                    <select name="permissions" required>
+                                <label style="font-weight:bold;" for="permissions">Permissions: </label><br>
+                                    <select class="form-select" name="permissions" required>
                                         <option value="admin">admin</option>
                                         <option value="user">user</option>                                        
                                     </select>
                             </div>
                             <div class="form-group">                                
-                                <input type="submit" name="submit" class="btn btn-info btn-md mt-4" value="submit">
+                                <input type="submit" name="submit" class="btn btn-info btn-md mt-4" 
+                                style="background-color: #2A4494; color:#f0f0f0;" value="Enter">
                                 <a class="btn btn-danger btn-md mt-4" href="{{url_for('users_lists')}}"> Cancel </a>
                             </div>                          
                             {% with messages = get_flashed_messages() %}
@@ -54,4 +55,6 @@
         </div>
     </div>
 </div>
+<div style="height: 100px;"></div>
+
 {% endblock %}

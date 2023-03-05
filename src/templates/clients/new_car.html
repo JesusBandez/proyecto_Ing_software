@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}<title>Add New Car</title>{% endblock %}
 {% block body %}
-<div style="max-width: 600px; margin:auto; margin-top:60px; border-radius: 10px">
+<div style="max-width: 800px; margin:auto; margin-top:60px; border-radius: 10px">
     <div id="register" style="margin: 15px 0px">        
-        <div class="container">
+        <div class="container pt-3 b-1 bg-light border rounded">
             <div id="register-row" class="row justify-content-center align-items-center" >
                 <div id="register-column" class="col-md-8" >
                     <div id="register-box" class="col-md-12">
@@ -18,23 +18,23 @@
                                 <!-- {% if project_to_edit%}
                                 <input id="id_project" name="id_project" type="hidden" value="{{project_to_edit['id']}}">
                                 {% endif %} -->
-                                <label for="ci_owner">Cedula del dueño</label><br>
-                                <input id="ci_owner" name="ci_owner" type="text" value="" placeholder="V-12345678"required><br><br>
-                                <label for="license_plate">License Plate</label><br>
-                                <input id="license_plate" name="license_plate" type="text" value="" required><br><br>
-                                <label for="brand">Marca</label><br>
-                                <input id="brand" name="brand" type="text" value="" required><br><br>
-                                <label for="model">Model</label><br>
-                                <input id="model" name="model" type="text" value="" required><br><br>
-                                <label for="year">Año</label><br>
-                                <input id="year" name="year" type="text" value="" required><br><br>
-                                <label for="serial_car">Serial del carro</label><br>
-                                <input id="serial_car" name="serial_car" type="text" value="" required><br><br>
-                                <label for="serial_engine">Serial del motor</label><br>
-                                <input id="serial_engine" name="serial_engine" type="text" value="" required><br><br>
-                                <label for="color">Color</label><br>
-                                <input id="color" name="color" type="text" value="" required><br><br>
-                                <label for="issue">Problema</label><br>
+                                <label style="font-weight:bold;" for="ci_owner">Cedula del dueño: </label><br>
+                                <input id="ci_owner" name="ci_owner" type="text" value="" class="form-control" placeholder="V-12345678"required><br>
+                                <label style="font-weight:bold;" for="license_plate">License Plate: </label><br>
+                                <input id="license_plate" name="license_plate" type="text" class="form-control" value="" required><br>
+                                <label style="font-weight:bold;" for="brand">Marca: </label><br>
+                                <input id="brand" name="brand" type="text" class="form-control" value="" required><br>
+                                <label style="font-weight:bold;" for="model">Model: </label><br>
+                                <input id="model" name="model" type="text" class="form-control" value="" required><br>
+                                <label style="font-weight:bold;" for="year">Año: </label><br>
+                                <input id="year" name="year" type="text" class="form-control" value="" required><br>
+                                <label style="font-weight:bold;" for="serial_car">Serial del carro: </label><br>
+                                <input id="serial_car" name="serial_car" type="text" class="form-control" value="" required><br>
+                                <label style="font-weight:bold;" for="serial_engine">Serial del motor: </label><br>
+                                <input id="serial_engine" name="serial_engine" type="text" class="form-control" value="" required><br>
+                                <label style="font-weight:bold;" for="color">Color: </label><br>
+                                <input id="color" name="color" type="text" class="form-control" value="" required><br>
+                                <label style="font-weight:bold;" for="issue">Problema: </label><br>
                                 <textarea type="text" name="issue" id="issue" class="form-control" required></textarea>
                             </div>                            
                             <div class="form-group">
@@ -42,13 +42,7 @@
                                     style="background-color: #2A4494; color:#f0f0f0;" value="Enter">
 
                                 <a class="btn btn-danger btn-md mt-4" href="{{url_for('clients_list')}}"> Cancel </a>
-                            </div>
-                            <div class="mt-3">
-                                <div class="d-flex justify-content-center">
-                                  <h2>Car's list</h2>
-                                </div>
-                                {% include  'generics/generic_list.html' %}  
-                            </div>                
+                            </div>               
                             {% with messages = get_flashed_messages() %}
                             {% if messages %}                                
                                 {% for message in messages %}
@@ -63,4 +57,11 @@
         </div>
     </div>
 </div>
+<div class="mt-3">
+    <div class="d-flex justify-content-center">
+      <h2>Car's list</h2>
+    </div>
+    {% include  'generics/generic_list.html' %}  
+</div> 
+<div style="height: 100px;"></div>
 {% endblock %}

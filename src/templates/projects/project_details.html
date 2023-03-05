@@ -13,56 +13,55 @@
 <div class="container">
   <div class="row">
     <table class="table">
-      <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
       <tbody>
         <tr>
           <th>Description</th>
-          <td>{{context['description']}}</td>
+          <td><div  class="p-2">{{context['description']}}</div></td>
         </tr>
         <tr>
           <th>Start Date</th>
-          <td>{{context['start_date']}}</td>
+          <td><div  class="p-2">{{context['start_date']}}</div></td>
         </tr>
         <tr>
           <th>Finish Date</th>
-          <td>{{context['finish_date']}}</td>
+          <td><div  class="p-2">{{context['finish_date']}}</div></td>
         </tr>
         <tr>
-          <th>Managed by:</th>
-          <td>
-            {% set x = ''%}
-            <div class="p-2">
+            <th>
+              
+              Managed by:
+              </th>
+              <td>
+              <div style="display: flex;">
+              <div  class="p-2">
               {% if context['manager']%}
-              <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
-                href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;">Edit</a>
-              <a id="removeManager" class="btn btn-danger {{ 'disabled' if not context['has_permissions'] else '' }}" 
-                href="{{url_for('remove_manager', id=context['id'])}}" style="background-color: #2A4494; color:#f0f0f0;">Remove</a>
+              <h6>{{context['manager']}}</h6>
               {% else %}
-              <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
-                href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;">Select</a>
+              <h6>Without manager assigned</h6>
               {% endif%}
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <th>Manager:</th>
-          <td>{% if context['manager']%}
-      <h6>{{context['manager']}}</h6>
-      {% else %}
-      <h6>Without manager assigned</h6>
-      {% endif%}</td>
-        </tr>
-
+              </div>
+              {% set x = ''%}
+              <div>
+                {% if context['manager']%}
+                <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
+                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;" title="Edit project manager"> <i class="fa-solid fa-user-pen"></i></a>
+                <a id="removeManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}" 
+                  href="{{url_for('remove_manager', id=context['id'])}}" style="background-color: #2A4494; color:#f0f0f0;"
+                  title="Remove project manager"> <i class="fa-solid fa-user-xmark"></i> </a>
+                {% else %}
+                <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
+                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;" title="Select project manager"> <i class="fa-solid fa-user-plus"></i>  </a>
+                {% endif%}
+                </div>
+              </div>
+            </td>
+          </tr>
       </tbody>
-    </table>
+    </table>    
   </div>
+
+  
+    
 </div>
 
 <div class="row container-fluid mt-1 mx-auto" style="display: flex;">

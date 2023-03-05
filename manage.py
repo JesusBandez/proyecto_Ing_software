@@ -18,7 +18,7 @@ def create_default_users():
     users = [User('fadmin', 'ladmin', '1', '1', 'admin', 'Enginer'),
             User('fadmin2', 'ladmin2', '2', '2', 'admin', 'Cleaner'),
             User('fadmin3', 'ladmin3', '3', '3', 'admin', 'Boss'),
-            User('fuser', 'luser', '4', '4', 'user', 'Enginer'),
+            User('fuser', 'luser', '4', '4', 'user', 'Engineer'),
             ]
     db.session.add_all(users)
     db.session.commit()

@@ -8,7 +8,21 @@ from src.lib.generate_action import generate_action
 from datetime import datetime
 from . import app
 
-@app.route('/users_list')
+def search_users(typeS,search):
+    if typeS == "login":
+        users = db.session.query(User).filter(User.username.ilike(search))
+    elif typeS == "first":
+        users = db.session.query(User).filter(User.first_name.ilike(search))
+    elif typeS == "last":
+        users = db.session.query(User).filter(User.last_name.ilike(search))
+    elif typeS == "role":
+        users = db.session.query(User).filter(User.job.ilike(search))
+    else:
+        users = db.session.query(User).all()
+    return users
+
+
+@app.route('/users_list', methods=['GET', 'POST'])
 def users_lists():
     "Muestra la lista de usuarios del sistema"
 
@@ -20,8 +34,15 @@ def users_lists():
         {'label': 'Role', 'class': 'col-2'},
         {'label': 'Actions', 'class': 'col-2'}
     ]
+    try:
+        typeS = request.form['typeSearch']
+        search = request.form['search']
+        users = search_users(typeS,search)
+        if users.count() == 0:
+            users = db.session.query(User).all()
+    except:
+        users = db.session.query(User).all()
 
-    users = db.session.query(User).all()
     users_list_body = []
     for user in users:
         # Mostrar boton de accion desabilitado si el usuario no tiene

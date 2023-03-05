@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}<title>Add New Project</title>{% endblock %}
 {% block body %}
-<div style="max-width: 600px; margin:auto; margin-top:60px; border-radius: 10px">
+<div style="max-width: 800px; margin:auto; margin-top:60px; border-radius: 10px">
     <div id="register" style="margin: 15px 0px">        
-        <div class="container">
+        <div class="container pt-3 b-1 bg-light border rounded">
             <div id="register-row" class="row justify-content-center align-items-center" >
                 <div id="register-column" class="col-md-8" >
                     <div id="register-box" class="col-md-12">
@@ -15,18 +15,23 @@
                             {% endif %}
                             <div class="form-group">
                                 {% if project_to_edit%}
-                                <input id="id_project" name="id_project" type="text" value="{{project_to_edit['id']}}">
+                                <div>
+                                <label style="font-weight:bold;">Project ID: </label><br>
+                                </div>
+                                <input id="id_project" name="id_project" type="text" value="{{project_to_edit['id']}}" class="form-control">
                                 {% endif %}
-                                <label for="description">Project description</label><br>
+                                <div>
+                                <label style="font-weight:bold;" for="description">Project's Description:</label><br>
+                                </div>
                                 <textarea type="text" name="description" id="description" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
                                 <div class="row">
                                     <div class="col">
-                                        <label for="s_date">Start Date</label>
+                                        <label style="font-weight:bold;" for="s_date">Start Date: </label>
                                         <input id="s_date" name="s_date" class="form-control" required
                                             type="date" value="{{ project_to_edit.start if project_to_edit else '' }}">
                                     </div>
                                     <div class="col">
-                                        <label for="c_date">Close Date</label>
+                                        <label style="font-weight:bold;" for="c_date">Close Date: </label>
                                         <input id="c_date" name="c_date" class="form-control" required
                                         type="date" value="{{ project_to_edit.finish if project_to_edit else '' }}" />
                                     </div>
@@ -52,4 +57,5 @@
         </div>
     </div>
 </div>
+<div style="height: 100px;"></div>
 {% endblock %}

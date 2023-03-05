@@ -9,30 +9,63 @@
   </div>
 </div>
 
+  <!--
+<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+  <option selected>Open this select menu</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</select>
+<div class="input-group mb-3">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Separated link</a></li>
+            </ul>
+            <input type="text" class="form-control" name="otro" aria-label="Text input with dropdown button">
+          </div>
+-->
+
+
+
 <div class="container">
     <div style="text-align: right;">
-    <div class="container-fluid" style="width:50%;display: flex;">
-        <form class="input-group mb-3">
+    <div class="container" style="width:50%;display:flex;">
+        <form class="input-group flex p-2" action="{{url_for('users_lists')}}" method="post">
+          <div class="d-inline p-2 text-white">
+          <select class="form-select" name="typeSearch">
+            <option selected>Search by: </option>
+            <option value="login">Login</option>
+            <option value="first">First Name</option>
+            <option value="last">Last Name</option>
+            <option value="role">Role</option>
+          </select>
+        </div>
+          <div class="d-inline p-2 text-white">
           <input
             type="search"
             class="form-control rounded"
             placeholder="Search"
             aria-label="Search"
             aria-describedby="search-addon"
+            name="search"
           />
+        </div>
+          <div class="d-inline p-2 text-white">
+            <button type="submit" name="submit" class="btn btn-light btn-md" 
+          style="background-color: #2A4494; color:#f0f0f0;" title ="Search"><i class="fas fa-search"></i></button>
+
+            {% if not has_role('admin')%}
+            <a class="btn btn-secondary disabled" disabled title="Register new user" ><i class="fa-solid fa-person"></i></a>
+            {% else %}
+            <a href="{{url_for('new_user')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
+            title="Register new user" ><i class="fa-solid fa-person"></i></a>
+            {% endif %}
+          </div>
         </form>
-      <div>
-      <a id="addButton" href="{{url_for('new_project')}}" class="btn btn-light" 
-      style="background-color: #2A4494; color:#f0f0f0;margin-left: 10px;"><i class="fas fa-search"></i></a>
-      </div>
-      <div class="mb-2 mx-2">
-        {% if not has_role('admin')%}
-        <a class="btn btn-secondary disabled" disabled title="Register new user" ><i class="fa-solid fa-person"></i></a>
-        {% else %}
-        <a href="{{url_for('new_user')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
-        title="Register new user" ><i class="fa-solid fa-person"></i></a>
-        {% endif %}
-      </div>
     </div>
     </div>
   {% include  'generics/generic_list.html' %}  

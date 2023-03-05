@@ -2,7 +2,7 @@
 style="background-color: #122C34;color:white;">
     <div class="offcanvas-header" >
         <h2 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h2>
-        <button type="button" class="btn-close text-reset" style="border-color: white;" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close text-reset btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body px-0">
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
@@ -12,7 +12,7 @@ style="background-color: #122C34;color:white;">
             </li>
             <li>
               <a class="nav-link text-truncate link-light" href="{{url_for('clients_list')}}" style="font-size: 20px;">
-                <i class="fa-solid fa-list-check"></i> Clients</a>
+                <i class="fa-solid fa-user-gear"></i> Clients</a>
             </li>
             <li>
               <a class="nav-link text-truncate link-light" href="{{url_for('projects_list')}}" style="font-size: 20px;">
@@ -33,6 +33,7 @@ style="background-color: #122C34;color:white;">
         <i class="fa-solid fa-bars"></i>
     </button>
 
+    <!-- 
     <div class="dropdown">
       <button class="btn dropdown-toggle btn-light" style="background-color: transparent;border-color: transparent;color:#f0f0f0;" type="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
         Menu
@@ -44,7 +45,9 @@ style="background-color: #122C34;color:white;">
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{{url_for('logger')}}">Event Logger</a></li>
       </ul>
-    </div>
+    </div>-->
+
+
     {% if session.get('user') %}
     <a class="navbar-brand" style="color:#f0f0f0;">Bienvenido {{session['user'].username}}</a>
     <a class="btn btn-black" style="background-color: #2A4494;color:#f0f0f0;" 

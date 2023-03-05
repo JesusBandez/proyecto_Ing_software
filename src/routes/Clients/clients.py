@@ -24,7 +24,7 @@ def clients_list():
         {'label': 'Birthdate', 'class': 'col-1'},
         {'label': 'Phone Number', 'class': 'col-2'},
         {'label': 'Mail', 'class': 'col-2'},
-        {'label': 'Adress', 'class': 'col-2'},
+        {'label': 'Address', 'class': 'col-2'},
         {'label': 'Actions', 'class': 'col-2'}, 
     ]
 
