@@ -11,6 +11,8 @@ from src.models.Client import Client
 from src.models.Car import Car
 
 from datetime import datetime
+from sqlalchemy import extract  
+
 import pdfkit
 import os
 from . import app
@@ -23,6 +25,20 @@ db.session.commit()
 car = Car(1237483,"mazda","miata",2006,138844,"verde","no enciende",log.ci)
 db.session.add(car)
 db.session.commit()'''
+
+
+def search_projects(typeS,search):
+    if typeS == "des":
+        projects = db.session.query(Project).filter(Project.description.contains(search))
+    elif typeS == "start":
+        projects = db.session.query(Project).filter(extract('month', Project.start)==int(search))
+    elif typeS == "finish":
+        projects = db.session.query(Project).filter(extract('month', Project.finish)==int(search))
+    elif typeS == "id":
+        projects = db.session.query(Project).filter(Project.id.ilike(search))
+    else:
+        projects = db.session.query(Project).all()
+    return projects
 
 # Proyectos del sistema
 @app.route('/projects/list', methods=('GET', 'POST'))
@@ -37,7 +53,15 @@ def projects_list():
         {'label': 'Actions', 'class': 'col-2'},        
     ]
 
-    PROJECTS = db.session.query(Project).all()
+    try:
+        typeS = request.form['typeSearch']
+        search = request.form['search']
+        PROJECTS = search_projects(typeS,search)
+        if PROJECTS.count() == 0:
+            PROJECTS = db.session.query(Project).all()
+    except:
+        PROJECTS = db.session.query(Project).all()
+
     projects_list_body = []
     for project in PROJECTS:
     

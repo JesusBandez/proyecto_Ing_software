@@ -12,6 +12,50 @@ from src.models.User import User
 from datetime import datetime
 from . import app
 
+def search_clients(typeS,search):
+    if typeS == "ci":
+        users = db.session.query(Client).filter(Client.ci.ilike(search))
+    elif typeS == "name":
+        users = db.session.query(Client).filter(Client.first_name.ilike(search))
+    elif typeS == "last":
+        users = db.session.query(Client).filter(Client.last_name.ilike(search))
+    elif typeS == "mail":
+        users = db.session.query(Client).filter(Client.mail.ilike(search))
+    elif typeS == "phone":
+        users = db.session.query(Client).filter(Client.phone.ilike(search))
+    else:
+        users = db.session.query(Client).all()
+    return users
+
+@app.route('/cars', methods=('GET', 'POST'))
+def client_cars():
+    cars_projects_list_header = [
+        {'label': 'Placa', 'class': 'col-1'},
+        {'label': 'Marca', 'class': 'col-6'},
+        {'label': 'Modelo', 'class': 'col-2'},
+        {'label': 'Año', 'class': 'col-2'},
+        {'label': 'Serial de Carroceria', 'class': 'col-2'},
+        {'label': 'Serial de Motor', 'class': 'col-2'},
+        {'label': 'Color', 'class': 'col-2'},
+        {'label': 'Problema', 'class': 'col-2'}
+    ]
+    client_id = session["user"]["id"]
+    client = db.session.query(Client).filter_by(id=client_id).first() 
+    clients_cars = []
+    for car in client.cars :
+        clients_cars.append({
+            'data' : [car.license_plate, car.brand, car.model, car.year,
+                        car.serial_car, car.serial_engine, car.color, car.issue]
+        })
+        
+    return render_template('clients/clients_cars.html', 
+                has_role=has_role,
+                list_context= {
+                'list_header': cars_projects_list_header,
+                'list_body' : clients_cars
+            })
+
+
 # Clientes del sistema
 @app.route('/clients/list', methods=('GET', 'POST'))
 def clients_list():
@@ -28,7 +72,14 @@ def clients_list():
         {'label': 'Actions', 'class': 'col-2'}, 
     ]
 
-    CLIENTS = db.session.query(Client).all()
+    try:
+        typeS = request.form['typeSearch']
+        search = request.form['search']
+        CLIENTS = search_clients(typeS,search)
+        if CLIENTS.count() == 0:
+            CLIENTS = db.session.query(Client).all()
+    except:
+        CLIENTS = db.session.query(Client).all()
     clients_list_body = []
     for client in CLIENTS:
         add_car = generate_action(client.id, 'new_car', method='get',

@@ -11,33 +11,45 @@
   </div>
 </div>
 
+
+
+<div class="container">
     <div style="text-align: right;">
-    <div class="container-fluid" style="width:50%;display: flex;">
-        <form class="input-group mb-3">
+    <div class="container" style="width:50%;display:flex;">
+        <form class="input-group flex p-2" action="{{url_for('projects_list')}}" method="post">
+          <div class="d-inline p-2 text-white">
+          <select class="form-select" name="typeSearch">
+            <option selected>Search by: </option>
+            <option value="des">Description</option>
+            <option value="start">Start Mo.</option>
+            <option value="finish">Finish Mo.</option>
+            <option value="id">Proj. ID</option>
+          </select>
+        </div>
+          <div class="d-inline p-2 text-white">
           <input
             type="search"
             class="form-control rounded"
             placeholder="Search"
             aria-label="Search"
             aria-describedby="search-addon"
+            name="search"
           />
-        </form>
-      <div>
-      <a id="addButton" href="{{url_for('new_project')}}" class="btn btn-light" 
-      style="background-color: #2A4494; color:#f0f0f0;margin-left: 10px;"><i class="fas fa-search"></i></a>
-      </div>
+        </div>
+          <div class="d-inline p-2 text-white">
+            <button type="submit" name="submit" class="btn btn-light btn-md" 
+          style="background-color: #2A4494; color:#f0f0f0;" title ="Search"><i class="fas fa-search"></i></button>
 
-      <div class="mb-2 mx-2" style="text-align: right;">
-        {% if not has_role('admin')%}
-        <a class="btn btn-secondary disabled" disabled><i class="fa-solid fa-plus"></i></a>
-        {% else %}
-        <a id="addButton" href="{{url_for('new_project')}}" class="btn btn-light" 
-        style="background-color: #2A4494; color:#f0f0f0;" title="Create New Project"><i class="fa-sharp fa-solid fa-plus"></i></a>
-        {% endif %}
-      </div>
+            {% if not has_role('admin')%}
+            <a class="btn btn-secondary disabled" disabled title="Add New Project" ><i class="fa-solid fa-plus"></i></a>
+            {% else %}
+            <a href="{{url_for('new_project')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
+            title="Add New Project" ><i class="fa-solid fa-plus"></i></a>
+            {% endif %}
+          </div>
+        </form>
     </div>
-  </div>
-    
-    {% include  'generics/generic_list.html' %}  
-  </div>
+    </div>
+  {% include  'generics/generic_list.html' %}  
+</div>
 {% endblock %}

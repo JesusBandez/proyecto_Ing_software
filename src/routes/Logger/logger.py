@@ -4,7 +4,23 @@ from src.models import db
 from src.models.Logger import Logger
 
 from . import app
+from sqlalchemy import extract  
 
+
+
+
+def search_events(typeS,search):
+    if typeS == "event":
+        events = db.session.query(Logger).filter(Logger.event.contains(search))
+    elif typeS == "month":
+        events = db.session.query(Logger).filter(extract('month', Logger.date)==int(search))
+    elif typeS == "day":
+        events = db.session.query(Logger).filter(extract('day', Logger.date)==int(search))
+    elif typeS == "year":
+        events = db.session.query(Logger).filter(extract('year', Logger.date)==int(search))
+    else:
+        events = db.session.query(Logger).all()
+    return events
 
 @app.route('/event_logger', methods=('GET', 'POST'))
 def logger():
@@ -17,7 +33,15 @@ def logger():
         {'label': 'Actions', 'class': 'col-2'},
     ]
 
-    EVENTS = db.session.query(Logger).all()
+    try:
+        typeS = request.form['typeSearch']
+        search = request.form['search']
+        EVENTS = search_events(typeS,search)
+        if EVENTS.count() == 0:
+            EVENTS = db.session.query(Logger).all()
+    except:
+        EVENTS = db.session.query(Logger).all()
+
     events_list_body = []
     for event in EVENTS:
         remove = generate_action(event.id, 'remove_event', 'post',

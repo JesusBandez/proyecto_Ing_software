@@ -10,25 +10,35 @@
 </div>
 
 <div class="container">
-    
     <div style="text-align: right;">
-    <div class="container-fluid" style="width:50%;display: flex;">
-        <form class="input-group mb-3">
+    <div class="container" style="width:50%;display:flex;">
+        <form class="input-group flex p-2" action="{{url_for('logger')}}" method="post">
+          <div class="d-inline p-2 text-white">
+          <select class="form-select" name="typeSearch">
+            <option selected>Search by: </option>
+            <option value="event">Event</option>
+            <option value="month">Month</option>
+            <option value="day">Day</option>
+            <option value="year">Year</option>
+          </select>
+        </div>
+          <div class="d-inline p-2 text-white">
           <input
             type="search"
             class="form-control rounded"
             placeholder="Search"
             aria-label="Search"
             aria-describedby="search-addon"
+            name="search"
           />
+        </div>
+          <div class="d-inline p-2 text-white">
+            <button type="submit" name="submit" class="btn btn-light btn-md" 
+          style="background-color: #2A4494; color:#f0f0f0;" title ="Search"><i class="fas fa-search"></i></button>
+          </div>
         </form>
-      <div>
-      <a id="addButton" href="{{url_for('new_project')}}" class="btn btn-light" 
-      style="background-color: #2A4494; color:#f0f0f0;margin-left: 10px;"><i class="fas fa-search"></i></a>
-      </div>
     </div>
-  </div>
-
-    {% include  'generics/generic_list.html' %}  
-  </div>
+    </div>
+  {% include  'generics/generic_list.html' %}  
+</div>
 {% endblock %}

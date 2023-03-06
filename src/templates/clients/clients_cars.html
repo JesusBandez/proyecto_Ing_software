@@ -1,28 +1,30 @@
 {% extends "base.html" %}
-{% block title %}<title>Clients list</title>{% endblock %}
+{% block title %}<title>Client's Car</title>{% endblock %}
 {% block body %}
 <div class="fluid-container">
 
   <div class="card border-light mb-3">
   <div class="card-header">
-    <h1 class="text-center my-4">Client's List</h1>
+    <h1 class="text-center my-4">Client's Car</h1>
   </div>
   <div class="card-body" style="background-color: #36494E;">
   </div>
 </div>
 
+
+
 <div class="container">
     <div style="text-align: right;">
     <div class="container" style="width:50%;display:flex;">
-        <form class="input-group flex p-2" action="{{url_for('clients_list')}}" method="post">
+        <form class="input-group flex p-2" action="{{url_for('client_cars')}}" method="post">
           <div class="d-inline p-2 text-white">
           <select class="form-select" name="typeSearch">
             <option selected>Search by: </option>
-            <option value="ci">Cedula</option>
-            <option value="name">Name</option>
-            <option value="last">Last Name</option>
-            <option value="mail">Mail</option>
-            <option value="phone">Phone</option>
+            <option value="des">Placa</option>
+            <option value="start">Marca</option>
+            <option value="finish">Modelo</option>
+            <option value="id">Año</option>
+            <option value="finish">Color</option>
           </select>
         </div>
           <div class="d-inline p-2 text-white">
@@ -40,10 +42,10 @@
           style="background-color: #2A4494; color:#f0f0f0;" title ="Search"><i class="fas fa-search"></i></button>
 
             {% if not has_role('admin')%}
-            <a class="btn btn-secondary disabled" disabled title="Add New Client" ><i class="fa-solid fa-plus"></i></a>
+            <a class="btn btn-secondary disabled" disabled title="Add New Car" ><i class="fa-solid fa-plus"></i></a>
             {% else %}
-            <a href="{{url_for('new_client')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
-            title="Add New Client" ><i class="fa-solid fa-plus"></i></a>
+            <a href="{{url_for('new_project')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
+            title="Add New Car" ><i class="fa-solid fa-plus"></i></a>
             {% endif %}
           </div>
         </form>

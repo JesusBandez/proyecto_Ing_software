@@ -32,8 +32,21 @@
                                 <input id="serial_car" name="serial_car" type="text" class="form-control" value="" required><br>
                                 <label style="font-weight:bold;" for="serial_engine">Serial del motor: </label><br>
                                 <input id="serial_engine" name="serial_engine" type="text" class="form-control" value="" required><br>
+                                <div class="form-group">
                                 <label style="font-weight:bold;" for="color">Color: </label><br>
-                                <input id="color" name="color" type="text" class="form-control" value="" required><br>
+                                    <select class="form-select" name="color" required>
+                                        <option value="blanco">Blanco</option>
+                                        <option value="gris">Gris</option>
+                                        <option value="negro">Negro</option>
+                                        <option value="plata">Plata</option>
+                                        <option value="azul">Azul</option>
+                                        <option value="rojo">Rojo</option>
+                                        <option value="marron">Marron</option>
+                                        <option value="verde">Verde</option>
+                                        <option value="amarillo">Amarillo</option>
+                                    </select>
+                                </div>
+                                <br>
                                 <label style="font-weight:bold;" for="issue">Problema: </label><br>
                                 <textarea type="text" name="issue" id="issue" class="form-control" required></textarea>
                             </div>                            
