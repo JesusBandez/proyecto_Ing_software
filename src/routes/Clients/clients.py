@@ -1,14 +1,10 @@
 from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
-from src.models import db
 from src.models.Client import Client
-from src.models.Car import Car
-from src.models.Logger import Logger
-from src.models.Project import Project
-from src.models.User import User
-
 from src.routes.Clients import client_details
+from src.models.Logger import Logger
+from src.models import db
 
 from datetime import datetime
 from . import app
@@ -121,12 +117,8 @@ def add_new_client():
     
     if not client_to_edit:
         client = Client(ci, first_name, last_name, birth_date, mail, phone, address)
-        time_data = datetime.now()
-        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-        log = Logger('Adding Client', date, hour)
-        db.session.add(log)
-        db.session.add(client)
+        log = Logger('Adding Client')
+        db.session.add_all([log, client])        
         db.session.flush()
         db.session.refresh(client)
         id = client.id
@@ -145,10 +137,7 @@ def add_new_client():
             id=client_to_edit).update(changes)
 
         id = client_to_edit
-        time_data = datetime.now()
-        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-        log = Logger('Editing project', date, hour)
+        log = Logger('Editing project')
         db.session.add(log)
         
     db.session.commit()        
@@ -159,10 +148,7 @@ def remove_client():
     "Eliminar client"
     client_id = request.form['id']
     client = db.session.query(Client).filter_by(id=client_id).first()
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Deleting project', date, hour)
+    log = Logger('Deleting project')
 
     db.session.add(log)
     db.session.delete(client)

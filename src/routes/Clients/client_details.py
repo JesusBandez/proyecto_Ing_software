@@ -47,8 +47,7 @@ def client_details():
 @app.route('/clients/new_car', methods=['GET', 'POST'])
 def new_car():    
     """Muestra el formulario para agregar carro de un cliente y los carros
-        que tiene el mismo"""
-        
+        que tiene el mismo"""        
     return render_template('clients/new_car.html',
             context={
                 'id' : request.args['id']
@@ -71,10 +70,7 @@ def add_new_car():
     issue = request.form['issue']
 
     car = Car(license_plate, brand, model, year, serial_car, serial_engine, color, issue, owner.id)
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Adding new car', date, hour)
+    log = Logger('Adding new car')
     db.session.add(log)
     db.session.add(car)
         

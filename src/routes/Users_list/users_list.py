@@ -5,7 +5,6 @@ from src.models.User import User
 from src.models.Logger import Logger
 from src.models import db
 from src.lib.generate_action import generate_action
-from datetime import datetime
 from . import app
 
 def search_users(typeS,search):
@@ -80,10 +79,8 @@ def delete_user():
         
     user_id = request.form['id']
     user = db.session.query(User).filter_by(id=user_id).first()
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Deleting user', date, hour)
+
+    log = Logger('Deleting user')
 
     db.session.add(log)
     db.session.delete(user)
@@ -126,10 +123,8 @@ def add_new_user():
 
     if error is None:
         user = User(f_name, l_name,username, password, role, job, False)
-        time_data = datetime.now()
-        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-        log = Logger('Adding user', date, hour)
+
+        log = Logger('Adding user')
 
         db.session.add(log)
         db.session.add(user)

@@ -138,12 +138,10 @@ def add_new_project():
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
     
     if not id_project_to_edit:
-        project = Project(description, start_date, close_date)        
-        time_data = datetime.now()
-        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-        log = Logger('Adding project', start_date, hour)
-        db.session.add(log)
-        db.session.add(project)
+        project = Project(description, start_date, close_date)       
+
+        log = Logger('Adding project')
+        db.session.add_all([log, project])        
         db.session.flush()
         db.session.refresh(project)
         id = project.id
@@ -157,10 +155,7 @@ def add_new_project():
         project = db.session.query(Project).filter_by(
             id=id_project_to_edit).update(changes)
         id = id_project_to_edit
-        time_data = datetime.now()
-        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-        log = Logger('Editing project', date, hour)
+        log = Logger('Editing project')
         db.session.add(log)
         
     db.session.commit()        
@@ -199,10 +194,8 @@ def remove_project():
         
     project_id = request.form['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Editing project', date, hour)
+
+    log = Logger('Editing project')
 
     db.session.add(log)
     db.session.delete(project)
@@ -258,10 +251,7 @@ def print_project():
     else :
         pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
 
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Printing project', date, hour)
+    log = Logger('Printing project')
     db.session.add(log)
     db.session.commit()   
 

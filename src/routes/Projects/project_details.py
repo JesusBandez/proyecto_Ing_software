@@ -130,10 +130,7 @@ def add_user_to_project():
     
     user = db.session.query(User).filter_by(id=request.form['id']).first()
     project.users.append(user)
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Adding user', date, hour)
+    log = Logger('Adding user')
 
     db.session.add(log)
     db.session.commit()
@@ -148,10 +145,7 @@ def remove_user_from_project():
         return redirect(url_for('error'))
 
     user = db.session.query(User).filter_by(id=request.form['id']).first()
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Deleting user', date, hour)
+    log = Logger('Deleting user')
 
     db.session.add(log)
     project.users.remove(user)

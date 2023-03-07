@@ -1,3 +1,4 @@
+from datetime import datetime
 from . import db
 
 class Logger(db.Model):
@@ -6,10 +7,11 @@ class Logger(db.Model):
     date = db.Column(db.DateTime())
     hour = db.Column(db.DateTime())
 
-    def __init__(self, event, date, hour):
+    def __init__(self, event):
         self.event = event
-        self.date = date
-        self.hour = hour
+        time_data = datetime.now()
+        self.date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+        self.hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
 
     def __repr__(self):
         return f"Evento: {self.event}, Fecha: {self.date}, Hora: {self.hour}"

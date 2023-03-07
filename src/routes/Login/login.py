@@ -30,10 +30,7 @@ def login():
             query.update(
                 {'status' : True}
             )
-            time_data = datetime.now()
-            date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-            hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-            log = Logger('Login', date, hour)
+            log = Logger('Login')
             db.session.add(log)
             db.session.commit()
             session['user'] = {
