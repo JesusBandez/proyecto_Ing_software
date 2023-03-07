@@ -5,7 +5,7 @@
 
   <div class="card border-light mb-3">
   <div class="card-header">
-    <h1 class="text-center my-4">{{context['name']}} Cars</h1>
+    <h1 class="text-center my-4">{{context['client'].first_name}} {{context['client'].last_name}} Details</h1>
   </div>
   <div class="card-body" style="background-color: #36494E;">
   </div>
@@ -15,19 +15,42 @@
     <table class="table">
       <tbody>
         <tr>
-          <th>Description</th>
-          <td><div  class="p-2">{{context['description']}}</div></td>
+          <th>CI</th>
+          <td><div  class="p-2">{{context['client'].ci}}</div></td>
         </tr>
         <tr>
-          <th>Start Date</th>
-          <td><div  class="p-2">{{context['start_date']}}</div></td>
+          <th>First name</th>
+          <td><div  class="p-2">{{context['client'].first_name}}</div></td>
         </tr>
         <tr>
-          <th>Finish Date</th>
-          <td><div  class="p-2">{{context['finish_date']}}</div></td>
+          <th>Last name</th>
+          <td><div  class="p-2">{{context['client'].last_name}}</div></td>
+        </tr>
+        <tr>
+          <th>Birth date</th>
+          <td><div  class="p-2">{{context['client'].birth_date.date()}}</div></td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td><div  class="p-2">{{context['client'].mail}}</div></td>
+        </tr>
+        <tr>
+          <th>Contact Phone</th>
+          <td><div  class="p-2">{{context['client'].phone}}</div></td>
+        </tr>
+        <tr>
+          <th>Address</th>
+          <td><div  class="p-2">{{context['client'].address}}</div></td>
         </tr>
       </tbody>
     </table>    
+  </div>
+</div>
+<div class="card border-light mb-3">
+  <div class="card-header">
+    <h1 class="text-center my-4">{{context['client'].first_name}} {{context['client'].last_name}} Cars</h1>
+  </div>
+  
   </div>
 </div>
 <div class="container">
@@ -61,13 +84,13 @@
             {% if not has_role('admin')%}
             <a class="btn btn-secondary disabled" disabled title="Add New Car" ><i class="fa-solid fa-plus"></i></a>
             {% else %}
-            <a href="{{url_for('new_car', id=context['id'])}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
+            <a href="{{url_for('new_car', id=context['client'].id)}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
             title="Add New Car" ><i class="fa-solid fa-plus"></i></a>
             {% endif %}
           </div>
         </form>
     </div>
     </div>
-  {% include  'generics/generic_list.html' %}  
+  {% include  'generics/generic_list.html' %}
 </div>
 {% endblock %}

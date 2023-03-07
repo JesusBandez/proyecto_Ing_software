@@ -35,13 +35,14 @@ def client_details():
     return render_template('clients/client_details.html',
                 has_role=has_role,
                 context={
-                    'id' : client_id,
-                    'name' : f"{client.first_name} {client.last_name}"
+                    'client' : client,
                 },
                 list_context= {
                 'list_header': cars_projects_list_header,
                 'list_body' : clients_cars
             })
+
+
 
 @app.route('/clients/new_car', methods=['GET', 'POST'])
 def new_car():    
