@@ -61,12 +61,14 @@ def clients_list():
         edit = generate_action(client.id, 'new_client', method='get', 
             button_class='btn btn-sm btn-outline-success',
             title="Edit client",
-            text_class='fa-solid fa-pencil')
+            text_class='fa-solid fa-pencil',
+            disabled= not has_role('admin'))
 
         remove = generate_action(client.id, 'remove_client', 'post',
             button_class='btn btn-sm btn-outline-danger',
             title="Remove client",
-            text_class='fa-solid fa-trash')
+            text_class='fa-solid fa-trash',
+            disabled= not has_role('admin'))
         
         clients_list_body.append({
             'data' : [client.ci, client.first_name, 
@@ -83,8 +85,11 @@ def clients_list():
 
 # Agregar clientes
 @app.route('/clients/new_clients')
-def new_client():    
+def new_client():
     "Muestra el formulario para agregar o editar un cliente"
+    if not has_role('admin'):
+        return redirect(url_for('error'))
+
     client = db.session.query(Client).filter_by(id=request.args.get('id')).first()
     birthdate = None
     if client:        
@@ -104,6 +109,8 @@ def new_client():
 def add_new_client():
     """Obtiene los datos para agregar un nuevo carro de un cliente y 
         lo agrega al sistema"""
+    if not has_role('admin'):
+        return redirect(url_for('error'))
     
     client_to_edit = request.form.get('client_to_edit')
     ci = request.form['ci']
@@ -145,6 +152,9 @@ def add_new_client():
 @app.route('/clients/list/remove_project', methods=['GET', 'POST'])
 def remove_client():
     "Eliminar client"
+    if not has_role('admin'):
+        return redirect(url_for('error'))
+
     client_id = request.form['id']
     client = db.session.query(Client).filter_by(id=client_id).first()
     for car in client.cars:

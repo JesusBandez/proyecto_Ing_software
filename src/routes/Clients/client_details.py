@@ -63,6 +63,8 @@ def client_details():
 @app.route('/clients/client_details/new_car', methods=['GET', 'POST'])
 def new_car():    
     """Muestra el formulario para agregar o editar el carro de un cliente"""
+    if not has_role('admin'):
+            return redirect(url_for('error'))
     car = db.session.query(Car).filter_by(
         license_plate=request.args.get('car_plate')).first()
     
@@ -83,6 +85,9 @@ def new_car():
 def add_new_car():
     """ Obtiene los datos para agregar un nuevo carro de un cliente y 
         lo agrega al sistema """
+    if not has_role('admin'):
+        return redirect(url_for('error'))        
+
     car_to_edit = request.form.get('car_plate')
     owner_id = request.form['owner_id']
     owner = db.session.query(Client).filter_by(id=owner_id).first()
@@ -124,6 +129,9 @@ def add_new_car():
 @app.route('/clients/client_details/remove_car', methods=['GET', 'POST'])
 def remove_car():
     "Eliminar carro"
+    if not has_role('admin'):
+        return redirect(url_for('error'))
+
     car = db.session.query(Car).filter(
         Car.license_plate == request.form['id'],
         Car.owner == request.form['owner_id']

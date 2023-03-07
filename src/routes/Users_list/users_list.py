@@ -75,7 +75,7 @@ def delete_user():
     "Elimina a un usuario del sistema"
 
     if not has_role('admin'):
-        return redirect(url_for('users_lists'))
+        return redirect(url_for('error'))
         
     user_id = request.form['id']
     user = db.session.query(User).filter_by(id=user_id).first()
@@ -92,7 +92,7 @@ def new_user():
     "Renderiza el formulario de registro de nuevo usuario"
 
     if not has_role('admin'):
-        return redirect(url_for('users_lists'))
+        return redirect(url_for('error'))
 
     return render_template('users_list/new_user.html')
 
