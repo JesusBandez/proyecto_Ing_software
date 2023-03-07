@@ -11,9 +11,29 @@
   </div>
 </div>
 <div class="container">
+  <div class="row">
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>Description</th>
+          <td><div  class="p-2">{{context['description']}}</div></td>
+        </tr>
+        <tr>
+          <th>Start Date</th>
+          <td><div  class="p-2">{{context['start_date']}}</div></td>
+        </tr>
+        <tr>
+          <th>Finish Date</th>
+          <td><div  class="p-2">{{context['finish_date']}}</div></td>
+        </tr>
+      </tbody>
+    </table>    
+  </div>
+</div>
+<div class="container">
     <div style="text-align: right;">
     <div class="container" style="width:50%;display:flex;">
-        <form class="input-group flex p-2" action="{{url_for('client_cars')}}" method="post">
+        <form class="input-group flex p-2" action="{{url_for('client_details')}}" method="post">
           <div class="d-inline p-2 text-white">
           <select class="form-select" name="typeSearch">
             <option selected>Search by: </option>

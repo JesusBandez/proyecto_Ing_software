@@ -5,12 +5,14 @@ from src.models import db
 from src.models.Client import Client
 from src.models.Car import Car
 from src.models.Logger import Logger
-
 from src.models.Project import Project
 from src.models.User import User
 
+from src.routes.Clients import client_details
+
 from datetime import datetime
 from . import app
+
 
 def search_clients(typeS,search):
     if typeS == "ci":
@@ -26,38 +28,6 @@ def search_clients(typeS,search):
     else:
         users = db.session.query(Client).all()
     return users
-
-@app.route('/clients/cars', methods=('GET', 'POST'))
-def client_cars():
-    cars_projects_list_header = [
-        {'label': 'Placa', 'class': 'col-1'},
-        {'label': 'Marca', 'class': 'col-2'},
-        {'label': 'Modelo', 'class': 'col-1'},
-        {'label': 'Año', 'class': 'col-1'},
-        {'label': 'Serial de Carroceria', 'class': 'col-1'},
-        {'label': 'Serial de Motor', 'class': 'col-1'},
-        {'label': 'Color', 'class': 'col-1'},
-        {'label': 'Problema', 'class': 'col-5'}
-    ]
-    client_id = request.args['id']
-    client = db.session.query(Client).filter_by(id=client_id).first() 
-    clients_cars = []
-    for car in client.cars :
-        clients_cars.append({
-            'data' : [car.license_plate, car.brand, car.model, car.year,
-                        car.serial_car, car.serial_engine, car.color, car.issue]
-        })
-        
-    return render_template('clients/clients_cars.html',
-                has_role=has_role,
-                context={
-                    'id' : client_id,
-                    'name' : f"{client.first_name} {client.last_name}"
-                },
-                list_context= {
-                'list_header': cars_projects_list_header,
-                'list_body' : clients_cars
-            })
 
 
 # Clientes del sistema
@@ -84,14 +54,15 @@ def clients_list():
             CLIENTS = db.session.query(Client).all()
     except:
         CLIENTS = db.session.query(Client).all()
+
     clients_list_body = []
     for client in CLIENTS:
-        see_cars = generate_action(client.id, 'client_cars', method='get',
+        see_cars = generate_action(client.id, 'client_details', method='get',
             button_class='btn btn-sm btn-outline-primary',
             text_class='fa fa-car',
             title="Add Car Information")
 
-        edit = generate_action(client.id, 'edit_client', method='post', 
+        edit = generate_action(client.id, 'new_client', method='get', 
             button_class='btn btn-sm btn-outline-success',
             title="Edit client",
             text_class='fa-solid fa-pencil')
@@ -117,13 +88,29 @@ def clients_list():
 # Agregar clientes
 @app.route('/clients/new_clients')
 def new_client():    
-    "Muestra el formulario para agregar o editar un proyecto"
-    return render_template('clients/new_client.html')
+    "Muestra el formulario para agregar o editar un cliente"
+    client = None
+    birthdate = None
+    if request.args.get('id'):
+        client = db.session.query(Client).filter_by(id=request.args.get('id')).first()
+        page_title = 'Edit client'
+        birthdate = client.birth_date.date()
+
+    else:
+        page_title = 'Add new client'
+    
+    return render_template('clients/new_client.html', context={
+        'client' : client,
+        'birthdate' : birthdate,
+        'page_title' : page_title, 
+    })
 
 @app.route('/clients/new_client/add_client', methods=['POST'])
 def add_new_client():
     """Obtiene los datos para agregar un nuevo carro de un cliente y 
         lo agrega al sistema"""
+    
+    client_to_edit = request.form.get('client_to_edit')
     ci = request.form['ci']
     first_name = request.form['first_name']
     last_name = request.form['last_name']
@@ -132,16 +119,40 @@ def add_new_client():
     mail = request.form['mail']
     address = request.form['address']
     
-    client = Client(ci, first_name, last_name, birth_date, mail, phone, address)        
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Adding Client', date, hour)
-    db.session.add(log)
-    db.session.add(client)
+    if not client_to_edit:
+        client = Client(ci, first_name, last_name, birth_date, mail, phone, address)
+        time_data = datetime.now()
+        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+        log = Logger('Adding Client', date, hour)
+        db.session.add(log)
+        db.session.add(client)
+        db.session.flush()
+        db.session.refresh(client)
+        id = client.id
+    
+    else:
+        changes = {
+            'ci' : ci,
+            'first_name' : first_name,
+            'last_name' : last_name,
+            'birth_date' : birth_date,
+            'mail' : phone,
+            'phone' : mail,
+            'address' : address,
+        }
+        client = db.session.query(Client).filter_by(
+            id=client_to_edit).update(changes)
+
+        id = client_to_edit
+        time_data = datetime.now()
+        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+        log = Logger('Editing project', date, hour)
+        db.session.add(log)
         
     db.session.commit()        
-    return redirect(url_for('clients_list'))
+    return redirect(url_for('client_details', id=id))
 
 @app.route('/clients/list/remove_project', methods=['GET', 'POST'])
 def remove_client():
@@ -158,57 +169,3 @@ def remove_client():
     db.session.commit()
     return redirect(url_for('clients_list'))
 
-@app.route('/clients/new_car', methods=['GET', 'POST'])
-def new_car():    
-    """Muestra el formulario para agregar carro de un cliente y los carros
-        que tiene el mismo"""
-        
-    return render_template('clients/new_car.html',
-            context={
-                'id' : request.args['id']
-            }
-            )
-
-@app.route('/clients/new_car/add_car', methods=['GET', 'POST'])
-def add_new_car():
-    """ Obtiene los datos para agregar un nuevo carro de un cliente y 
-        lo agrega al sistema """
-    owner_id = request.form['owner_id']
-    owner = db.session.query(Client).filter_by(id=owner_id).first()
-
-    license_plate = request.form['license_plate']
-    brand = request.form['brand']
-    model = request.form['model']
-    year = request.form['year']
-    serial_car = request.form['serial_car']
-    serial_engine = request.form['serial_engine']
-    color = request.form['color']
-    issue = request.form['issue']
-
-    car = Car(license_plate, brand, model, year, serial_car, serial_engine, color, issue, owner.id)
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Adding new car', date, hour)
-    db.session.add(log)
-    db.session.add(car)
-        
-    db.session.commit()  
-    return redirect(url_for('client_cars', id=owner_id))
-
-@app.route('/clients/list/edit_client', methods=['POST'])
-def edit_client():
-    "Editar cliente"
-    """ if not has_role('admin'):
-        return redirect(url_for()) 
-    project = db.session.query(Project).filter_by(
-        id=request.form['id']).first()
-    edit_context = {
-        'id' : project.id,
-        'description': project.description,
-        'start' : project.start.date(),
-        'finish' : project.finish.date(),
-        'users' : project.users
-    } """
-    print("editing project")
-    return redirect(url_for('clients_list'))

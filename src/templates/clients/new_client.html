@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}<title>Add New Client</title>{% endblock %}
+{% block title %}<title>{{context['page_title']}}</title>{% endblock %}
 {% block body %}
 <div style="max-width: 800px; margin:auto; margin-top:60px; border-radius: 10px">
     <div id="register" style="margin: 15px 0px">        
@@ -8,22 +8,25 @@
                 <div id="register-column" class="col-md-8" >
                     <div id="register-box" class="col-md-12">
                         <form id="register-form" class="form-group" action="{{url_for('add_new_client')}}" method="post">
-                            <h3 class="text-center">Add New Client</h3>
+                            <h3 class="text-center">{{context['page_title']}}</h3>
                             <div class="form-group">
+                                {% if context.get('client') %}
+                                <input name="client_to_edit" value="{{context['client'].id}}" type="hidden">
+                                {% endif %}
                                 <label style="font-weight:bold;" for="ci">Cédula: </label><br>
-                                <input id="ci" name="ci" type="text" value="" class="form-control" placeholder="V-12345678"required><br>
+                                <input id="ci" name="ci" type="text" value="{{context['client'].ci | default('')}}" class="form-control" placeholder="V-12345678"required><br>
                                 <label style="font-weight:bold;" for="first_name">Nombre: </label><br>
-                                <input id="first_name" name="first_name" type="text" value="" class="form-control" placeholder="John" required><br>
+                                <input id="first_name" name="first_name" type="text" value="{{context['client'].first_name | default('')}}" class="form-control" placeholder="John" required><br>
                                 <label style="font-weight:bold;" for="last_name">Apellido: </label><br>
-                                <input id="last_name" name="last_name" type="text" value="" class="form-control" placeholder="Doe" required><br>
+                                <input id="last_name" name="last_name" type="text" value="{{context['client'].last_name | default('')}}" class="form-control" placeholder="Doe" required><br>
                                 <label style="font-weight:bold;" for="birth_date">Fecha de Nacimiento: </label><br>
-                                <input id="birth_date" name="birth_date" class="form-control" required type="date" value=""><br>
+                                <input id="birth_date" name="birth_date" class="form-control" required type="date" value="{{context['birthdate']}}"><br>
                                 <label style="font-weight:bold;" for="phone">Teléfono de contacto: </label><br>
-                                <input id="phone" name="phone" type="text" value="" class="form-control" placeholder="04121234567"required><br>
+                                <input id="phone" name="phone" type="text" value="{{context['client'].phone | default('')}}" class="form-control" placeholder="04121234567"required><br>
                                 <label style="font-weight:bold;" for="mail">Email: </label><br>
-                                <input id="mail" name="mail" type="text" value="" class="form-control" placeholder="ejemplo@mail.com"required><br>
+                                <input id="mail" name="mail" type="text" value="{{context['client'].mail | default('')}}" class="form-control" placeholder="ejemplo@mail.com"required><br>
                                 <label style="font-weight:bold;" for="address">Dirección: </label><br>
-                                <textarea type="text" name="address" id="address" class="form-control" required></textarea>
+                                <textarea type="text" name="address" id="address" class="form-control" required>{{context['client'].address | default('')}}</textarea>
                             </div>                            
                             <div class="form-group">
                                 <input type="submit" name="submit" class="btn btn-light btn-md mt-4" 
