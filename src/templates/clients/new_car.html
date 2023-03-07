@@ -8,24 +8,30 @@
                 <div id="register-column" class="col-md-8" >
                     <div id="register-box" class="col-md-12">
                         <form id="register-form" class="form-group" action="{{url_for('add_new_car')}}" method="post">                            
-                            <h3 class="text-center">Add New Car</h3>
+                            <h3 class="text-center">{{context['page_title']}}</h3>
                             <div class="form-group">
-                                <input id="owner_id" name="owner_id" type="hidden", value="{{context['id']}}">                                    
+                                <input id="owner_id" name="owner_id" type="hidden", value="{{context['id']}}">
+                                {% if context['car'] %}
+                                <input id="car_plate" name="car_plate" type="hidden", value="{{context['car'].license_plate}}">
+                                {% endif%}
                                 <label style="font-weight:bold;" for="license_plate">License Plate: </label><br>
-                                <input id="license_plate" name="license_plate" type="text" class="form-control" value="" required><br>
+                                <input id="license_plate" name="license_plate" type="text" class="form-control" value="{{context['car'].license_plate | default('')}}" required><br>
                                 <label style="font-weight:bold;" for="brand">Marca: </label><br>
-                                <input id="brand" name="brand" type="text" class="form-control" value="" required><br>
+                                <input id="brand" name="brand" type="text" class="form-control" value="{{context['car'].brand | default('')}}" required><br>
                                 <label style="font-weight:bold;" for="model">Model: </label><br>
-                                <input id="model" name="model" type="text" class="form-control" value="" required><br>
+                                <input id="model" name="model" type="text" class="form-control" value="{{context['car'].model | default('')}}" required><br>
                                 <label style="font-weight:bold;" for="year">Año: </label><br>
-                                <input id="year" name="year" type="text" class="form-control" value="" required><br>
-                                <label style="font-weight:bold;" for="serial_car">Serial del carro: </label><br>
-                                <input id="serial_car" name="serial_car" type="text" class="form-control" value="" required><br>
+                                <input id="year" name="year" type="text" class="form-control" value="{{context['car'].year | default('')}}" required><br>
+                                <label style="font-weight:bold;" for="serial_car">Serial de carroceria: </label><br>
+                                <input id="serial_car" name="serial_car" type="text" class="form-control" value="{{context['car'].serial_car | default('')}}" required><br>
                                 <label style="font-weight:bold;" for="serial_engine">Serial del motor: </label><br>
-                                <input id="serial_engine" name="serial_engine" type="text" class="form-control" value="" required><br>
+                                <input id="serial_engine" name="serial_engine" type="text" class="form-control" value="{{context['car'].serial_engine | default('')}}" required><br>
                                 <div class="form-group">
                                 <label style="font-weight:bold;" for="color">Color: </label><br>
-                                    <select class="form-select" name="color" required>
+                                    <select class="form-select" name="color" value="{{context['car'].color | default('')}}" required>
+                                        {% if context['car'] %}
+                                            <option value="{{context['car'].color}}" hidden>{{context['car'].color | capitalize}}</option>
+                                        {% endif %}
                                         <option value="blanco">Blanco</option>
                                         <option value="gris">Gris</option>
                                         <option value="negro">Negro</option>
@@ -39,7 +45,7 @@
                                 </div>
                                 <br>
                                 <label style="font-weight:bold;" for="issue">Problema: </label><br>
-                                <textarea type="text" name="issue" id="issue" class="form-control" required></textarea>
+                                <textarea type="text" name="issue" id="issue" class="form-control" required>{{context['car'].issue}}</textarea>
                             </div>                            
                             <div class="form-group">
                                 <input type="submit" name="submit" class="btn btn-light btn-md mt-4" 

@@ -56,7 +56,7 @@ def clients_list():
         see_cars = generate_action(client.id, 'client_details', method='get',
             button_class='btn btn-sm btn-outline-primary',
             text_class='fa fa-car',
-            title="Add Car Information")
+            title="See client information")
 
         edit = generate_action(client.id, 'new_client', method='get', 
             button_class='btn btn-sm btn-outline-success',
@@ -85,10 +85,9 @@ def clients_list():
 @app.route('/clients/new_clients')
 def new_client():    
     "Muestra el formulario para agregar o editar un cliente"
-    client = None
+    client = db.session.query(Client).filter_by(id=request.args.get('id')).first()
     birthdate = None
-    if request.args.get('id'):
-        client = db.session.query(Client).filter_by(id=request.args.get('id')).first()
+    if client:        
         page_title = 'Edit client'
         birthdate = client.birth_date.date()
 
@@ -154,4 +153,3 @@ def remove_client():
     db.session.delete(client)
     db.session.commit()
     return redirect(url_for('clients_list'))
-
