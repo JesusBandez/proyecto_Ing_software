@@ -18,8 +18,7 @@
                                 <!-- {% if project_to_edit%}
                                 <input id="id_project" name="id_project" type="hidden" value="{{project_to_edit['id']}}">
                                 {% endif %} -->
-                                <label style="font-weight:bold;" for="ci_owner">Cedula del dueño: </label><br>
-                                <input id="ci_owner" name="ci_owner" type="text" value="" class="form-control" placeholder="V-12345678"required><br>
+                                <input id="owner_id" name="owner_id" type="hidden", value="{{context['id']}}">                                    
                                 <label style="font-weight:bold;" for="license_plate">License Plate: </label><br>
                                 <input id="license_plate" name="license_plate" type="text" class="form-control" value="" required><br>
                                 <label style="font-weight:bold;" for="brand">Marca: </label><br>
@@ -70,11 +69,5 @@
         </div>
     </div>
 </div>
-<div class="mt-3">
-    <div class="d-flex justify-content-center">
-      <h2>Car's list</h2>
-    </div>
-    {% include  'generics/generic_list.html' %}  
-</div> 
 <div style="height: 100px;"></div>
 {% endblock %}

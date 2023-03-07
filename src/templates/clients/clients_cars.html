@@ -1,18 +1,15 @@
 {% extends "base.html" %}
-{% block title %}<title>Client's Car</title>{% endblock %}
+{% block title %}<title>Client's Cars</title>{% endblock %}
 {% block body %}
 <div class="fluid-container">
 
   <div class="card border-light mb-3">
   <div class="card-header">
-    <h1 class="text-center my-4">Client's Car</h1>
+    <h1 class="text-center my-4">{{context['name']}} Cars</h1>
   </div>
   <div class="card-body" style="background-color: #36494E;">
   </div>
 </div>
-
-
-
 <div class="container">
     <div style="text-align: right;">
     <div class="container" style="width:50%;display:flex;">
@@ -44,7 +41,7 @@
             {% if not has_role('admin')%}
             <a class="btn btn-secondary disabled" disabled title="Add New Car" ><i class="fa-solid fa-plus"></i></a>
             {% else %}
-            <a href="{{url_for('new_project')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
+            <a href="{{url_for('new_car', id=context['id'])}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
             title="Add New Car" ><i class="fa-solid fa-plus"></i></a>
             {% endif %}
           </div>

@@ -27,7 +27,7 @@ def search_clients(typeS,search):
         users = db.session.query(Client).all()
     return users
 
-@app.route('/cars', methods=('GET', 'POST'))
+@app.route('/clients/cars', methods=('GET', 'POST'))
 def client_cars():
     cars_projects_list_header = [
         {'label': 'Placa', 'class': 'col-1'},
@@ -39,7 +39,7 @@ def client_cars():
         {'label': 'Color', 'class': 'col-2'},
         {'label': 'Problema', 'class': 'col-2'}
     ]
-    client_id = session["user"]["id"]
+    client_id = request.args['id']
     client = db.session.query(Client).filter_by(id=client_id).first() 
     clients_cars = []
     for car in client.cars :
@@ -48,8 +48,12 @@ def client_cars():
                         car.serial_car, car.serial_engine, car.color, car.issue]
         })
         
-    return render_template('clients/clients_cars.html', 
+    return render_template('clients/clients_cars.html',
                 has_role=has_role,
+                context={
+                    'id' : client_id,
+                    'name' : f"{client.first_name} {client.last_name}"
+                },
                 list_context= {
                 'list_header': cars_projects_list_header,
                 'list_body' : clients_cars
@@ -82,7 +86,7 @@ def clients_list():
         CLIENTS = db.session.query(Client).all()
     clients_list_body = []
     for client in CLIENTS:
-        add_car = generate_action(client.id, 'new_car', method='get',
+        see_cars = generate_action(client.id, 'client_cars', method='get',
             button_class='btn btn-sm btn-outline-primary',
             text_class='fa fa-car',
             title="Add Car Information")
@@ -100,7 +104,7 @@ def clients_list():
         clients_list_body.append({
             'data' : [client.ci, client.first_name, 
                     client.last_name, client.birth_date.strftime(f'%m-%d-%Y'), client.phone, client.mail, client.address],
-            'actions' : [add_car, edit, remove]
+            'actions' : [see_cars, edit, remove]
             })
      
     return render_template('clients/clients.html',
@@ -110,7 +114,7 @@ def clients_list():
                 'list_body' : clients_list_body
             })
 
-# Agregar proyectos
+# Agregar clientes
 @app.route('/clients/new_clients')
 def new_client():    
     "Muestra el formulario para agregar o editar un proyecto"
@@ -158,37 +162,20 @@ def remove_client():
 def new_car():    
     """Muestra el formulario para agregar carro de un cliente y los carros
         que tiene el mismo"""
-    cars_projects_list_header = [
-        {'label': 'Placa', 'class': 'col-1'},
-        {'label': 'Marca', 'class': 'col-6'},
-        {'label': 'Modelo', 'class': 'col-2'},
-        {'label': 'Año', 'class': 'col-2'},
-        {'label': 'Serial de Carroceria', 'class': 'col-2'},
-        {'label': 'Serial de Motor', 'class': 'col-2'},
-        {'label': 'Color', 'class': 'col-2'},
-        {'label': 'Problema', 'class': 'col-2'}
-    ]
-
-    client_id = request.args['id']
-    client = db.session.query(Client).filter_by(id=client_id).first() 
-    clients_cars = []
-    for car in client.cars :
-        clients_cars.append({
-            'data' : [car.license_plate, car.brand, car.model, car.year,
-                        car.serial_car, car.serial_engine, car.color, car.issue]
-        })
         
-    return render_template('clients/new_car.html', 
-                list_context= {
-                'list_header': cars_projects_list_header,
-                'list_body' : clients_cars
-            })
+    return render_template('clients/new_car.html',
+            context={
+                'id' : request.args['id']
+            }
+            )
 
 @app.route('/clients/new_car/add_car', methods=['GET', 'POST'])
 def add_new_car():
     """ Obtiene los datos para agregar un nuevo carro de un cliente y 
         lo agrega al sistema """
-    ci_owner = request.form['ci_owner']
+    owner_id = request.form['owner_id']
+    owner = db.session.query(Client).filter_by(id=owner_id).first()
+
     license_plate = request.form['license_plate']
     brand = request.form['brand']
     model = request.form['model']
@@ -197,8 +184,6 @@ def add_new_car():
     serial_engine = request.form['serial_engine']
     color = request.form['color']
     issue = request.form['issue']
-    owner = db.session.query(Client).filter_by(ci=ci_owner).first()
-    print(owner)
 
     car = Car(license_plate, brand, model, year, serial_car, serial_engine, color, issue, owner.id)
     time_data = datetime.now()
@@ -209,11 +194,11 @@ def add_new_car():
     db.session.add(car)
         
     db.session.commit()  
-    return redirect(url_for('clients_list'))
+    return redirect(url_for('client_cars', id=owner_id))
 
 @app.route('/clients/list/edit_client', methods=['POST'])
 def edit_client():
-    "Editar proyecto"
+    "Editar cliente"
     """ if not has_role('admin'):
         return redirect(url_for()) 
     project = db.session.query(Project).filter_by(
