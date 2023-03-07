@@ -7,6 +7,7 @@ from src.models.Car import Car
 from src.models.Logger import Logger
 from src.models.Project import Project
 from src.models.User import User
+from sqlalchemy.exc import IntegrityError
 
 from datetime import datetime
 from . import app
@@ -123,7 +124,13 @@ def add_new_car():
         log = Logger('Adding new car')
         db.session.add_all([log, car])
 
-    db.session.commit()  
+    #TODO: Mostrar un mensaje de error
+    try:
+        db.session.commit()
+    except IntegrityError:
+        flash("Ya existe esa placa")
+        print("Ya existe esa placa")
+
     return redirect(url_for('client_details', id=owner_id))
 
 @app.route('/clients/client_details/remove_car', methods=['GET', 'POST'])
