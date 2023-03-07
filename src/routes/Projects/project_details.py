@@ -120,15 +120,13 @@ def manage_project():
                 'list_body' : users_list_body
             })
 
-@app.route('/projects/manage_project_users/add', methods=["POST"])
-def add_user_to_project():
-    "Agrega un usuario al proyecto"
 
-    project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
+def adding_user_to_project(project_id,user_id):
+    project = db.session.query(Project).filter_by(id=project_id).first()
     if not has_role('admin') and not is_project_manager(project):
-        return redirect(url_for('error'))       
+        return False     
     
-    user = db.session.query(User).filter_by(id=request.form['id']).first()
+    user = db.session.query(User).filter_by(id=user_id).first()
     project.users.append(user)
     time_data = datetime.now()
     date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
@@ -137,17 +135,25 @@ def add_user_to_project():
 
     db.session.add(log)
     db.session.commit()
+    return project
+
+@app.route('/projects/manage_project_users/add', methods=["POST"])
+def add_user_to_project():
+    "Agrega un usuario al proyecto"
+    project_id = request.form['project_id']
+    user_id = request.form['id']
+    p = adding_user_to_project(project_id,user_id)
+    if p == False:
+        return redirect(url_for('error'))
+    
     return redirect(url_for('manage_project', mode='Add', id=request.form['project_id']))
 
-@app.route('/projects/manage_project_users/remove',  methods=["POST"])
-def remove_user_from_project():
-    "Elimina un usuario del proyecto"
-
-    project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
+def removing_user_from_project(project_id,user_id):
+    project = db.session.query(Project).filter_by(id=project_id).first()
     if not has_role('admin') and not is_project_manager(project):
-        return redirect(url_for('error'))
+        return False
 
-    user = db.session.query(User).filter_by(id=request.form['id']).first()
+    user = db.session.query(User).filter_by(id=user_id).first()
     time_data = datetime.now()
     date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
     hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
@@ -156,31 +162,61 @@ def remove_user_from_project():
     db.session.add(log)
     project.users.remove(user)
     db.session.commit()
+    return project
+
+
+@app.route('/projects/manage_project_users/remove',  methods=["POST"])
+def remove_user_from_project():
+    "Elimina un usuario del proyecto"
+    project_id = request.form['project_id']
+    user_id = request.form['id']
+    p = removing_user_from_project(project_id,user_id)
+    if p == False:
+        return redirect(url_for('error'))
+    
     return redirect(url_for('manage_project', mode='Remove', id=request.form['project_id']))
+
+
+def editing_manager(project_id,manager_id):
+    project = db.session.query(Project).filter_by(id=project_id).first()
+
+    if not has_role('admin') and not is_project_manager(project):
+        return False
+
+    project.manager_id = manager_id
+
+    db.session.commit()
+    return project
 
 @app.route('/projects/manage_project_users/select_manager',  methods=["POST"])
 def edit_manager():
     "Selecciona el gerente para el proyecto"
 
-    project = db.session.query(Project).filter_by(id=request.form['project_id']).first()
-    if not has_role('admin') and not is_project_manager(project):
+    project_id = request.form['project_id']
+    manager_id = request.form['id']
+    p = editing_manager(project_id,manager_id)
+    if p == False:
         return redirect(url_for('error'))
 
-    project.manager_id = request.form['id']
-
-    db.session.commit()
     return redirect(url_for('project_details', id=request.form['project_id']))
     
 
-@app.route('/projects/manage_project_users/remove_manager')
-def remove_manager():
-    "Elimina el gerente actual para el proyecto"
-
-    project = db.session.query(Project).filter_by(id=request.args['id']).first()
+def removing_manager(project_id):
+    project = db.session.query(Project).filter_by(id=project_id).first()
     if not has_role('admin') and not is_project_manager(project):
         return redirect(url_for('error'))
 
     project.manager_id = None
 
     db.session.commit()
+    return project
+
+
+@app.route('/projects/manage_project_users/remove_manager')
+def remove_manager():
+    "Elimina el gerente actual para el proyecto"
+
+    project_id = request.args['id']
+    p = removing_manager(project_id)
+    
     return redirect(url_for('project_details', id=request.args['id']))

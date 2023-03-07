@@ -8,6 +8,22 @@ from datetime import datetime
 import pdfkit
 from . import app
 
+def user_projects(user_id):
+    user = db.session.query(User).filter_by(id=user_id).first()
+    projects = db.session.query(Project).all()    
+    projects_user_is = []
+    for p in projects :
+        for u in p.users:
+            see_project = generate_action(p.id, 'project_details', 
+                button_class='btn btn-outline-primary',
+                text_class="fa-solid fa-eye",
+                title="View project details")
+            if (u.id == user.id):
+                projects_user_is.append({
+                    'data' : [p.id, p.description, p.start.strftime(f'%m-%d-%Y'), p.finish.strftime(f'%m-%d-%Y')],
+                    'actions' : [see_project]
+                })
+    return [projects_user_is,user]
 
 @app.route('/users_list/user_details')
 def user_details():
@@ -20,25 +36,11 @@ def user_details():
         {'label': 'Start', 'class': 'col-2'},
         {'label': 'End', 'class': 'col-2'},
         {'label' : 'actions', 'class': 'col-1'} 
-    ]
-
+    ] 
     user_id = request.args['id']
-    user = db.session.query(User).filter_by(id=user_id).first()
-    projects = db.session.query(Project).all()    
-    projects_user_is = []
-    for p in projects :
-        for u in p.users:
-            
-            see_project = generate_action(p.id, 'project_details', 
-                button_class='btn btn-outline-primary',
-                text_class="fa-solid fa-eye",
-                title="View project details")
-            if (u.id == user.id):
-                projects_user_is.append({
-                    'data' : [p.id, p.description, p.start.strftime(f'%m-%d-%Y'), p.finish.strftime(f'%m-%d-%Y')],
-                    'actions' : [see_project]
-                })
-
+    get = user_projects(user_id)
+    projects_user_is = get[0]
+    user = get[1]
     return render_template('users_list/user_details.html',
         context={
             'username' : user.username,

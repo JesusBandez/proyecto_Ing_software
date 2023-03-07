@@ -5,8 +5,9 @@ from src.models import db
 app = Flask(__name__, template_folder='src/templates')
 app.config.from_object(DevConfig)
 from src.routes.Login import login
-from src.routes.Users_list import users_list
-from src.routes.Projects import projects
+from src.routes.Users_list import users_list, user_details
+
+from src.routes.Projects import projects, project_details
 from src.routes.Logger import logger
 from src.routes.Clients import clients
 

@@ -1,5 +1,6 @@
 from flask import session
 def has_role(role='user'):
+
     if not session.get('user'):
         return False
 

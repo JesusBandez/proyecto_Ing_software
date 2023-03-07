@@ -126,17 +126,7 @@ def new_project():
     return render_template('projects/new_project.html', 
         project_to_edit=None)
 
-@app.route('/projects/new_project/add', methods=['POST'])
-def add_new_project():
-    """Obtiene los datos para agregar un nuevo proyecto y 
-        lo agrega al sistema"""
-    if not has_role('admin'):
-        return redirect(url_for()) 
-    id_project_to_edit = request.form.get('id_project')
-    description = request.form['description']
-    start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
-    close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
-    
+def adding_new_project(id_project_to_edit, description, start_date, close_date):
     if not id_project_to_edit:
         project = Project(description, start_date, close_date)        
         time_data = datetime.now()
@@ -163,7 +153,23 @@ def add_new_project():
         log = Logger('Editing project', date, hour)
         db.session.add(log)
         
-    db.session.commit()        
+    db.session.commit()
+    return project
+
+
+@app.route('/projects/new_project/add', methods=['POST'])
+def add_new_project():
+    """Obtiene los datos para agregar un nuevo proyecto y 
+        lo agrega al sistema"""
+    if not has_role('admin'):
+        return redirect(url_for()) 
+    id_project_to_edit = request.form.get('id_project')
+    description = request.form['description']
+    start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
+    close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
+    
+    p = adding_new_project(id_project_to_edit, description, start_date, close_date)
+            
     return redirect(url_for('project_details', id=id))
 
 
@@ -191,13 +197,7 @@ def edit_project():
     return render_template('projects/new_project.html', 
         project_to_edit=edit_context)
 
-@app.route('/projects/list/remove_project', methods=['GET', 'POST'])
-def remove_project():
-    "Eliminar proyecto"
-    if not has_role('admin'):
-        return redirect(url_for('projects_list'))
-        
-    project_id = request.form['id']
+def removing_project(project_id):
     project = db.session.query(Project).filter_by(id=project_id).first()
     time_data = datetime.now()
     date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
@@ -207,7 +207,27 @@ def remove_project():
     db.session.add(log)
     db.session.delete(project)
     db.session.commit()
+    return project
+
+
+@app.route('/projects/list/remove_project', methods=['GET', 'POST'])
+def remove_project():
+    "Eliminar proyecto"
+    if not has_role('admin'):
+        return redirect(url_for('projects_list'))
+        
+    project_id = request.form['id']
+
+    p = removing_project(project_id)
+    
     return redirect(url_for('projects_list'))
+
+
+def change_availability(project_id):
+    project = db.session.query(Project).filter_by(id=project_id).first()
+    project.available = not project.available
+    db.session.commit()
+    return project
 
 @app.route('/projects/list/toggle_project_availability', methods=['POST'])
 def toggle_project_availability():
@@ -215,10 +235,8 @@ def toggle_project_availability():
     if not has_role('admin'):
         return redirect(url_for('projects_list'))
 
-    project = db.session.query(Project).filter_by(
-            id=request.form['id']).first()
-    project.available = not project.available
-    db.session.commit()
+    changed = change_availability(request.form['id'])
+    
     return redirect(url_for('projects_list'))
 
 @app.route('/projects/print_project', methods=['POST'])

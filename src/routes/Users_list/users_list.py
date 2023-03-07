@@ -71,14 +71,7 @@ def users_lists():
         }       
     )
 
-@app.route('/users_list/delete', methods=['GET', 'POST'])
-def delete_user():
-    "Elimina a un usuario del sistema"
-
-    if not has_role('admin'):
-        return redirect(url_for('users_lists'))
-        
-    user_id = request.form['id']
+def deleting(user_id):
     user = db.session.query(User).filter_by(id=user_id).first()
     time_data = datetime.now()
     date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
@@ -88,6 +81,18 @@ def delete_user():
     db.session.add(log)
     db.session.delete(user)
     db.session.commit()
+    return [log,user]
+
+@app.route('/users_list/delete', methods=['GET', 'POST'])
+def delete_user():
+    "Elimina a un usuario del sistema"
+
+    if not has_role('admin'):
+        return redirect(url_for('users_lists'))
+        
+    user_id = request.form['id']
+    z = deleting(user_id)
+    
     return redirect(url_for('users_lists'))
 
 @app.route('/users_list/new_user')
@@ -98,6 +103,36 @@ def new_user():
         return redirect(url_for('users_lists'))
 
     return render_template('users_list/new_user.html')
+
+
+
+
+def create_user(f_name, l_name,username, password, role, job):
+    error = None
+    if not username:
+        error = 'Username is required.'
+    elif not password:
+        error = 'Password is required.'
+
+    user = db.session.query(User).filter_by(username=username).first()
+    if user:
+        error = f'Username "{username}" is already taken.'
+
+    if error:
+        return [error,False]
+
+    if error is None:
+        user = User(f_name, l_name,username, password, role, job, False)
+        time_data = datetime.now()
+        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
+        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
+        log = Logger('Adding user', date, hour)
+
+        db.session.add(log)
+        db.session.add(user)
+        db.session.commit()
+        return [user,True]
+
 
 @app.route('/users_list/add_new_user', methods=['POST'])
 def add_new_user():
@@ -110,29 +145,9 @@ def add_new_user():
     password = request.form['password']
     role = request.form['permissions']
 
-    error = None
-    if not username:
-        error = 'Username is required.'
-    elif not password:
-        error = 'Password is required.'
-
-    user = db.session.query(User).filter_by(username=username).first()
-    if user:
-        error = f'Username "{username}" is already taken.'
-
-    if error:
-        flash(error)
+    user = create_user(f_name, l_name,username, password, role, job)
+    if user[1] == False:
+        flash(user)
         return redirect(url_for('new_user'))
-
-    if error is None:
-        user = User(f_name, l_name,username, password, role, job, False)
-        time_data = datetime.now()
-        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-        log = Logger('Adding user', date, hour)
-
-        db.session.add(log)
-        db.session.add(user)
-        db.session.commit()       
-        
-    return redirect(url_for('users_lists'))
+    else:
+        return redirect(url_for('users_lists'))

@@ -9,5 +9,9 @@ Comandos:
 		init_db()
 		flask --app main --debug run 
 
+Para los tests:
+
+		python -m unittest tests/test.py
+
 
 

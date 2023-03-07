@@ -66,13 +66,19 @@ def logger():
             'list_body' : events_list_body
         })
 
-@app.route('/event_logger/remove_event', methods=('GET', 'POST'))
-def remove_event():
-    event_id = request.form['id']
+def removing_event(event_id):
     event = db.session.query(Logger).filter_by(id=event_id).first()
 
     db.session.delete(event)
     db.session.commit()
+    return event
+
+
+@app.route('/event_logger/remove_event', methods=('GET', 'POST'))
+def remove_event():
+    event_id = request.form['id']
+    e = removing_event(event_id)
+    
     return redirect(url_for('logger'))
 
 @app.route('/event_logger/foo_event', methods=('GET', 'POST'))
