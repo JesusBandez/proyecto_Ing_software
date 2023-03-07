@@ -147,8 +147,10 @@ def remove_client():
     "Eliminar client"
     client_id = request.form['id']
     client = db.session.query(Client).filter_by(id=client_id).first()
-    log = Logger('Deleting project')
-
+    for car in client.cars:
+        db.session.delete(car)
+        
+    log = Logger('Deleting client')
     db.session.add(log)
     db.session.delete(client)
     db.session.commit()
