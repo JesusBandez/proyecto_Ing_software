@@ -52,8 +52,7 @@ def new_car():
     return render_template('clients/new_car.html',
             context={
                 'id' : request.args['id']
-            }
-            )
+            })
 
 @app.route('/clients/new_car/add_car', methods=['GET', 'POST'])
 def add_new_car():
