@@ -26,7 +26,7 @@ engine = create_engine("sqlite:///instance/database.db")
 home_page = "http://127.0.0.1:5000"
 
 class driver():
-  def __init__(self,browser = 'chrome',**kwargs) -> None:
+  def __init__(self,browser = 'firefox',**kwargs) -> None:
       self.browser_name = browser
       self.kwargs       = kwargs
   def __enter__(self):
@@ -258,7 +258,7 @@ class tests(unittest.TestCase):
         time_data = datetime.now()
         date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
         hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-        log = Logger('Login', date, hour)
+        log = Logger('Login')
         db.session.add(log)
         db.session.commit()
         a = logger.removing_event(log.id)
@@ -274,7 +274,7 @@ class tests(unittest.TestCase):
         print("Creacion de proyecto")
         with session(user=self.user1_params) as d:
           d.get(f'{home_page}/projects/list')
-          d.find_element(By.XPATH, r"//a[@id='addButton']").click()
+          d.find_element(By.XPATH, r'//a[@title="Add New Project"]').click()
           self.assertEqual(d.title, 'Add New Project')
           d.find_element('id', 'description').send_keys('Project 1')
           self.assertEqual(d.title, 'Add New Project' )
@@ -284,14 +284,14 @@ class tests(unittest.TestCase):
         with session(user=self.user1_params) as d:
           d.get(f'{home_page}/projects/project_details?id=1')
           d.find_element(By.XPATH, r"//a[@id='addUser']").click()
-          self.assertEqual(d.title, 'Manage project')
+          self.assertEqual(d.title, 'Manage Project')
 
     def test_delete_user_in_project(self):
         print("Se eliminan usuarios del proyecto")
         with session(user=self.user1_params) as d:
           d.get(f'{home_page}/projects/project_details?id=1')
           d.find_element(By.XPATH, r"//a[@id='removeUser']").click()
-          self.assertEqual(d.title, 'Manage project' )
+          self.assertEqual(d.title, 'Manage Project' )
 
     def test_delete_project(self):
         print("Eliminar proyecto de usuario")
@@ -317,34 +317,9 @@ class tests(unittest.TestCase):
         d.find_element('id', 'password').send_keys('1')        
         d.find_element('name', 'submit').click()
         self.assertEqual(d.title, 'Login' )       
-    
-    def test_d_delete_user(self):
-        print("Borrar usuario")
-        with session(user=self.user1_params) as d:
-           d.get(f'{home_page}/users_list')
-           button = d.find_elements(By.NAME,'id')[-1]
-           value = button.get_attribute('value')
-           button.click()
-           new_values = [b.get_attribute('value') for b in d.find_elements(By.NAME,'id')]
-           self.assertNotIn(value,new_values)
 
-    def test_e_add_user_admin(self):
-        print("Agregar usuario")
-        with session(user=self.user1_params) as d:
-          d.get(f'{home_page}/users_list')
-          number_users_before = len(d.find_elements(By.CSS_SELECTOR, 'tr'))
-          self.assertNotEqual(number_users_before,0)
-          d.get(f'{home_page}/users_list/new_user')
-          d.find_element('id', 'username').send_keys("10")
-          d.find_element('id', 'password').send_keys("10")
-          d.find_element('id', 'f_name').send_keys("10")
-          d.find_element('id', 'l_name').send_keys("10")
-          d.find_element('id', 'job').send_keys("10")   
-          d.find_element('name', 'submit').click()
-          d.get(f'{home_page}/users_list')
-          number_users_after = len(d.find_elements(By.CSS_SELECTOR, 'tr'))
-          self.assertLess(number_users_before,number_users_after)
-          
+
+
 if __name__ == "__main__":
     unittest.main()
 

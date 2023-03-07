@@ -128,15 +128,12 @@ def new_project():
 
 def adding_new_project(id_project_to_edit, description, start_date, close_date):
     if not id_project_to_edit:
-        project = Project(description, start_date, close_date)        
-        time_data = datetime.now()
-        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-        log = Logger('Adding project', start_date, hour)
-        db.session.add(log)
-        db.session.add(project)
+        project = Project(description, start_date, close_date)
+        log = Logger('Adding project')
+        db.session.add_all([log, project])        
         db.session.flush()
         db.session.refresh(project)
-        id = project.id
+        
         
     else:        
         changes = {
@@ -144,15 +141,14 @@ def adding_new_project(id_project_to_edit, description, start_date, close_date):
             'start' : start_date,
             'finish' : close_date,            
             }
-        project = db.session.query(Project).filter_by(
+        db.session.query(Project).filter_by(
             id=id_project_to_edit).update(changes)
-        id = id_project_to_edit
-        time_data = datetime.now()
-        date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-        hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-        log = Logger('Editing project', date, hour)
-        db.session.add(log)
+        project = db.session.query(Project).filter_by(
+            id=id_project_to_edit).first()
+        log = Logger('Editing project')
         
+            
+    db.session.add(log)        
     db.session.commit()
     return project
 
@@ -168,9 +164,9 @@ def add_new_project():
     start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
     
-    p = adding_new_project(id_project_to_edit, description, start_date, close_date)
+    project = adding_new_project(id_project_to_edit, description, start_date, close_date)
             
-    return redirect(url_for('project_details', id=id))
+    return redirect(url_for('project_details', id=project.id))
 
 
 @app.route('/projects/list/generate_project', methods=['GET', 'POST'])
@@ -199,10 +195,8 @@ def edit_project():
 
 def removing_project(project_id):
     project = db.session.query(Project).filter_by(id=project_id).first()
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Editing project', date, hour)
+
+    log = Logger('Editing project')
 
     db.session.add(log)
     db.session.delete(project)
@@ -276,10 +270,7 @@ def print_project():
     else :
         pdfkit.from_string(rendered, f'./printed/{project_id}.pdf')
 
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Printing project', date, hour)
+    log = Logger('Printing project')
     db.session.add(log)
     db.session.commit()   
 

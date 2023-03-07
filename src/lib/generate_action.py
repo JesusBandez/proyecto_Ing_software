@@ -1,5 +1,5 @@
 from flask import url_for
-def generate_action(value=None, redirect_function=None, method="get", col_size='', **kwargs):
+def generate_action(value=None, redirect_function=None, method="get", col_size='', value_name='id',  **kwargs):
     if col_size:
         col_size = f'-{col_size}'
     if kwargs.get('disabled'):
@@ -11,7 +11,7 @@ def generate_action(value=None, redirect_function=None, method="get", col_size='
     else:
         button = f"""
             <button method="post" class="{kwargs.get('button_class')}"
-                name="id" value="{value}" title="{kwargs.get("title")}" 
+                name="{value_name}" value="{value}" title="{kwargs.get("title")}" 
                 formaction="{url_for(redirect_function)}">
                     <i class="{kwargs.get('text_class')}" aria-hidden="true"></i>
             </button>

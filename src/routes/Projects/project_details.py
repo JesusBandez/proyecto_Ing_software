@@ -64,9 +64,10 @@ def project_details():
 def manage_project():
     """Agregar o eliminar usuarios del proyecto """
     project = db.session.query(Project).filter_by(id=request.args['id']).first()
+
     if not has_role('admin') and not is_project_manager(project):
         return redirect(url_for('error'))
-
+    
     users_projects_list_header = [
         {'label': 'Id', 'class': 'col-1'},
         {'label': 'First name', 'class': 'col-6'},
@@ -128,12 +129,10 @@ def adding_user_to_project(project_id,user_id):
     
     user = db.session.query(User).filter_by(id=user_id).first()
     project.users.append(user)
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Adding user', date, hour)
+    log = Logger('Adding user')
 
     db.session.add(log)
+    
     db.session.commit()
     return project
 
@@ -154,13 +153,9 @@ def removing_user_from_project(project_id,user_id):
         return False
 
     user = db.session.query(User).filter_by(id=user_id).first()
-    time_data = datetime.now()
-    date = time_data.strptime(time_data.strftime(r'%Y-%m-%d'), r'%Y-%m-%d')
-    hour = time_data.strptime(time_data.strftime(r'%H:%M:%S'), r'%H:%M:%S')
-    log = Logger('Deleting user', date, hour)
-
-    db.session.add(log)
+    log = Logger('Deleting user')
     project.users.remove(user)
+    db.session.add(log)
     db.session.commit()
     return project
 
