@@ -31,13 +31,13 @@ def search_clients(typeS,search):
 def client_cars():
     cars_projects_list_header = [
         {'label': 'Placa', 'class': 'col-1'},
-        {'label': 'Marca', 'class': 'col-6'},
-        {'label': 'Modelo', 'class': 'col-2'},
-        {'label': 'Año', 'class': 'col-2'},
-        {'label': 'Serial de Carroceria', 'class': 'col-2'},
-        {'label': 'Serial de Motor', 'class': 'col-2'},
-        {'label': 'Color', 'class': 'col-2'},
-        {'label': 'Problema', 'class': 'col-2'}
+        {'label': 'Marca', 'class': 'col-2'},
+        {'label': 'Modelo', 'class': 'col-1'},
+        {'label': 'Año', 'class': 'col-1'},
+        {'label': 'Serial de Carroceria', 'class': 'col-1'},
+        {'label': 'Serial de Motor', 'class': 'col-1'},
+        {'label': 'Color', 'class': 'col-1'},
+        {'label': 'Problema', 'class': 'col-5'}
     ]
     client_id = request.args['id']
     client = db.session.query(Client).filter_by(id=client_id).first() 
