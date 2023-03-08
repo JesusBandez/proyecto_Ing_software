@@ -8,7 +8,7 @@ from src.models import db
 
 from datetime import datetime
 
-from src.errors import Errors, ERROR_MUST_BE_ADMIN,ERROR_MUST_BE_ADMIN_ADD_CLIENT,ERROR_MUST_BE_ADMIN_DELETE_CLIENT
+from src.errors import Errors, ERROR_MUST_BE_ADMIN,ERROR_MUST_BE_ADMIN_ADD_CLIENT,ERROR_MUST_BE_ADMIN_DELETE_CLIENT, ERROR_CI_ALREADY_EXISTS
 
 from . import app
 
@@ -123,7 +123,6 @@ def adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,a
         db.session.add_all([log, client])        
         db.session.flush()
         db.session.refresh(client)
-        id = client.id
     
     else:
         changes = {
@@ -137,13 +136,20 @@ def adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,a
         }
         client = db.session.query(Client).filter_by(
             id=client_to_edit).update(changes)
+        client = db.session.query(Client).filter_by(
+            id=client_to_edit).first()
 
-        id = client_to_edit
         log = Logger('Editing project')
         db.session.add(log)
         
     db.session.commit()
     return client
+
+def verify_client_exist(CI,client_id):
+    client = db.session.query(Client).filter_by(ci=CI).first()
+    if client!=None and client_id != client.id:
+        return True
+    return False
 
 
 @app.route('/clients/new_client/add_client', methods=['POST'])
@@ -159,6 +165,18 @@ def add_new_client():
     mail = request.form['mail']
     address = request.form['address']
 
+    client_id = int(client_to_edit)
+
+    already_exists = verify_client_exist(ci,client_id)
+
+    if already_exists:
+        title = Errors(ERROR_CI_ALREADY_EXISTS).error.title
+        desc = Errors(ERROR_CI_ALREADY_EXISTS).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('clients_list'))
+
     c = adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,address)
 
     if c==False:
@@ -169,7 +187,10 @@ def add_new_client():
         flash(desc, 'error_description')
         return redirect(url_for('clients_list'))
 
-    return redirect(url_for('client_details', id=id))
+    if client_to_edit != None:
+        return redirect(url_for('clients_list'))
+
+    return redirect(url_for('client_details', id=c.id))
 
 
 def removing_client(client_id):
@@ -190,7 +211,7 @@ def removing_client(client_id):
 def remove_client():
     "Eliminar client"
     client_id = request.form['id']
-    c = remove_client(client_id)
+    c = removing_client(client_id)
     if c == False:
         title = Errors(ERROR_MUST_BE_ADMIN_DELETE_CLIENT).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN_DELETE_CLIENT).error.description

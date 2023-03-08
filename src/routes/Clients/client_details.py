@@ -54,6 +54,7 @@ def client_details():
             client = db.session.query(Client).filter_by(id=client_id).first()
             cars_found = client.cars
     except:
+        print(client_id)
         client = db.session.query(Client).filter_by(id=client_id).first()
         cars_found = client.cars
 
@@ -212,7 +213,7 @@ def remove_car():
     owner_id = request.form['owner_id']
 
     c = removing_car(license_plate,owner_id)
-    
+
     if c == False:
         title = Errors(ERROR_MUST_BE_ADMIN).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN).error.description
