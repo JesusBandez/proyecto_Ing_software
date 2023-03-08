@@ -11,7 +11,9 @@ from src.models.Client import Client
 from src.models.Car import Car
 
 from datetime import datetime
-from sqlalchemy import extract  
+from sqlalchemy import extract
+
+from src.errors import Errors  
 
 import pdfkit
 import os
@@ -44,7 +46,6 @@ def search_projects(typeS,search):
 @app.route('/projects/list', methods=('GET', 'POST'))
 def projects_list():
     "Renderiza la lista con todos los proyectos del sistema"
-
     users_list_header = [
         {'label': 'Id', 'class': 'col-1'},
         {'label': 'Description', 'class': 'col'},
@@ -52,6 +53,10 @@ def projects_list():
         {'label': 'End', 'class': 'col-2'},        
         {'label': 'Actions', 'class': 'col-2'},        
     ]
+    error = bool(session['error']['n'])
+    error_title = Errors(int(session['error']['t'])).error.title
+    error_description = Errors(int(session['error']['d'])).error.description
+    session['error'] = {"n":False,"t":0,"d":0} 
 
     try:
         typeS = request.form['typeSearch']
@@ -115,7 +120,10 @@ def projects_list():
         list_context= {
                 'list_header': users_list_header,
                 'list_body' : projects_list_body
-            })
+            },
+        error = error,
+        error_title = error_title,
+        error_description = error_description)
 
 # Agregar proyectos
 @app.route('/projects/new_project')

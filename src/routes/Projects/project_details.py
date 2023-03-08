@@ -64,10 +64,10 @@ def project_details():
 def manage_project():
     """Agregar o eliminar usuarios del proyecto """
     project = db.session.query(Project).filter_by(id=request.args['id']).first()
-
+    error_happened = False
     if not has_role('admin') and not is_project_manager(project):
-        return redirect(url_for('error'))
-    
+        error_happened = True
+        
     users_projects_list_header = [
         {'label': 'Id', 'class': 'col-1'},
         {'label': 'First name', 'class': 'col-6'},
@@ -110,7 +110,10 @@ def manage_project():
             'data' : [user.id, user.first_name, user.last_name],
             'actions' : [button]
         })
-
+    if error_happened:
+        session['error'] = {"n":True,"t":0,"d":0}
+        return redirect(url_for('projects_list'))
+        
     return render_template('projects/manage_project_users.html',
         context={
             'id' : project.id,
@@ -191,7 +194,12 @@ def edit_manager():
     manager_id = request.form['id']
     p = editing_manager(project_id,manager_id)
     if p == False:
-        return redirect(url_for('error'))
+        return redirect(url_for('project_details', 
+            id=request.form['project_id'],
+            error = True,
+            error_title = "Eres un usuario sin permisos",
+            error_description = "No puedes hacer esto"
+            ))
 
     return redirect(url_for('project_details', id=request.form['project_id']))
     

@@ -67,7 +67,10 @@ def users_lists():
         list_context= {
             'list_header': users_list_header,
             'list_body' : users_list_body,
-        }       
+        },
+        error=False,
+        error_title = "",
+        error_description = ""    
     )
 
 def deleting(user_id):
