@@ -4,6 +4,9 @@ from src.models.User import User
 from src.models.Logger import Logger
 from werkzeug.security import check_password_hash
 from datetime import date, datetime
+
+from src.errors import Errors, ERROR_USERNAME_DONT_EXIST, ERROR_INCORRECT_PASSWORD,ERROR_MUST_BE_ADMIN
+
 from . import app
 
 
@@ -18,13 +21,19 @@ def login():
         password = request.form['password']
         error = None
         query = db.session.query(User).filter_by(username=username)
+        title = ""
+        desc = ""
 
         logged_user = query.first()
 
         if logged_user is None:
-            error = 'Username does not exist.'
+            error = True
+            title = Errors(ERROR_USERNAME_DONT_EXIST).error.title
+            desc = Errors(ERROR_USERNAME_DONT_EXIST).error.description
         elif not check_password_hash(logged_user.password, password):
-            error = 'Incorrect password.'
+            error = True
+            title = Errors(ERROR_INCORRECT_PASSWORD).error.title
+            desc = Errors(ERROR_INCORRECT_PASSWORD).error.description
 
         if error is None:
             query.update(
@@ -39,8 +48,10 @@ def login():
                 'role' : logged_user.role
             }
             return redirect(url_for('user_details', id=logged_user.id))
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
 
-        flash(error)
     return render_template('login/login.html')
 
 

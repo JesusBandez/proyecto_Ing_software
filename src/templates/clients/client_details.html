@@ -56,15 +56,15 @@
 <div class="container">
     <div style="text-align: right;">
     <div class="container" style="width:50%;display:flex;">
-        <form class="input-group flex p-2" action="{{url_for('client_details')}}" method="post">
+        <form class="input-group flex p-2" action="{{url_for('client_details', id=context['client'].id)}}" method="post">
           <div class="d-inline p-2 text-white">
           <select class="form-select" name="typeSearch">
             <option selected>Search by: </option>
-            <option value="des">Placa</option>
-            <option value="start">Marca</option>
-            <option value="finish">Modelo</option>
-            <option value="id">Año</option>
-            <option value="finish">Color</option>
+            <option value="number">Placa</option>
+            <option value="brand">Marca</option>
+            <option value="model">Modelo</option>
+            <option value="year">Año</option>
+            <option value="color">Color</option>
           </select>
         </div>
           <div class="d-inline p-2 text-white">
@@ -93,4 +93,5 @@
     </div>
 </div>
 {% include  'generics/generic_list.html' %}
+<div style="height:100px;"></div>
 {% endblock %}

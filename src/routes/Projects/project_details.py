@@ -6,6 +6,10 @@ from src.models.Project import Project
 from src.models.User import User
 from src.models.Logger import Logger
 from datetime import datetime
+
+from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER
+
+
 from . import app
 
 
@@ -44,7 +48,7 @@ def project_details():
         project_manager = ' '.join([manager.first_name, manager.last_name])
     else:
         project_manager = None
-    
+ 
     return render_template('projects/project_details.html',        
         context={
             'id' : project.id,
@@ -111,7 +115,11 @@ def manage_project():
             'actions' : [button]
         })
     if error_happened:
-        session['error'] = {"n":True,"t":0,"d":0}
+        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
         return redirect(url_for('projects_list'))
         
     return render_template('projects/manage_project_users.html',
@@ -146,7 +154,12 @@ def add_user_to_project():
     user_id = request.form['id']
     p = adding_user_to_project(project_id,user_id)
     if p == False:
-        return redirect(url_for('error'))
+        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('projects_list')) 
     
     return redirect(url_for('manage_project', mode='Add', id=request.form['project_id']))
 
@@ -170,7 +183,12 @@ def remove_user_from_project():
     user_id = request.form['id']
     p = removing_user_from_project(project_id,user_id)
     if p == False:
-        return redirect(url_for('error'))
+        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('projects_list')) 
     
     return redirect(url_for('manage_project', mode='Remove', id=request.form['project_id']))
 
@@ -194,12 +212,12 @@ def edit_manager():
     manager_id = request.form['id']
     p = editing_manager(project_id,manager_id)
     if p == False:
-        return redirect(url_for('project_details', 
-            id=request.form['project_id'],
-            error = True,
-            error_title = "Eres un usuario sin permisos",
-            error_description = "No puedes hacer esto"
-            ))
+        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('project_details', id=request.form['project_id']))
 
     return redirect(url_for('project_details', id=request.form['project_id']))
     
@@ -207,7 +225,7 @@ def edit_manager():
 def removing_manager(project_id):
     project = db.session.query(Project).filter_by(id=project_id).first()
     if not has_role('admin') and not is_project_manager(project):
-        return redirect(url_for('error'))
+        return False
 
     project.manager_id = None
 
@@ -221,5 +239,12 @@ def remove_manager():
 
     project_id = request.args['id']
     p = removing_manager(project_id)
+    if p == False:
+        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('project_details')) 
     
     return redirect(url_for('project_details', id=request.args['id']))

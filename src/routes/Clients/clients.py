@@ -7,6 +7,9 @@ from src.models.Logger import Logger
 from src.models import db
 
 from datetime import datetime
+
+from src.errors import Errors, ERROR_MUST_BE_ADMIN,ERROR_MUST_BE_ADMIN_ADD_CLIENT,ERROR_MUST_BE_ADMIN_DELETE_CLIENT
+
 from . import app
 
 
@@ -88,7 +91,12 @@ def clients_list():
 def new_client():
     "Muestra el formulario para agregar o editar un cliente"
     if not has_role('admin'):
-        return redirect(url_for('error'))
+        title = Errors(ERROR_MUST_BE_ADMIN_ADD_CLIENT).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN_ADD_CLIENT).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('clients_list'))
 
     client = db.session.query(Client).filter_by(id=request.args.get('id')).first()
     birthdate = None
@@ -105,22 +113,10 @@ def new_client():
         'page_title' : page_title, 
     })
 
-@app.route('/clients/new_client/add_client', methods=['POST'])
-def add_new_client():
-    """Obtiene los datos para agregar un nuevo carro de un cliente y 
-        lo agrega al sistema"""
+def adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,address):
     if not has_role('admin'):
-        return redirect(url_for('error'))
-    
-    client_to_edit = request.form.get('client_to_edit')
-    ci = request.form['ci']
-    first_name = request.form['first_name']
-    last_name = request.form['last_name']
-    birth_date = datetime.strptime(request.form['birth_date'], r'%Y-%m-%d')
-    phone = request.form['phone']
-    mail = request.form['mail']
-    address = request.form['address']
-    
+        return False
+
     if not client_to_edit:
         client = Client(ci, first_name, last_name, birth_date, mail, phone, address)
         log = Logger('Adding Client')
@@ -146,16 +142,40 @@ def add_new_client():
         log = Logger('Editing project')
         db.session.add(log)
         
-    db.session.commit()        
+    db.session.commit()
+    return client
+
+
+@app.route('/clients/new_client/add_client', methods=['POST'])
+def add_new_client():
+    """Obtiene los datos para agregar un nuevo carro de un cliente y 
+        lo agrega al sistema"""
+    client_to_edit = request.form.get('client_to_edit')
+    ci = request.form['ci']
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    birth_date = datetime.strptime(request.form['birth_date'], r'%Y-%m-%d')
+    phone = request.form['phone']
+    mail = request.form['mail']
+    address = request.form['address']
+
+    c = adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,address)
+
+    if c==False:
+        title = Errors(ERROR_MUST_BE_ADMIN).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('clients_list'))
+
     return redirect(url_for('client_details', id=id))
 
-@app.route('/clients/list/remove_project', methods=['GET', 'POST'])
-def remove_client():
-    "Eliminar client"
-    if not has_role('admin'):
-        return redirect(url_for('error'))
 
-    client_id = request.form['id']
+def removing_client():
+    if not has_role('admin'):
+        return False
+    
     client = db.session.query(Client).filter_by(id=client_id).first()
     for car in client.cars:
         db.session.delete(car)
@@ -164,4 +184,19 @@ def remove_client():
     db.session.add(log)
     db.session.delete(client)
     db.session.commit()
+    return client
+
+@app.route('/clients/list/remove_project', methods=['GET', 'POST'])
+def remove_client():
+    "Eliminar client"
+    client_id = request.form['id']
+    c = remove_client(client_id)
+    if c == False:
+        title = Errors(ERROR_MUST_BE_ADMIN_DELETE_CLIENT).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN_DELETE_CLIENT).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('clients_list'))
+
     return redirect(url_for('clients_list'))

@@ -13,7 +13,7 @@ from src.models.Car import Car
 from datetime import datetime
 from sqlalchemy import extract
 
-from src.errors import Errors  
+from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER
 
 import pdfkit
 import os
@@ -53,11 +53,6 @@ def projects_list():
         {'label': 'End', 'class': 'col-2'},        
         {'label': 'Actions', 'class': 'col-2'},        
     ]
-    error = bool(session['error']['n'])
-    error_title = Errors(int(session['error']['t'])).error.title
-    error_description = Errors(int(session['error']['d'])).error.description
-    session['error'] = {"n":False,"t":0,"d":0} 
-
     try:
         typeS = request.form['typeSearch']
         search = request.form['search']
@@ -120,19 +115,20 @@ def projects_list():
         list_context= {
                 'list_header': users_list_header,
                 'list_body' : projects_list_body
-            },
-        error = error,
-        error_title = error_title,
-        error_description = error_description)
+            })
 
 # Agregar proyectos
 @app.route('/projects/new_project')
 def new_project():
     if not has_role('admin'):
-        return redirect(url_for())    
+        title = Errors(ERROR_MUST_BE_ADMIN).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('projects_list'))    
     "Muestra el formulario para agregar o editar un proyecto"
-    return render_template('projects/new_project.html', 
-        project_to_edit=None)
+    return render_template('projects/new_project.html', project_to_edit=None)
 
 def adding_new_project(id_project_to_edit, description, start_date, close_date):
     if not id_project_to_edit:
@@ -166,7 +162,12 @@ def add_new_project():
     """Obtiene los datos para agregar un nuevo proyecto y 
         lo agrega al sistema"""
     if not has_role('admin'):
-        return redirect(url_for()) 
+        title = Errors(ERROR_MUST_BE_ADMIN).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('projects_list'))
     id_project_to_edit = request.form.get('id_project')
     description = request.form['description']
     start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
@@ -188,7 +189,12 @@ def generate_project():
 def edit_project():
     "Editar proyecto"
     if not has_role('admin'):
-        return redirect(url_for()) 
+        title = Errors(ERROR_MUST_BE_ADMIN).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('projects_list'))
     project = db.session.query(Project).filter_by(
         id=request.form['id']).first()
     edit_context = {
@@ -198,8 +204,7 @@ def edit_project():
         'finish' : project.finish.date(),
         'users' : project.users
     }
-    return render_template('projects/new_project.html', 
-        project_to_edit=edit_context)
+    return render_template('projects/new_project.html', project_to_edit=edit_context)
 
 def removing_project(project_id):
     project = db.session.query(Project).filter_by(id=project_id).first()
@@ -216,6 +221,11 @@ def removing_project(project_id):
 def remove_project():
     "Eliminar proyecto"
     if not has_role('admin'):
+        title = Errors(ERROR_MUST_BE_ADMIN).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
         return redirect(url_for('projects_list'))
         
     project_id = request.form['id']
@@ -235,6 +245,11 @@ def change_availability(project_id):
 def toggle_project_availability():
     "Habilitar/desabilitar proyecto"
     if not has_role('admin'):
+        title = Errors(ERROR_MUST_BE_ADMIN).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
         return redirect(url_for('projects_list'))
 
     changed = change_availability(request.form['id'])

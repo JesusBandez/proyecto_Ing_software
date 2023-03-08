@@ -29,10 +29,8 @@ style="background-color: #122C34;color:white;">
 
 <script type="text/javascript">
       var error = '{{ error }}';
-      console.log(error);
       window.onload = init
       function init() {
-          console.log(error);
           modal = document.getElementById('modalError');
           var modalPopUp = new bootstrap.Modal(modal, {});
           modalPopUp.show()
@@ -41,6 +39,45 @@ style="background-color: #122C34;color:white;">
     </script>
 
 <!-- Modal -->
+
+{% with error = get_flashed_messages(category_filter=["error"]) %}
+{% if error %}
+    {%- for msga in error %}
+      {% if msga %}          
+          {% with messages = get_flashed_messages(category_filter=["error_title"]) %}
+            {% if messages %}                                
+                {% for message in messages %}
+                    <div class="modal fade" id="modalError" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">{{ message }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            {% with descriptions = get_flashed_messages(category_filter=["error_description"]) %}
+                            {% if descriptions %}
+                                {%- for msg in descriptions %}
+                                  {{ msg }}
+                                {% endfor -%}
+                            {% endif %}
+                            {% endwith %}
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+      {% endif %}
+    {% endfor -%}
+{% endif %}
+{% endwith %}
+
+
 {% if error %}
 <div class="modal fade" id="modalError" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">

@@ -5,6 +5,9 @@ from src.models.User import User
 from src.models.Logger import Logger
 from src.models import db
 from src.lib.generate_action import generate_action
+
+from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_NEW_USER,ERROR_MUST_BE_ADMIN_DELETE_USER
+
 from . import app
 
 def search_users(typeS,search):
@@ -67,11 +70,7 @@ def users_lists():
         list_context= {
             'list_header': users_list_header,
             'list_body' : users_list_body,
-        },
-        error=False,
-        error_title = "",
-        error_description = ""    
-    )
+        })
 
 def deleting(user_id):
     user = db.session.query(User).filter_by(id=user_id).first()
@@ -88,6 +87,11 @@ def delete_user():
     "Elimina a un usuario del sistema"
 
     if not has_role('admin'):
+        title = Errors(ERROR_MUST_BE_ADMIN_DELETE_USER).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN_DELETE_USER).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
         return redirect(url_for('users_lists'))
         
     user_id = request.form['id']
@@ -100,11 +104,14 @@ def new_user():
     "Renderiza el formulario de registro de nuevo usuario"
 
     if not has_role('admin'):
-        return redirect(url_for('error'))
+        title = Errors(ERROR_MUST_BE_ADMIN_NEW_USER).error.title
+        desc = Errors(ERROR_MUST_BE_ADMIN_NEW_USER).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('users_lists'))
 
     return render_template('users_list/new_user.html')
-
-
 
 
 def create_user(f_name, l_name,username, password, role, job):
@@ -145,7 +152,11 @@ def add_new_user():
 
     user = create_user(f_name, l_name,username, password, role, job)
     if user[1] == False:
-        flash(user)
+        title = Errors(ERROR_USERNAME_ALREADY_USED).error.title
+        desc = Errors(ERROR_USERNAME_ALREADY_USED).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
         return redirect(url_for('new_user'))
     else:
         return redirect(url_for('users_lists'))
