@@ -7,7 +7,7 @@ ERROR_USERNAME_DONT_EXIST = 5
 ERROR_INCORRECT_PASSWORD = 6
 ERROR_MUST_BE_ADMIN_ADD_CLIENT = 7
 ERROR_MUST_BE_ADMIN_DELETE_CLIENT = 8
-ERROR_EXISTS_PLACA = 9
+ERROR_EXISTS_LICENSE_PLATE = 9
 
 class Errors(): 
     def __init__(self,number):
@@ -44,5 +44,5 @@ class ErrorType:
     		return "Debe ser admin para agregar un cliente"
     	elif n==ERROR_MUST_BE_ADMIN_DELETE_CLIENT:
     		return "Debe ser admin para eliminar un cliente"
-    	elif n==ERROR_EXISTS_PLACA:
+    	elif n==ERROR_EXISTS_LICENSE_PLATE:
     		return "La placa introducida ya existe"

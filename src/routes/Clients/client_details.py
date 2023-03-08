@@ -11,7 +11,7 @@ from src.models.Car import Car
 from src.models.User import User
 from sqlalchemy.exc import IntegrityError
 
-from src.errors import Errors, ERROR_MUST_BE_ADMIN,ERROR_EXISTS_PLACA
+from src.errors import Errors, ERROR_MUST_BE_ADMIN,ERROR_EXISTS_LICENSE_PLATE
 
 from datetime import datetime
 from . import app
@@ -181,8 +181,8 @@ def add_new_car():
 
     c = adding_new_car(car_to_edit,owner_id,owner,license_plate,brand,model,year,serial_engine,serial_car,color,issue)
     if c==False:
-        title = Errors(ERROR_EXISTS_PLACA).error.title
-        desc = Errors(ERROR_EXISTS_PLACA).error.description
+        title = Errors(ERROR_EXISTS_LICENSE_PLATE).error.title
+        desc = Errors(ERROR_EXISTS_LICENSE_PLATE).error.description
         flash(True, 'error')
         flash(title, 'error_title') 
         flash(desc, 'error_description')
