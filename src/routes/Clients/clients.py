@@ -172,7 +172,7 @@ def add_new_client():
     return redirect(url_for('client_details', id=id))
 
 
-def removing_client():
+def removing_client(client_id):
     if not has_role('admin'):
         return False
     

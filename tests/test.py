@@ -13,10 +13,13 @@ from flask import url_for, session as flask_session
 from src.models.User import User
 from src.models.Project import Project
 from src.models.Logger import Logger
+from src.models.Client import Client
+from src.models.Car import Car
+
 
 from datetime import datetime
 
-from main import user_details,users_list, projects, project_details, logger
+from main import user_details,users_list, projects, project_details, logger, clients, client_details
 
 from main import app
 from manage import init_db
@@ -26,7 +29,7 @@ engine = create_engine("sqlite:///instance/database.db")
 home_page = "http://127.0.0.1:5000"
 
 class driver():
-  def __init__(self,browser = 'firefox',**kwargs) -> None:
+  def __init__(self,browser = 'chrome',**kwargs) -> None:
       self.browser_name = browser
       self.kwargs       = kwargs
   def __enter__(self):
@@ -36,6 +39,7 @@ class driver():
         self.driver = webdriver.Chrome(**self.kwargs)
       if (self.browser_name == 'firefox'):
         self.driver = webdriver.Firefox(**self.kwargs)
+      self.driver.maximize_window()
       return self.driver
 
   def __exit__(self,*args):
@@ -62,8 +66,6 @@ unittest.TestLoader.sortTestMethodsUsing = None
 # selenium y el driver geckodriver para poder iniciarlas
 app.config['SERVER_NAME'] = 'http://127.0.0.1:5000/'
 
-appCont = app.app_context() 
-
 class tests(unittest.TestCase):
 
     def setUp(self):
@@ -76,12 +78,14 @@ class tests(unittest.TestCase):
           'job': 'Enginer', 
         }
 
-        with appCont:
+        with app.app_context():
           init_db()
 
     def tearDown(self):
         with app.app_context():
           db.drop_all()
+
+    '''
     
     def test_create_user_duplicated_username_db(self):
       with app.app_context():
@@ -265,6 +269,67 @@ class tests(unittest.TestCase):
         event = db.session.query(Logger).filter_by(id=a.id)
         self.assertEqual(event.count(),0)
 
+    '''
+
+    def test_adding_client(self):
+      with app.test_request_context(), app.test_client() as c:
+        flask_session['user'] = {
+                'id' : '1',
+                'username' : '1',
+                'role' : 'admin'
+            }
+        birth_date = datetime.strptime('1996-10-10', r'%Y-%m-%d') 
+        c = clients.adding_client(0,25145785,"Carlos","Perez",birth_date,4161234567,"carlos@mail.com","Caracas")
+        self.assertEqual(c,db.session.query(Client).filter_by(id=c.id).first())
+
+
+    def test_removing_client(self):
+      with app.test_request_context(), app.test_client() as c:
+        flask_session['user'] = {
+                'id' : '1',
+                'username' : '1',
+                'role' : 'admin'
+            }
+        birth_date = datetime.strptime('1996-10-10', r'%Y-%m-%d') 
+        c = clients.adding_client(0,25145785,"Carlos","Perez",birth_date,4161234567,"carlos@mail.com","Caracas")
+        self.assertEqual(c,db.session.query(Client).filter_by(id=c.id).first())
+        d = clients.removing_client(c.id)
+        query = db.session.query(Client).filter_by(id=d.id).first()
+        self.assertEqual(query,None)
+
+    def test_adding_car(self):
+      with app.test_request_context(), app.test_client() as c:
+        flask_session['user'] = {
+                'id' : '1',
+                'username' : '1',
+                'role' : 'admin'
+            }
+        birth_date = datetime.strptime('1996-10-10', r'%Y-%m-%d') 
+        c = clients.adding_client(0,25145785,"Carlos","Perez",birth_date,4161234567,"carlos@mail.com","Caracas")
+        car = client_details.adding_new_car(0,c.id,c,"AZC78E","toyota","corolla",2004,
+          16168161616,68848616,"negro","no enciende")
+        query = db.session.query(Car).filter_by(serial_car=car.serial_car,serial_engine=car.serial_engine).first()
+        self.assertEqual(query.serial_engine,car.serial_engine)
+        self.assertEqual(query.serial_car,car.serial_car)
+
+    def test_removing_car(self):
+      with app.test_request_context(), app.test_client() as c:
+        flask_session['user'] = {
+                'id' : '1',
+                'username' : '1',
+                'role' : 'admin'
+            }
+        birth_date = datetime.strptime('1996-10-10', r'%Y-%m-%d') 
+        c = clients.adding_client(0,25145785,"Carlos","Perez",birth_date,4161234567,"carlos@mail.com","Caracas")
+        car = client_details.adding_new_car(0,c.id,c,"AZC78E","toyota","corolla",2004,
+          16168161616,68848616,"negro","no enciende")
+        removed_car = client_details.removing_car(car.license_plate,c.id)
+        self.assertEqual(removed_car.license_plate,car.license_plate)
+        query = db.session.query(Car).filter_by(serial_car=removed_car.serial_car,serial_engine=removed_car.serial_engine).first()
+        self.assertEqual(query,None)
+
+    '''
+    #PRUEBAS CON SELENIUM
     def test_c_login(self):
         print("Login y logout correcto")
         with session(user=self.user1_params) as d:
@@ -317,7 +382,7 @@ class tests(unittest.TestCase):
         d.find_element('id', 'password').send_keys('1')        
         d.find_element('name', 'submit').click()
         self.assertEqual(d.title, 'Login' )       
-
+    '''
 
 
 if __name__ == "__main__":

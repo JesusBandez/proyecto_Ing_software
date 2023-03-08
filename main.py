@@ -9,7 +9,7 @@ from src.routes.Users_list import users_list, user_details
 
 from src.routes.Projects import projects, project_details
 from src.routes.Logger import logger
-from src.routes.Clients import clients
+from src.routes.Clients import clients, client_details
 
 
 db.init_app(app)

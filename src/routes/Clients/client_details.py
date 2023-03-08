@@ -189,10 +189,31 @@ def add_new_car():
 
     return redirect(url_for('client_details', id=owner_id))
 
+def removing_car(license_plate,owner_id):
+    if not has_role('admin'):
+        return False
+
+    car = db.session.query(Car).filter(
+        Car.license_plate == license_plate,
+        Car.owner == owner_id
+        ).first()
+    log = Logger('Deleting Car')
+
+    db.session.add(log)
+    db.session.delete(car)
+    db.session.commit()
+    return car
+
+
 @app.route('/clients/client_details/remove_car', methods=['GET', 'POST'])
 def remove_car():
     "Eliminar carro"
-    if not has_role('admin'):
+    license_plate = request.form['id']
+    owner_id = request.form['owner_id']
+
+    c = removing_car(license_plate,owner_id)
+    
+    if c == False:
         title = Errors(ERROR_MUST_BE_ADMIN).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN).error.description
         flash(True, 'error')
@@ -200,13 +221,5 @@ def remove_car():
         flash(desc, 'error_description')
         return redirect(url_for('client_details'))
 
-    car = db.session.query(Car).filter(
-        Car.license_plate == request.form['id'],
-        Car.owner == request.form['owner_id']
-        ).first()
-    log = Logger('Deleting Car')
 
-    db.session.add(log)
-    db.session.delete(car)
-    db.session.commit()
     return redirect(url_for('client_details', id=request.form['owner_id']))
