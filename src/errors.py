@@ -25,27 +25,48 @@ class ErrorType:
         self.description = self.description(number)
  
     def title(self,n):
-        return "ERROR => Nombre del error Modificar en errors.py"
+        if n==ERROR_MUST_BE_ADMIN:
+            return "ERROR: You're not an administrator"
+        elif n==ERROR_MUST_BE_ADMIN_AND_MANAGER:
+            return "ERROR: You're not an administrator and manager of this project"
+        elif n==ERROR_MUST_BE_ADMIN_NEW_USER:
+            return "ERROR: Cannot create new user"
+        elif n==ERROR_MUST_BE_ADMIN_DELETE_USER:
+            return "ERROR: Cannot delete user"
+        elif n==ERROR_USERNAME_ALREADY_USED:
+            return "ERROR: The username is in use"
+        elif n==ERROR_USERNAME_DONT_EXIST:
+            return "ERROR: The username doesn't exist"
+        elif n==ERROR_INCORRECT_PASSWORD:
+            return "ERROR: Incorrect password"
+        elif n==ERROR_MUST_BE_ADMIN_ADD_CLIENT:
+            return "ERROR: Cannot add client"
+        elif n==ERROR_MUST_BE_ADMIN_DELETE_CLIENT:
+            return "ERROR: Cannot delete client"
+        elif n==ERROR_EXISTS_LICENSE_PLATE:
+            return "ERROR: License plate already exists"
+        elif n==ERROR_CI_ALREADY_EXISTS:
+            return "ERROR: C.I. already exists"
     def description(self,n):
         if n==ERROR_MUST_BE_ADMIN:
-            return "Para acceder a esta opcion debes ser admin."
+            return "To access this option you must be an administrator."
         elif n==ERROR_MUST_BE_ADMIN_AND_MANAGER:
-            return "Para acceder debes ser administrador y manager del proyecto"
+            return "To access this option you must be an administrator of the system and manager of the project you're trying to access."
         elif n==ERROR_MUST_BE_ADMIN_NEW_USER:
-            return "Para crear un usuario debes ser administrador"
+            return "To create a user you must be an administrator."
         elif n==ERROR_MUST_BE_ADMIN_DELETE_USER:
-            return "Para eliminar un usuario debes ser administrador"
+            return "To delete a user you must be an administrator."
         elif n==ERROR_USERNAME_ALREADY_USED:
-            return "El nombre de usuario ya ha sido utilizado"
+            return "The username is already taken."
         elif n==ERROR_USERNAME_DONT_EXIST:
-            return "El nombre de usuario no existe"
+            return "The entered username doesn't exist."
         elif n==ERROR_INCORRECT_PASSWORD:
-            return "La contrasena es incorrecta"
+            return "The entered password is incorrect."
         elif n==ERROR_MUST_BE_ADMIN_ADD_CLIENT:
-            return "Debe ser admin para agregar un cliente"
+            return "You have to be an administrator to add a client."
         elif n==ERROR_MUST_BE_ADMIN_DELETE_CLIENT:
-            return "Debe ser admin para eliminar un cliente"
+            return "You have to be an administrator to delete a client."
         elif n==ERROR_EXISTS_LICENSE_PLATE:
-            return "La placa introducida ya existe"
+            return "The license plate that has been introduced already belongs to an existing car in the system."
         elif n==ERROR_CI_ALREADY_EXISTS:
-            return "La cedula introducida ya esta registrada"
+            return "The introduced C.I. already belongs to a client."
