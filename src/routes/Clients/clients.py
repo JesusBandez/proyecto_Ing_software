@@ -145,7 +145,11 @@ def adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,a
     db.session.commit()
     return client
 
-def verify_client_exist(CI,client_id):
+def verify_client_exist(CI,client_to_edit):
+    if client_to_edit is not None:
+        client_id = int(client_to_edit)
+    else:
+        return False
     client = db.session.query(Client).filter_by(ci=CI).first()
     if client!=None and client_id != client.id:
         return True
@@ -165,9 +169,7 @@ def add_new_client():
     mail = request.form['mail']
     address = request.form['address']
 
-    client_id = int(client_to_edit)
-
-    already_exists = verify_client_exist(ci,client_id)
+    already_exists = verify_client_exist(ci,client_to_edit)
 
     if already_exists:
         title = Errors(ERROR_CI_ALREADY_EXISTS).error.title
