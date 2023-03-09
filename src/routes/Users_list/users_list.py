@@ -5,7 +5,7 @@ from src.models.User import User
 from src.models.Logger import Logger
 from src.models import db
 from src.lib.generate_action import generate_action
-
+from werkzeug.security import generate_password_hash
 from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_NEW_USER,ERROR_MUST_BE_ADMIN_DELETE_USER, ERROR_USERNAME_ALREADY_USED
 
 from . import app
@@ -184,7 +184,7 @@ def add_new_user():
             'last_name' : l_name,
             'job' : job,
             'username' : username,
-            'password' : password,
+            'password' : generate_password_hash(password),
             'role' : role,
 
         }
@@ -194,5 +194,5 @@ def add_new_user():
         db.session.add(log)
 
     db.session.commit()
-    print('commit')
+
     return redirect(url_for('users_lists'))
