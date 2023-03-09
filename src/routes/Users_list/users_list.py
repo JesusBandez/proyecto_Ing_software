@@ -101,6 +101,8 @@ def delete_user():
     
     return redirect(url_for('users_lists'))
 
+
+
 @app.route('/users_list/new_user', methods=['POST', 'GET'])
 def new_user():
     "Renderiza el formulario de registro de nuevo usuario"
@@ -155,6 +157,17 @@ def create_user(f_name, l_name,username, password, role, job):
         return [user,True]
 
 
+def verify_user_exist(guser_id,username):
+    if guser_id is not None:
+        user_id = int(guser_id)
+    else:
+        return False
+    user = db.session.query(User).filter_by(id=user_id).first()
+    if user!=None and username != user.username:
+        return True
+    return False
+
+
 @app.route('/users_list/add_new_user', methods=['POST'])
 def add_new_user():
     "Agrega un nuevo usuario al sistema"
@@ -167,6 +180,16 @@ def add_new_user():
     role = request.form['permissions']
     
     client_to_edit = request.form.get('user_to_edit')
+
+    already_exists = verify_user_exist(client_to_edit,username)
+
+    if already_exists:
+        title = Errors(ERROR_USERNAME_ALREADY_USED).error.title
+        desc = Errors(ERROR_USERNAME_ALREADY_USED).error.description
+        flash(True, 'error')
+        flash(title, 'error_title') 
+        flash(desc, 'error_description')
+        return redirect(url_for('users_lists'))
 
     if not client_to_edit:
         user = create_user(f_name, l_name,username, password, role, job)
