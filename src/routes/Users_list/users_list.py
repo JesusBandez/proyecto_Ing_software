@@ -6,7 +6,7 @@ from src.models.Logger import Logger
 from src.models import db
 from src.lib.generate_action import generate_action
 
-from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_NEW_USER,ERROR_MUST_BE_ADMIN_DELETE_USER
+from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_NEW_USER,ERROR_MUST_BE_ADMIN_DELETE_USER, ERROR_USERNAME_ALREADY_USED
 
 from . import app
 
@@ -47,22 +47,24 @@ def users_lists():
 
     users_list_body = []
     for user in users:
-        # Mostrar boton de accion desabilitado si el usuario no tiene
-        # permisos
 
         delete = generate_action(user.id, 'delete_user', 'post', 
             button_class='btn btn-outline-danger', text_class='fa fa-trash',
             title="Delete user",
             disabled=not has_role('admin'))           
         
-        see_projects = generate_action(user.id, 'user_details', 'get',
+        see_user = generate_action(user.id, 'user_details', 'get',
                 button_class='btn btn-outline-primary', text_class="fa-solid fa-eye",
-                title="View the projects associated with the user") 
+                title="View the projects associated with the user")
+
+        edit_user = generate_action(user.id, 'new_user', 'post',
+                button_class='btn btn-outline-primary', text_class="fa-solid fa-pencil",
+                title="Edit the user")
 
         users_list_body.append({
                 'data' : [user.id, user.username, user.first_name, 
                           user.last_name, user.job],               
-                'actions' : [delete, see_projects]})
+                'actions' : [see_user, edit_user, delete]})
 
     return render_template(
         'users_list/users_list.html',
@@ -99,10 +101,10 @@ def delete_user():
     
     return redirect(url_for('users_lists'))
 
-@app.route('/users_list/new_user')
+@app.route('/users_list/new_user', methods=['POST', 'GET'])
 def new_user():
     "Renderiza el formulario de registro de nuevo usuario"
-
+    
     if not has_role('admin'):
         title = Errors(ERROR_MUST_BE_ADMIN_NEW_USER).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN_NEW_USER).error.description
@@ -111,7 +113,21 @@ def new_user():
         flash(desc, 'error_description')
         return redirect(url_for('users_lists'))
 
-    return render_template('users_list/new_user.html')
+    
+    user_to_edit = db.session.query(User).filter_by(
+            id=request.form.get('id')).first()
+
+    if not user_to_edit:
+        title = 'Register New User'
+    else:
+        title = 'Edit User'
+
+
+    return render_template('users_list/new_user.html', 
+        context={
+            'user_to_edit': user_to_edit,
+            'title': title,
+        })
 
 
 def create_user(f_name, l_name,username, password, role, job):
@@ -149,14 +165,34 @@ def add_new_user():
     username = request.form['username']
     password = request.form['password']
     role = request.form['permissions']
+    
+    client_to_edit = request.form.get('user_to_edit')
 
-    user = create_user(f_name, l_name,username, password, role, job)
-    if user[1] == False:
-        title = Errors(ERROR_USERNAME_ALREADY_USED).error.title
-        desc = Errors(ERROR_USERNAME_ALREADY_USED).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('new_user'))
+    if not client_to_edit:
+        user = create_user(f_name, l_name,username, password, role, job)
+        if user[1] == False:
+            title = Errors(ERROR_USERNAME_ALREADY_USED).error.title
+            desc = Errors(ERROR_USERNAME_ALREADY_USED).error.description
+            flash(True, 'error')
+            flash(title, 'error_title') 
+            flash(desc, 'error_description')
+            return redirect(url_for('new_user'))
     else:
-        return redirect(url_for('users_lists'))
+
+        changes = {
+            'first_name' : f_name,
+            'last_name' : l_name,
+            'job' : job,
+            'username' : username,
+            'password' : password,
+            'role' : role,
+
+        }
+        db.session.query(User).filter_by(
+            id=client_to_edit).update(changes)
+        log = Logger('Editing user')
+        db.session.add(log)
+
+    db.session.commit()
+    print('commit')
+    return redirect(url_for('users_lists'))

@@ -8,30 +8,36 @@
                 <div id="register-column" class="col-md-6">
                     <div id="register-box" class="col-md-12">
                         <form id="register-form" class="form" action="{{url_for('add_new_user')}}" method="post">
-                            <h3 class="text-center">Register New User</h3>
+                            {% if context.get('user_to_edit') %}
+                            <input name="user_to_edit" value="{{context['user_to_edit'].id}}" type="hidden">
+                            {% endif %}
+                            <h3 class="text-center">{{context['title']}}</h3>
                             <div class="form-group">
                                 <label style="font-weight:bold;" for="username">Username: </label><br>
-                                <input type="text" name="username" id="username" class="form-control" required>
+                                <input type="text" name="username" id="username" class="form-control" value="{{context['user_to_edit'].username | default('')}}" required>
                             </div>
                             <div class="form-group">
                                 <label style="font-weight:bold;" for="f_name">First Name: </label><br>
-                                <input type="text" name="f_name" id="f_name" class="form-control" required>
+                                <input type="text" name="f_name" id="f_name" class="form-control" value="{{context['user_to_edit'].first_name | default('')}}" required>
                             </div>
                             <div class="form-group">
                                 <label style="font-weight:bold;" for="l_name">Last Name: </label><br>
-                                <input type="text" name="l_name" id="l_name" class="form-control" required>
+                                <input type="text" name="l_name" id="l_name" class="form-control" value="{{context['user_to_edit'].last_name | default('')}}" required>
                             </div>
                             <div class="form-group">
                                 <label style="font-weight:bold;" for="job">Job: </label><br>
-                                <input type="text" name="job" id="job" class="form-control" required>
+                                <input type="text" name="job" id="job" class="form-control" value="{{context['user_to_edit'].job | default('')}}" required>
                             </div>
                             <div class="form-group">
                                 <label style="font-weight:bold;" for="password">Password: </label><br>
-                                <input type="password" name="password" id="password" class="form-control" required>
+                                <input type="password" name="password" id="password" class="form-control" value="" required>
                             </div>
                             <div class="form-group">
                                 <label style="font-weight:bold;" for="permissions">Permissions:</label><br>
-                                    <select class="form-select" name="permissions" required>
+                                    <select class="form-select" name="permissions" value="{{context['user_to_edit'] | default('')}}" required>
+                                        {% if context['user_to_edit'] %}
+                                            <option value="{{context['user_to_edit'].role}}" hidden>{{context['user_to_edit'].role}}</option>
+                                        {% endif %}
                                         <option value="admin">admin</option>
                                         <option value="opera">operations analyst</option>   
                                         <option value="user">user</option>                                        
