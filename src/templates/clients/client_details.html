@@ -81,7 +81,7 @@
             <button type="submit" name="submit" class="btn btn-light btn-md" 
           style="background-color: #2A4494; color:#f0f0f0;" title ="Search"><i class="fas fa-search"></i></button>
 
-            {% if not has_role('admin')%}
+            {% if not has_role('opera')%}
             <a class="btn btn-secondary disabled" disabled title="Add New Car" ><i class="fa-solid fa-plus"></i></a>
             {% else %}
             <a href="{{url_for('new_car', id=context['client'].id)}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"

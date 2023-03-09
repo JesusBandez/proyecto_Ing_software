@@ -1,11 +1,19 @@
 from flask import session
 def has_role(role='user'):
+    '''Comprueba si un usuario tiene un determinado rol de permisos
+    role : Rol que se comprueba que el usuario cumple
+    El rol del usuario logeado se encuentra en session['user']['role'] 
+    '''
 
     if not session.get('user'):
         return False
 
     if role == 'user':
-        return session.get('user')['role'] == 'user' or session.get('user')['role'] == 'admin'
+        return session.get('user')['role'] in ['user', 'opera', 'admin']
+
+    elif role == 'opera':
+        return session.get('user')['role'] in ['opera', 'admin']
+
     elif role == 'admin':
         return session.get('user')['role'] == 'admin'
 

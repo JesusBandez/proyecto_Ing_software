@@ -67,7 +67,7 @@ def client_details():
             button_class='btn btn-sm btn-outline-danger',
             text_class='fa-solid fa-trash',
             title='View user details',
-            disabled= not has_role('admin'),
+            disabled= not has_role('opera'),
             hiddens= [{'name' : 'owner_id', 'data': client_id}])
 
         edit = generate_action(car.license_plate, 'new_car', 
@@ -75,7 +75,7 @@ def client_details():
             button_class='btn btn-sm btn-outline-success',
             title="Edit project",
             text_class='fa-solid fa-pencil',
-            disabled= not has_role('admin'),
+            disabled= not has_role('opera'),
             hiddens= [{'name' : 'id', 'data': client_id}],
             value_name='car_plate')
 
@@ -100,7 +100,7 @@ def client_details():
 @app.route('/clients/client_details/new_car', methods=['GET', 'POST'])
 def new_car():    
     """Muestra el formulario para agregar o editar el carro de un cliente"""
-    if not has_role('admin'):
+    if not has_role('opera'):
         title = Errors(ERROR_MUST_BE_ADMIN).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN).error.description
         flash(True, 'error')
@@ -159,7 +159,7 @@ def adding_new_car(car_to_edit,owner_id,owner,license_plate,brand,model,year,ser
 def add_new_car():
     """ Obtiene los datos para agregar un nuevo carro de un cliente y 
         lo agrega al sistema """
-    if not has_role('admin'):
+    if not has_role('opera'):
         title = Errors(ERROR_MUST_BE_ADMIN).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN).error.description
         flash(True, 'error')
@@ -191,7 +191,7 @@ def add_new_car():
     return redirect(url_for('client_details', id=owner_id))
 
 def removing_car(license_plate,owner_id):
-    if not has_role('admin'):
+    if not has_role('opera'):
         return False
 
     car = db.session.query(Car).filter(

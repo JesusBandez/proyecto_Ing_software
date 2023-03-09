@@ -65,13 +65,13 @@ def clients_list():
             button_class='btn btn-sm btn-outline-success',
             title="Edit client",
             text_class='fa-solid fa-pencil',
-            disabled= not has_role('admin'))
+            disabled= not has_role('opera'))
 
         remove = generate_action(client.id, 'remove_client', 'post',
             button_class='btn btn-sm btn-outline-danger',
             title="Remove client",
             text_class='fa-solid fa-trash',
-            disabled= not has_role('admin'))
+            disabled= not has_role('opera'))
         
         clients_list_body.append({
             'data' : [client.ci, client.first_name, 
@@ -90,7 +90,7 @@ def clients_list():
 @app.route('/clients/new_clients')
 def new_client():
     "Muestra el formulario para agregar o editar un cliente"
-    if not has_role('admin'):
+    if not has_role('opera'):
         title = Errors(ERROR_MUST_BE_ADMIN_ADD_CLIENT).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN_ADD_CLIENT).error.description
         flash(True, 'error')
@@ -114,7 +114,7 @@ def new_client():
     })
 
 def adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,address):
-    if not has_role('admin'):
+    if not has_role('opera'):
         return False
 
     if not client_to_edit:
@@ -196,7 +196,7 @@ def add_new_client():
 
 
 def removing_client(client_id):
-    if not has_role('admin'):
+    if not has_role('opera'):
         return False
     
     client = db.session.query(Client).filter_by(id=client_id).first()
