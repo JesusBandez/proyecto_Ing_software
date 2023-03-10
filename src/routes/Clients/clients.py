@@ -130,8 +130,8 @@ def adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,a
             'first_name' : first_name,
             'last_name' : last_name,
             'birth_date' : birth_date,
-            'mail' : phone,
-            'phone' : mail,
+            'mail' : mail,
+            'phone' : phone,
             'address' : address,
         }
         client = db.session.query(Client).filter_by(
@@ -155,6 +155,19 @@ def verify_client_exist(CI,client_to_edit):
         return True
     return False
 
+def editing_client(ci,client_to_edit,first_name,last_name,birth_date,phone,mail,address):
+    already_exists = verify_client_exist(ci,client_to_edit)
+
+    if already_exists:
+        return [False,0]
+
+    c = adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,address)
+
+    if c==False:
+        return [False,1]
+
+    return [True,c]
+
 
 @app.route('/clients/new_client/add_client', methods=['POST'])
 def add_new_client():
@@ -169,30 +182,28 @@ def add_new_client():
     mail = request.form['mail']
     address = request.form['address']
 
-    already_exists = verify_client_exist(ci,client_to_edit)
+    e = editing_client(ci,client_to_edit,first_name,last_name,birth_date,phone,mail,address)
 
-    if already_exists:
+    if e[0] == False and e[1] == 0:
         title = Errors(ERROR_CI_ALREADY_EXISTS).error.title
         desc = Errors(ERROR_CI_ALREADY_EXISTS).error.description
         flash(True, 'error')
         flash(title, 'error_title') 
         flash(desc, 'error_description')
         return redirect(url_for('clients_list'))
-
-    c = adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,address)
-
-    if c==False:
+    elif e[0] == False and e[1] == 1:
         title = Errors(ERROR_MUST_BE_ADMIN).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN).error.description
         flash(True, 'error')
         flash(title, 'error_title') 
         flash(desc, 'error_description')
         return redirect(url_for('clients_list'))
+    
 
     if client_to_edit != None:
         return redirect(url_for('clients_list'))
 
-    return redirect(url_for('client_details', id=c.id))
+    return redirect(url_for('client_details', id=e[1].id))
 
 
 def removing_client(client_id):
