@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}<title>Clients list</title>{% endblock %}
+{% block title %}<title>Client's list</title>
+{% include  'generics/icon.html' %}  
+{% endblock %}
 {% block body %}
 <div class="fluid-container">
 
@@ -18,10 +20,10 @@
           <div class="d-inline p-2 text-white">
           <select class="form-select" name="typeSearch">
             <option selected>Search by: </option>
-            <option value="ci">Cedula</option>
+            <option value="ci">C.I.</option>
             <option value="name">Name</option>
             <option value="last">Last Name</option>
-            <option value="mail">Mail</option>
+            <option value="mail">E-mail</option>
             <option value="phone">Phone</option>
           </select>
         </div>

@@ -13,6 +13,7 @@ from src.routes.Clients import clients, client_details
 
 
 db.init_app(app)
+
 if __name__== '__main__':
     app.run()
 

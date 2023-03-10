@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}<title>Add New Project</title>{% endblock %}
+{% block title %}<title>Add New Project</title>
+{% include  'generics/icon.html' %}  
+{% endblock %}
 {% block body %}
 <div style="max-width: 800px; margin:auto; margin-top:60px; border-radius: 10px">
     <div id="register" style="margin: 15px 0px">        
@@ -40,13 +42,6 @@
 
                                 <a class="btn btn-danger btn-md mt-4" href="{{url_for('projects_list')}}"> Cancel </a>
                             </div>                          
-                            {% with messages = get_flashed_messages() %}
-                            {% if messages %}                                
-                                {% for message in messages %}
-                                    {{ message }}
-                                {% endfor %}
-                            {% endif %}
-                            {% endwith %} 
                         </form>
                     </div>
                 </div>

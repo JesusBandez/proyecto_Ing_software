@@ -23,7 +23,6 @@ def search_users(typeS,search):
         users = db.session.query(User).all()
     return users
 
-
 @app.route('/users_list', methods=['GET', 'POST'])
 def users_lists():
     "Muestra la lista de usuarios del sistema"

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}<title>Add New Car</title>{% endblock %}
+{% block title %}<title>Add New Car</title>
+{% include  'generics/icon.html' %}  
+{% endblock %}
 {% block body %}
 <div style="max-width: 800px; margin:auto; margin-top:60px; border-radius: 10px">
     <div id="register" style="margin: 15px 0px">        
@@ -16,15 +18,15 @@
                                 {% endif%}
                                 <label style="font-weight:bold;" for="license_plate">License Plate: </label><br>
                                 <input id="license_plate" name="license_plate" type="text" class="form-control" value="{{context['car'].license_plate | default('')}}" required><br>
-                                <label style="font-weight:bold;" for="brand">Marca: </label><br>
+                                <label style="font-weight:bold;" for="brand">Brand: </label><br>
                                 <input id="brand" name="brand" type="text" class="form-control" value="{{context['car'].brand | default('')}}" required><br>
                                 <label style="font-weight:bold;" for="model">Model: </label><br>
                                 <input id="model" name="model" type="text" class="form-control" value="{{context['car'].model | default('')}}" required><br>
-                                <label style="font-weight:bold;" for="year">Año: </label><br>
+                                <label style="font-weight:bold;" for="year">Year: </label><br>
                                 <input id="year" name="year" type="text" class="form-control" value="{{context['car'].year | default('')}}" required><br>
-                                <label style="font-weight:bold;" for="serial_car">Serial de carroceria: </label><br>
+                                <label style="font-weight:bold;" for="serial_car">Car Serial: </label><br>
                                 <input id="serial_car" name="serial_car" type="text" class="form-control" value="{{context['car'].serial_car | default('')}}" required><br>
-                                <label style="font-weight:bold;" for="serial_engine">Serial del motor: </label><br>
+                                <label style="font-weight:bold;" for="serial_engine">Engine Serial: </label><br>
                                 <input id="serial_engine" name="serial_engine" type="text" class="form-control" value="{{context['car'].serial_engine | default('')}}" required><br>
                                 <div class="form-group">
                                 <label style="font-weight:bold;" for="color">Color: </label><br>
@@ -32,19 +34,19 @@
                                         {% if context['car'] %}
                                             <option value="{{context['car'].color}}" hidden>{{context['car'].color | capitalize}}</option>
                                         {% endif %}
-                                        <option value="blanco">Blanco</option>
-                                        <option value="gris">Gris</option>
-                                        <option value="negro">Negro</option>
-                                        <option value="plata">Plata</option>
-                                        <option value="azul">Azul</option>
-                                        <option value="rojo">Rojo</option>
-                                        <option value="marron">Marron</option>
-                                        <option value="verde">Verde</option>
-                                        <option value="amarillo">Amarillo</option>
+                                        <option value="blanco">White</option>
+                                        <option value="gris">Grey</option>
+                                        <option value="negro">Black</option>
+                                        <option value="plata">Silver</option>
+                                        <option value="azul">Blue</option>
+                                        <option value="rojo">Red</option>
+                                        <option value="marron">Brown</option>
+                                        <option value="verde">Green</option>
+                                        <option value="amarillo">Yellow</option>
                                     </select>
                                 </div>
                                 <br>
-                                <label style="font-weight:bold;" for="issue">Problema: </label><br>
+                                <label style="font-weight:bold;" for="issue">Issue: </label><br>
                                 <textarea type="text" name="issue" id="issue" class="form-control" required>{{context['car'].issue}}</textarea>
                             </div>                            
                             <div class="form-group">
@@ -53,13 +55,6 @@
 
                                 <a class="btn btn-danger btn-md mt-4" href="{{url_for('client_details', id=context['id'])}}"> Cancel </a>
                             </div>               
-                            {% with messages = get_flashed_messages() %}
-                            {% if messages %}                                
-                                {% for message in messages %}
-                                    {{ message }}
-                                {% endfor %}
-                            {% endif %}
-                            {% endwith %} 
                         </form>
                     </div>
                 </div>

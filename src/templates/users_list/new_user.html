@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}<title>Register New User</title>{% endblock %}
+{% block title %}<title>Register New User</title>
+{% include  'generics/icon.html' %}  
+{% endblock %}
 {% block body %}
 <div style="max-width: 800px; margin:auto; margin-top:60px; border-radius: 10px">
     <div id="register" style="margin: 15px 0px">        
@@ -39,7 +41,7 @@
                                             <option value="{{context['user_to_edit'].role}}" hidden>{{context['user_to_edit'].role}}</option>
                                         {% endif %}
                                         <option value="admin">admin</option>
-                                        <option value="opera">operations analyst</option>   
+                                        <option value="opera">operation's analyst</option>   
                                         <option value="user">user</option>                                        
                                     </select>
                             </div>
@@ -48,13 +50,6 @@
                                 style="background-color: #2A4494; color:#f0f0f0;" value="Enter">
                                 <a class="btn btn-danger btn-md mt-4" href="{{url_for('users_lists')}}"> Cancel </a>
                             </div>                          
-                            {% with messages = get_flashed_messages() %}
-                            {% if messages %}                                
-                                {% for message in messages %}
-                                    {{ message }}
-                                {% endfor %}
-                            {% endif %}
-                            {% endwith %} 
                         </form>
                     </div>
                 </div>

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}<title>{{context['page_title']}}</title>{% endblock %}
+{% block title %}<title>{{context['page_title']}}</title>
+{% include  'generics/icon.html' %}  
+{% endblock %}
 {% block body %}
 <div style="max-width: 800px; margin:auto; margin-top:60px; border-radius: 10px">
     <div id="register" style="margin: 15px 0px">        
@@ -13,19 +15,19 @@
                                 {% if context.get('client') %}
                                 <input name="client_to_edit" value="{{context['client'].id}}" type="hidden">
                                 {% endif %}
-                                <label style="font-weight:bold;" for="ci">Cédula: </label><br>
+                                <label style="font-weight:bold;" for="ci">C.I.: </label><br>
                                 <input id="ci" name="ci" type="text" value="{{context['client'].ci | default('')}}" class="form-control" placeholder="V-12345678"required><br>
-                                <label style="font-weight:bold;" for="first_name">Nombre: </label><br>
+                                <label style="font-weight:bold;" for="first_name">Name: </label><br>
                                 <input id="first_name" name="first_name" type="text" value="{{context['client'].first_name | default('')}}" class="form-control" placeholder="John" required><br>
-                                <label style="font-weight:bold;" for="last_name">Apellido: </label><br>
+                                <label style="font-weight:bold;" for="last_name">Last Name: </label><br>
                                 <input id="last_name" name="last_name" type="text" value="{{context['client'].last_name | default('')}}" class="form-control" placeholder="Doe" required><br>
-                                <label style="font-weight:bold;" for="birth_date">Fecha de Nacimiento: </label><br>
+                                <label style="font-weight:bold;" for="birth_date">Birth Date: </label><br>
                                 <input id="birth_date" name="birth_date" class="form-control" required type="date" value="{{context['birthdate']}}"><br>
-                                <label style="font-weight:bold;" for="phone">Teléfono de contacto: </label><br>
+                                <label style="font-weight:bold;" for="phone">Phone: </label><br>
                                 <input id="phone" name="phone" type="text" value="{{context['client'].phone | default('')}}" class="form-control" placeholder="04121234567"required><br>
-                                <label style="font-weight:bold;" for="mail">Email: </label><br>
+                                <label style="font-weight:bold;" for="mail">E-mail: </label><br>
                                 <input id="mail" name="mail" type="text" value="{{context['client'].mail | default('')}}" class="form-control" placeholder="ejemplo@mail.com"required><br>
-                                <label style="font-weight:bold;" for="address">Dirección: </label><br>
+                                <label style="font-weight:bold;" for="address">Address: </label><br>
                                 <textarea type="text" name="address" id="address" class="form-control" required>{{context['client'].address | default('')}}</textarea>
                             </div>                            
                             <div class="form-group">
@@ -34,13 +36,6 @@
 
                                 <a class="btn btn-danger btn-md mt-4" href="{{url_for('clients_list')}}"> Cancel </a>
                             </div>                          
-                            {% with messages = get_flashed_messages() %}
-                            {% if messages %}                                
-                                {% for message in messages %}
-                                    {{ message }}
-                                {% endfor %}
-                            {% endif %}
-                            {% endwith %} 
                         </form>
                     </div>
                 </div>
