@@ -1,15 +1,12 @@
-from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory
+from flask import render_template, request, redirect, url_for, flash
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
 from src.models.Department import Department
 from src.models.Logger import Logger
 from src.models import db
-from datetime import datetime
-from src.errors import Errors, ERROR_MUST_BE_ADMIN
+from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_ADD_CLIENT
 
 from . import app
-
-
 
 # Departamentos del sistema
 @app.route('/departments/list', methods=('GET', 'POST'))
