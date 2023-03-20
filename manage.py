@@ -6,6 +6,7 @@ from src.models.Project import Project
 from src.models.Client import Client 
 from src.models.Car import Car
 from src.models.Logger import Logger
+from src.models.Department import Department
 
 
 
@@ -56,10 +57,20 @@ def create_default_clients():
     db.session.add_all(cars)
     db.session.commit()
 
+def create_default_departments():
+    DEPARTMENTS = [
+        Department('Latoneria'), Department('Pintura'), Department('Mecanica'),
+        Department('Lavado') 
+    ]
+    db.session.add_all(DEPARTMENTS)
+    db.session.commit()
+
+
 def init_db_records():
     create_default_users()
     create_default_projects()
-    #create_default_clients()
+    create_default_clients()
+    create_default_departments()
     project = db.session.query(Project).filter_by(id=1).first()
     users = db.session.query(User).all()
     project.users.extend(users[1:])
@@ -71,6 +82,7 @@ def init_db_records():
     projects = db.session.query(Project).all()
     user.projects.extend(projects)
     db.session.commit()
+
 
 def init_db():
     db.create_all()

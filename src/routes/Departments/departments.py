@@ -4,19 +4,22 @@ from src.routes.auth import has_role
 from src.models.Department import Department
 from src.models.Logger import Logger
 from src.models import db
-from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_ADD_CLIENT
+from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT, ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT
 
 from . import app
 
 
 def search_departments(typeS, search):
+    print(typeS)
+    print(search)
     if not typeS or typeS == 'Search By':
         return db.session.query(Department).all()
-    
+
+    DEPARTMENTS = []
     if typeS == 'description':
         DEPARTMENTS = db.session.query(Department)\
-            .filter(Department.description.ilike(search)).all()
-    
+            .filter(Department.description.ilike(f'%{search}%')).all()
+    print(DEPARTMENTS)
     if len(DEPARTMENTS) == 0:
         return db.session.query(Department).all()
 
@@ -34,8 +37,8 @@ def departments_list():
     ]
 
     DEPARTMENTS = search_departments(
-        request.form.get('typeSearch'), 
-        request.form.get('search'))
+        request.args.get('typeSearch'), 
+        request.args.get('search'))
 
     departments_list_body = []
     for department in DEPARTMENTS:
@@ -66,16 +69,13 @@ def departments_list():
 
 @app.route('/departments/new_department')
 def new_department():
-    "Muestra el formulario para agregar o editar un departamento" 
-    if not has_role('opera'):
-        title = Errors(ERROR_MUST_BE_ADMIN_ADD_CLIENT).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_ADD_CLIENT).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('departments_list'))
+    "Muestra el formulario para agregar o editar un departamento"
+    if not has_role('admin'):
+        return Errors(ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT).flash(
+            app, 'departments_list')
 
-    department = db.session.query(Department).filter_by(id=request.args.get('id')).first()
+    department = db.session.query(Department).filter_by(
+            id=request.args.get('id')).first()
     page_title = 'Edit department' if department else 'Add new department'
     
     return render_template('departments/new_department.html', context={
@@ -88,6 +88,9 @@ def new_department():
 def add_new_department():
     """Obtiene los datos para agregar un nuevo departamento y 
         lo agrega al sistema"""
+    if not has_role('admin'):
+        return Errors(ERROR_MUST_BE_ADMIN).flash(
+            app, 'departments_list')
 
     department_to_edit = request.form.get('department_to_edit')
 
@@ -112,6 +115,10 @@ def add_new_department():
 @app.route('/departments/list/remove_project', methods=['GET', 'POST'])
 def remove_department():
     """Elimina un departamento del sistema"""
+    if not has_role('admin'):
+        return Errors(ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT).flash(
+            app, 'departments_list')
+
     department = db.session.query(Department).filter_by(
         id=request.form['id']).first()
     log = Logger('Deleting department')

@@ -1,3 +1,4 @@
+from flask import flash, redirect, url_for
 ERROR_MUST_BE_ADMIN = 0
 ERROR_MUST_BE_ADMIN_AND_MANAGER = 1
 ERROR_MUST_BE_ADMIN_NEW_USER = 2
@@ -9,6 +10,8 @@ ERROR_MUST_BE_ADMIN_ADD_CLIENT = 7
 ERROR_MUST_BE_ADMIN_DELETE_CLIENT = 8
 ERROR_EXISTS_LICENSE_PLATE = 9
 ERROR_CI_ALREADY_EXISTS = 10
+ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT = 11
+ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT = 12
 
 class Errors(): 
     def __init__(self,number):
@@ -16,10 +19,15 @@ class Errors():
  
     def show(self):
         print ('Type:', self.name)
- 
-  
-class ErrorType:
- 
+
+    def flash(self, app, name):
+        with app.app_context():
+            flash(True, 'error')
+            flash(self.error.title, 'error_title') 
+            flash(self.error.description, 'error_description')
+        return redirect(url_for(name))
+        
+class ErrorType: 
     def __init__(self,number):
         self.title = self.title(number)
         self.description = self.description(number)
@@ -28,7 +36,7 @@ class ErrorType:
         if n==ERROR_MUST_BE_ADMIN:
             return "ERROR: You're not an administrator"
         elif n==ERROR_MUST_BE_ADMIN_AND_MANAGER:
-            return "ERROR: You're not an administrator and manager of this project"
+            return "ERROR: You're not an administrator or manager of this project"
         elif n==ERROR_MUST_BE_ADMIN_NEW_USER:
             return "ERROR: Cannot create new user"
         elif n==ERROR_MUST_BE_ADMIN_DELETE_USER:
@@ -47,15 +55,20 @@ class ErrorType:
             return "ERROR: License plate already exists"
         elif n==ERROR_CI_ALREADY_EXISTS:
             return "ERROR: C.I. already exists"
+        elif n==ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT:
+            return "ERROR: Cannot create new department"
+        elif n==ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT:
+            return "ERROR: Cannot delete department"
+
     def description(self,n):
         if n==ERROR_MUST_BE_ADMIN:
             return "To access this option you must be an administrator."
         elif n==ERROR_MUST_BE_ADMIN_AND_MANAGER:
             return "To access this option you must be an administrator of the system and manager of the project you're trying to access."
         elif n==ERROR_MUST_BE_ADMIN_NEW_USER:
-            return "To create a user you must be an administrator."
+            return "To create an user you must be an administrator."
         elif n==ERROR_MUST_BE_ADMIN_DELETE_USER:
-            return "To delete a user you must be an administrator."
+            return "To delete an user you must be an administrator."
         elif n==ERROR_USERNAME_ALREADY_USED:
             return "The username is already taken."
         elif n==ERROR_USERNAME_DONT_EXIST:
@@ -70,3 +83,7 @@ class ErrorType:
             return "The license plate that has been introduced already belongs to an existing car in the system."
         elif n==ERROR_CI_ALREADY_EXISTS:
             return "The introduced C.I. already belongs to a client."
+        elif n==ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT:
+            return "To create a department you must be an administrator."
+        elif n==ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT:
+            return "To delete a department you must be an administrator."
