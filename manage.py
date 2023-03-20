@@ -59,7 +59,7 @@ def create_default_clients():
 def init_db_records():
     create_default_users()
     create_default_projects()
-    create_default_clients()
+    #create_default_clients()
     project = db.session.query(Project).filter_by(id=1).first()
     users = db.session.query(User).all()
     project.users.extend(users[1:])
