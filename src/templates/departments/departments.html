@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}<title>Client's list</title>
+{% include 'generics/icon.html' %}
+{% endblock %}
+{% block body %}
+<div class="fluid-container">
+
+  <div class="card border-light mb-3">
+    <div class="card-header">
+      <h1 class="text-center my-4">Departments's List</h1>
+    </div>
+    <div class="card-body" style="background-color: #36494E;">
+    </div>
+  </div>
+
+  <div class="container">
+    <div style="text-align: right;">
+      <div class="container" style="width:50%;display:flex;">
+        <form class="input-group flex p-2" action="{{url_for('departments_list')}}" method="post">
+          <div class="d-inline p-2 text-white">
+            <select class="form-select" name="typeSearch">
+              <option selected>Search by: </option>
+              <option value="description">Description</option>
+
+            </select>
+          </div>
+          <div class="d-inline p-2 text-white">
+            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+              aria-describedby="search-addon" name="search" />
+          </div>
+          <div class="d-inline p-2 text-white">
+            <button type="submit" name="submit" class="btn btn-light btn-md"
+              style="background-color: #2A4494; color:#f0f0f0;" title="Search"><i class="fas fa-search"></i></button>
+
+            {% if not has_role('opera')%}
+            <a class="btn btn-secondary disabled" disabled title="Add New Department"><i class="fa-solid fa-plus"></i></a>
+            {% else %}
+            <a href="{{url_for('new_department')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
+              title="Add New Client"><i class="fa-solid fa-plus"></i></a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+    {% include 'generics/generic_list.html' %}
+  </div>
+  {% endblock %}

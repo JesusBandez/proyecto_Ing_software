@@ -1,6 +1,6 @@
 from . import db
 
-class Deparment(db.Model):
+class Department(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     description = db.Column(db.String(300),nullable=False)
 
