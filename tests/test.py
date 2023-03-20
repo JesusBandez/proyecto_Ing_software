@@ -1,20 +1,29 @@
 import os
 import sys
+import unittest
+
 sys.path.append(os.path.abspath('..'))
 from sqlalchemy import create_engine
-import unittest
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from src.models import db
-from src.routes.auth import has_role
+from selenium.webdriver.support.ui import Select
+
 from flask import url_for, session as flask_session
+
+from src.routes.auth import has_role
+from src.models import db
 from src.models.User import User
 from src.models.Project import Project
 from src.models.Logger import Logger
 from src.models.Client import Client
 from src.models.Car import Car
+from src.models.Department import Department
+from src import errors
+
 from datetime import datetime
 from main import user_details,users_list, projects, project_details, logger, clients, client_details, app
+
 from manage import init_db
 
 
@@ -40,23 +49,23 @@ class driver():
       self.driver.quit()
 
 class session():
-    def __init__(self,user,**kwargs) -> None:
+    def __init__(self,user=None,**kwargs) -> None:
       self.user   = user
       self.kwargs = kwargs
     def __enter__(self):
       self.d = driver(**self.kwargs).__enter__()
       self.d.get(f'{home_page}/login')
-      self.d.find_element('id', 'username').send_keys(self.user['username'])
-      self.d.find_element('id', 'password').send_keys(self.user['password'])        
-      self.d.find_element('name', 'submit').click()
+      if self.user:
+        self.d.find_element('id', 'username').send_keys(self.user['username'])
+        self.d.find_element('id', 'password').send_keys(self.user['password'])        
+        self.d.find_element('name', 'submit').click()
       return self.d
 
     def __exit__(self,*args):
       self.d.__exit__(*args)
 
 unittest.TestLoader.sortTestMethodsUsing = None
-# Estas pruebas son realizadas con el navegador Edge. Se necesita
-# selenium y el driver geckodriver para poder iniciarlas
+
 app.config['SERVER_NAME'] = 'http://127.0.0.1:5000/'
 
 class tests(unittest.TestCase):
@@ -72,15 +81,14 @@ class tests(unittest.TestCase):
         }
         with app.app_context():
           db.drop_all()
-
-        with app.app_context():
           init_db()
 
     def tearDown(self):
 
         with app.app_context():
           db.drop_all()
-
+          init_db()
+    
     def test_create_user_duplicated_username_db(self):
       with app.app_context():
         user = users_list.create_user("Maria", "Perez","mperez", "1234567", "admin", "Administrator")
@@ -95,7 +103,7 @@ class tests(unittest.TestCase):
     def test_password_length(self):
       with app.app_context():
         user = users_list.create_user("Maria", "Perez","mperez", "", "admin", "Administrator") 
-
+    
     '''def test_name_length(self):
       pass 
 
@@ -107,7 +115,7 @@ class tests(unittest.TestCase):
 
     def test_job_does_not_exist(self):
       pass'''
-
+    
     def test_create_delete_user(self):
       with app.app_context():
         user = users_list.create_user("Maria", "Perez","mperez", "1234567", "admin", "Administrator")
@@ -262,7 +270,7 @@ class tests(unittest.TestCase):
         a = logger.removing_event(log.id)
         event = db.session.query(Logger).filter_by(id=a.id)
         self.assertEqual(event.count(),0)
-
+    """
 
 
     ''' -------------------------------------------------------
@@ -273,7 +281,7 @@ class tests(unittest.TestCase):
     -------------------------------------------------
     ----------------------------------------
     '''
-
+    """
     def test_adding_client_admin(self):
       with app.test_request_context(), app.test_client() as c:
         flask_session['user'] = {
@@ -471,9 +479,85 @@ class tests(unittest.TestCase):
         d.find_element('id', 'password').send_keys('1')        
         d.find_element('name', 'submit').click()
         self.assertEqual(d.title, 'Login' )       
+    
 
+    def test_unauthorized_add_department(self):
+      "Agregar departamento sin ser admin"
+      # Crear el departamento    
+      with session() as sesion:
+        sesion.get(f'{home_page}/departments/new_department')
 
+        # Comprobar que se muestra el modal con el error de autorizacion
+        mensaje_en_modal = sesion.find_element(
+            By.CSS_SELECTOR, r'.modal-body').get_attribute("innerHTML").strip()
+        self.assertEqual(
+          mensaje_en_modal,
+          errors.ErrorType(errors.ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT).description
+          )
 
+    def test_add_department(self):
+      "Agregar departamento"
+      # Crear el departamento
+      user = {'username': '1', 'password': '1'}
+      with session(user) as sesion:
+        sesion.get(f'{home_page}/departments/list')
+        sesion.find_element(By.ID, 'addButton').click()
+        sesion.find_element(By.ID, 'description').send_keys('Aire')
+        sesion.find_element(By.NAME, 'submit').click()
+
+        # Comprobar que existe en la base
+        with app.app_context():
+          department = db.session.query(Department).filter_by(
+            description='Aire'
+          ).first()
+          self.assertTrue(department)
+
+    def test_edit_department(self):
+      "Editar departamento"
+
+      # Buscar el departamento a editar
+      user = {'username': '1', 'password': '1'}
+      with session(user) as sesion:
+        sesion.get(f'{home_page}/departments/list')
+        sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Edit department"][value="1"]').click()
+        sesion.find_element(By.ID, 'description').send_keys(' 2345')
+        sesion.find_element(By.NAME, 'submit').click()
+
+        # Comprobar que se ha editado
+        with app.app_context():
+          department = db.session.query(Department).filter_by(
+            description='Latoneria 2345'
+          ).first()
+          self.assertTrue(department)
+
+    def test_remove_department(self):
+      "Eliminar departamento"
+      # Buscar el departamento a eliminar
+      user = {'username': '1', 'password': '1'}
+      with session(user) as sesion:
+        sesion.get(f'{home_page}/departments/list')
+        sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Remove department"][value="1"]').click()
+        # Comprobar que se ha eliminado el departamento
+        with app.app_context():
+          department = db.session.query(Department).filter_by(
+            id='1'
+          ).first()
+          self.assertFalse(department)
+
+    def test_search_department(self):
+      "Busqueda de departamentos"
+
+      # Buscar el departamento a eliminar
+      with session() as sesion:
+        sesion.get(f'{home_page}/departments/list')
+        sesion.find_element(By.CSS_SELECTOR, r'[type="search"]').send_keys('La')
+        select = Select(sesion.find_element(By.CSS_SELECTOR, r'[name="typeSearch"]'))
+        select.select_by_value("description")
+        sesion.find_element(By.CSS_SELECTOR, r'[type="submit"]').click()
+        # Comprobar que se han filtrado los departamentos
+        departments = sesion.find_elements(By.CSS_SELECTOR, r'table tbody tr')
+        self.assertEqual(len(departments), 2)
+    
 if __name__ == "__main__":
     unittest.main()
 
