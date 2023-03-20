@@ -8,6 +8,20 @@ from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_ADD_CLIE
 
 from . import app
 
+
+def search_departments(typeS, search):
+    if not typeS or typeS == 'Search By':
+        return db.session.query(Department).all()
+    
+    if typeS == 'description':
+        DEPARTMENTS = db.session.query(Department)\
+            .filter(Department.description.ilike(search)).all()
+    
+    if len(DEPARTMENTS) == 0:
+        return db.session.query(Department).all()
+
+    return DEPARTMENTS
+
 # Departamentos del sistema
 @app.route('/departments/list', methods=('GET', 'POST'))
 def departments_list():
@@ -19,7 +33,9 @@ def departments_list():
         {'label': 'Actions', 'class': 'col-2'}, 
     ]
 
-    DEPARTMENTS = db.session.query(Department).all()
+    DEPARTMENTS = search_departments(
+        request.form.get('typeSearch'), 
+        request.form.get('search'))
 
     departments_list_body = []
     for department in DEPARTMENTS:

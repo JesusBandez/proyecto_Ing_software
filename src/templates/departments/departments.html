@@ -16,12 +16,11 @@
   <div class="container">
     <div style="text-align: right;">
       <div class="container" style="width:50%;display:flex;">
-        <form class="input-group flex p-2" action="{{url_for('departments_list')}}" method="post">
+        <form class="input-group flex p-2" action="{{url_for('departments_list')}}" method="get">
           <div class="d-inline p-2 text-white">
             <select class="form-select" name="typeSearch">
               <option selected>Search by: </option>
               <option value="description">Description</option>
-
             </select>
           </div>
           <div class="d-inline p-2 text-white">
@@ -29,7 +28,7 @@
               aria-describedby="search-addon" name="search" />
           </div>
           <div class="d-inline p-2 text-white">
-            <button type="submit" name="submit" class="btn btn-light btn-md"
+            <button type="submit" class="btn btn-light btn-md"
               style="background-color: #2A4494; color:#f0f0f0;" title="Search"><i class="fas fa-search"></i></button>
 
             {% if not has_role('opera')%}
