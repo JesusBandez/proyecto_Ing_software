@@ -32,10 +32,10 @@
               style="background-color: #2A4494; color:#f0f0f0;" title="Search"><i class="fas fa-search"></i></button>
 
             {% if not has_role('opera')%}
-            <a class="btn btn-secondary disabled" disabled title="Add New Department"><i class="fa-solid fa-plus"></i></a>
+            <a id="addButton" class="btn btn-secondary disabled" disabled title="Add New Department"><i class="fa-solid fa-plus"></i></a>
             {% else %}
-            <a href="{{url_for('new_department')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
-              title="Add New Client"><i class="fa-solid fa-plus"></i></a>
+            <a id="addButton" href="{{url_for('new_department')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;"
+              title="Add New Department"><i class="fa-solid fa-plus"></i></a>
             {% endif %}
           </div>
         </form>
