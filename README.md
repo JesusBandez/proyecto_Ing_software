@@ -11,7 +11,7 @@ Comandos:
 
 Para los tests:
 
-		python -m unittest tests/test.py
+		Revisar el readme en la carpeta tests
 
 
 
