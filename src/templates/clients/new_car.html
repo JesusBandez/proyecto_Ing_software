@@ -17,20 +17,20 @@
                                 <input id="car_plate" name="car_plate" type="hidden", value="{{context['car'].license_plate}}">
                                 {% endif%}
                                 <label style="font-weight:bold;" for="license_plate">License Plate: </label><br>
-                                <input id="license_plate" name="license_plate" type="text" class="form-control" value="{{context['car'].license_plate | default('')}}" required><br>
+                                <input id="license_plate" name="license_plate" type="text" class="form-control" value="{{context['car'].license_plate | default('')}}" maxlength="10" required><br>
                                 <label style="font-weight:bold;" for="brand">Brand: </label><br>
-                                <input id="brand" name="brand" type="text" class="form-control" value="{{context['car'].brand | default('')}}" required><br>
+                                <input id="brand" name="brand" type="text" class="form-control" value="{{context['car'].brand | default('')}}" maxlength="100" required><br>
                                 <label style="font-weight:bold;" for="model">Model: </label><br>
-                                <input id="model" name="model" type="text" class="form-control" value="{{context['car'].model | default('')}}" required><br>
+                                <input id="model" name="model" type="text" class="form-control" value="{{context['car'].model | default('')}}" maxlength="100" required><br>
                                 <label style="font-weight:bold;" for="year">Year: </label><br>
                                 <input id="year" name="year" type="text" class="form-control" value="{{context['car'].year | default('')}}" required><br>
                                 <label style="font-weight:bold;" for="serial_car">Car Serial: </label><br>
-                                <input id="serial_car" name="serial_car" type="text" class="form-control" value="{{context['car'].serial_car | default('')}}" required><br>
+                                <input id="serial_car" name="serial_car" type="text" class="form-control" value="{{context['car'].serial_car | default('')}}" maxlength="250"  required><br>
                                 <label style="font-weight:bold;" for="serial_engine">Engine Serial: </label><br>
-                                <input id="serial_engine" name="serial_engine" type="text" class="form-control" value="{{context['car'].serial_engine | default('')}}" required><br>
+                                <input id="serial_engine" name="serial_engine" type="text" class="form-control" value="{{context['car'].serial_engine | default('')}}" maxlength="250" required><br>
                                 <div class="form-group">
                                 <label style="font-weight:bold;" for="color">Color: </label><br>
-                                    <select class="form-select" name="color" value="{{context['car'].color | default('')}}" required>
+                                    <select class="form-select" name="color" value="{{context['car'].color | default('')}}" required maxlength="200">
                                         {% if context['car'] %}
                                             <option value="{{context['car'].color}}" hidden>{{context['car'].color | capitalize}}</option>
                                         {% endif %}
@@ -47,7 +47,7 @@
                                 </div>
                                 <br>
                                 <label style="font-weight:bold;" for="issue">Issue: </label><br>
-                                <textarea type="text" name="issue" id="issue" class="form-control" required>{{context['car'].issue}}</textarea>
+                                <textarea maxlength="200" type="text" name="issue" id="issue" class="form-control" required>{{context['car'].issue}}</textarea>
                             </div>                            
                             <div class="form-group">
                                 <input type="submit" name="submit" class="btn btn-light btn-md mt-4" 
