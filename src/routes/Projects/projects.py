@@ -92,17 +92,7 @@ def projects_list():
         generate = generate_action(project.id,
             'generate_project', button_class='btn btn-outline-primary',
             text_class='fa-regular fa-rectangle-list',
-            title="Project Details",
-            disabled=not project.available)
-
-        
-        edit = generate_action(project.id,
-            'edit_project', method='post', 
-            button_class='btn btn-sm btn-outline-success',
-            title="Edit project",
-            text_class='fa-solid fa-pencil',
-            disabled= not project.available or not has_role('admin'))
-
+            title="Project Details")
         
         remove = generate_action(project.id, 'remove_project', 'post',
             button_class='btn btn-outline-danger',
@@ -110,32 +100,21 @@ def projects_list():
             text_class='fa-solid fa-trash',
             disabled= not has_role('admin'))
 
-        
-        toggle_availability = generate_action(project.id,
-            'toggle_project_availability', method='post',
-            text_class= 'fa-solid fa-ban' if project.available else 'fa-solid fa-play',
-            title="Disable project" if project.available else "Enable project",
-            button_class='btn btn-sm btn-outline-primary', 
-            disabled = not has_role('admin'))
-
-        # semi-ready
-        print_project = generate_action(project.id,            
-            'print_project', 'post',
-            text_class='fa-solid fa-print',
-            title="Print project",
-            button_class='btn btn-outline-primary', 
-            disabled = not has_role('user'))
-
         budget_project = generate_action(project.id,            
             'print_project', 'post',
             text_class='fa-solid fa-sack-dollar',
             title="Project Budget",
             button_class='btn btn-outline-success', 
             disabled = not has_role('user'))
+
+        if project.manager:
+            manager_name = project.manager.first_name +" "+ project.manager.last_name
+        else:
+            manager_name = 'Without manager'
         
         
         projects_list_body.append({
-            'data' : [project.id, project.car, project.department, project.manager.first_name +" "+ project.manager.last_name,
+            'data' : [project.id, project.car, project.department, manager_name,
                     project.issue, project.solution, project.amount, project.observations],
             'actions' : [generate, budget_project, remove]
             })

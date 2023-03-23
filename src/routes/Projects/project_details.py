@@ -31,7 +31,7 @@ def project_details():
 
     has_permissions = has_role('admin') or is_project_manager(project)
     users_list_body = []
-    
+
     for user in project.users:    
         see_user = generate_action(user.id, 'user_details', 
             button_class='btn btn-outline-primary',
