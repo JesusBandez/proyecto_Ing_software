@@ -60,7 +60,7 @@ def project_details():
             'issue' : project.issue,
             'solution' : project.solution,
             'observations' : project.observations,
-
+            'amount' : str(project.amount)+'$',
             'has_permissions' : has_permissions,
             'available' : project.available,
             'generate_action' : generate_action
