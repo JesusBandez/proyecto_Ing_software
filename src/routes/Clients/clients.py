@@ -35,7 +35,7 @@ def clients_list():
     "Renderiza la lista con todos los clientes del sistema"
 
     clients_list_header = [
-        {'label': 'Cedula', 'class': 'col-1'},
+        {'label': 'C.I.', 'class': 'col-1'},
         {'label': 'Name', 'class': 'col-1'},
         {'label': 'Lastname', 'class': 'col-1'},
         {'label': 'Birthdate', 'class': 'col-1'},

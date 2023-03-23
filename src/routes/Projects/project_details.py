@@ -12,7 +12,6 @@ from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANA
 
 from . import app
 
-
 @app.route('/projects/project_details')
 def project_details():
     """Renderiza la vista con la lista de proyectos de un usuario.
@@ -22,9 +21,10 @@ def project_details():
         {'label': 'Id', 'class': 'col-1'},
         {'label': 'First name', 'class': 'col-3'},
         {'label': 'Last name', 'class': 'col-3'},
-        {'label' : 'job', 'class' : 'col-3'},
-        {'label' : 'actions', 'class': 'col-1'} 
+        {'label' : 'Job', 'class' : 'col-3'},
+        {'label' : 'Actions', 'class': 'col-1'} 
     ]
+
 
     project_id = request.args['id']
     project = db.session.query(Project).filter_by(id=project_id).first()

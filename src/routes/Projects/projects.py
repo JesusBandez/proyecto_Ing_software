@@ -1,4 +1,4 @@
-from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory
+from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory,jsonify
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role
 from src.routes.Projects import project_details
@@ -9,9 +9,10 @@ from src.models.Logger import Logger
 
 from src.models.Client import Client
 from src.models.Car import Car
+from src.models.Department import Department
 
 from datetime import datetime
-from sqlalchemy import extract
+from sqlalchemy import extract,or_
 
 from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER
 
@@ -19,15 +20,34 @@ import pdfkit
 import os
 from . import app
 
-#PRUEBA crear cliente y crear carro
-'''log = Client('14254785', "pedro", "perez","17/11/1978","pedro@mail.com","04142547856","Una direccion")
-db.session.add(log)
-db.session.commit()
 
-car = Car(1237483,"mazda","miata",2006,138844,"verde","no enciende",log.ci)
-db.session.add(car)
-db.session.commit()'''
+@app.route("/ajaxlivesearchmanager",methods=["POST","GET"])
+def ajaxlivesearchmanager():
+    if request.method == 'POST':
+        search_word = request.form['search']
 
+        if search_word != '':
+            users = db.session.query(User).filter(or_(User.first_name.contains(search_word),User.last_name.contains(search_word))).all()
+        else:
+            users = db.session.query(User).all()
+    return jsonify({'htmlresponse': render_template('projects/table_for_project.html', all_info=users, count=1)})
+     
+
+@app.route("/ajaxlivesearch",methods=["POST","GET"])
+def ajaxlivesearch():
+    if request.method == 'POST':
+        search_word = request.form['search']
+
+        if search_word != '':
+            cars = db.session.query(Car).filter(Car.license_plate.contains(search_word)).all()
+        else:
+            cars = db.session.query(Car).all()
+        all_info = []
+        for car in cars:
+            o = db.session.query(Client).filter_by(id=car.owner).first()
+            all_info.append([car,o])
+    return jsonify({'htmlresponse': render_template('projects/table_for_project.html', all_info=all_info, count=0)})
+     
 
 def search_projects(typeS,search):
     if typeS == "des":
@@ -47,11 +67,15 @@ def search_projects(typeS,search):
 def projects_list():
     "Renderiza la lista con todos los proyectos del sistema"
     users_list_header = [
-        {'label': 'Id', 'class': 'col-1'},
-        {'label': 'Description', 'class': 'col'},
-        {'label': 'Start', 'class': 'col-2'},
-        {'label': 'End', 'class': 'col-2'},        
-        {'label': 'Actions', 'class': 'col-2'},        
+        {'label': 'Id', 'class': 'col'},
+        {'label': 'Car', 'class': 'col'},
+        {'label': 'Department', 'class': 'col'},
+        {'label': 'Manager', 'class': 'col'},
+        {'label': 'Issue', 'class': 'col'},
+        {'label': 'Solution', 'class': 'col'}, 
+        {'label': 'Amount ($)', 'class': 'col'},
+        {'label': 'Observations', 'class': 'col'},            
+        {'label': 'Actions', 'class': 'col'},        
     ]
     try:
         typeS = request.form['typeSearch']
@@ -66,9 +90,9 @@ def projects_list():
     for project in PROJECTS:
     
         generate = generate_action(project.id,
-            'generate_project', button_class='btn btn-sm btn-outline-primary',
+            'generate_project', button_class='btn btn-outline-primary',
             text_class='fa-regular fa-rectangle-list',
-            title="Generate project",
+            title="Project Details",
             disabled=not project.available)
 
         
@@ -81,7 +105,7 @@ def projects_list():
 
         
         remove = generate_action(project.id, 'remove_project', 'post',
-            button_class='btn btn-sm btn-outline-danger',
+            button_class='btn btn-outline-danger',
             title="Remove project",
             text_class='fa-solid fa-trash',
             disabled= not has_role('admin'))
@@ -99,14 +123,21 @@ def projects_list():
             'print_project', 'post',
             text_class='fa-solid fa-print',
             title="Print project",
-            button_class='btn btn-sm btn-outline-primary', 
+            button_class='btn btn-outline-primary', 
+            disabled = not has_role('user'))
+
+        budget_project = generate_action(project.id,            
+            'print_project', 'post',
+            text_class='fa-solid fa-sack-dollar',
+            title="Project Budget",
+            button_class='btn btn-outline-success', 
             disabled = not has_role('user'))
         
         
         projects_list_body.append({
-            'data' : [project.id, project.description, 
-                    project.start.strftime(f'%m-%d-%Y'), project.finish.strftime(f'%m-%d-%Y')],
-            'actions' : [generate, edit, toggle_availability, print_project, remove]
+            'data' : [project.id, project.car, project.department, project.manager.first_name +" "+ project.manager.last_name,
+                    project.issue, project.solution, project.amount, project.observations],
+            'actions' : [generate, budget_project, remove]
             })
      
 
@@ -128,22 +159,36 @@ def new_project():
         flash(desc, 'error_description')
         return redirect(url_for('projects_list'))    
     "Muestra el formulario para agregar o editar un proyecto"
-    return render_template('projects/new_project.html', project_to_edit=None)
+    department = db.session.query(Department).all()
+    return render_template('projects/new_project.html', project_to_edit=None, all_departments = department)
 
-def adding_new_project(id_project_to_edit, description, start_date, close_date):
+
+def adding_new_project(id_project_to_edit, description, start_date, close_date,car,department,
+        manager,issue,solution,amount,obs):
+    project_car = db.session.query(Car).filter_by(license_plate=car).first()
+    m = manager.split(" ")
+    project_manager = db.session.query(User).filter_by(id=int(m[0])).first()
+
     if not id_project_to_edit:
-        project = Project(description, start_date, close_date)
+        project = Project(description, start_date, close_date,project_car.license_plate,department,
+            issue,solution,obs, project_manager.id, amount)
         log = Logger('Adding project')
         db.session.add_all([log, project])        
         db.session.flush()
         db.session.refresh(project)
         
-        
     else:        
         changes = {
             'description' : description,
             'start' : start_date,
-            'finish' : close_date,            
+            'finish' : close_date,  
+            'car' : project_car.license_plate,
+            'department' : department,
+            'issue' : issue,
+            'solution' : solution,
+            'observations' : obs,
+            'manager_id' : project_manager.id,
+            'amount' : amount        
             }
         db.session.query(Project).filter_by(
             id=id_project_to_edit).update(changes)
@@ -170,10 +215,18 @@ def add_new_project():
         return redirect(url_for('projects_list'))
     id_project_to_edit = request.form.get('id_project')
     description = request.form['description']
+    car = request.form['car_selection'] #la placa
+    department = request.form['department']  #la descripcion
+    manager = request.form['manager_selection'] #id nombre apellido
+    issue = request.form['issue']
+    solution = request.form['solution']
+    amount = request.form['amount']
+    obs = request.form['observation']
     start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
     
-    project = adding_new_project(id_project_to_edit, description, start_date, close_date)
+    project = adding_new_project(id_project_to_edit, description, start_date, close_date,car,department,
+        manager,issue,solution,amount,obs)
             
     return redirect(url_for('project_details', id=project.id))
 
@@ -187,7 +240,7 @@ def generate_project():
 
 @app.route('/projects/list/edit_project', methods=['POST'])
 def edit_project():
-    "Editar proyecto"
+    #"Editar proyecto"
     if not has_role('admin'):
         title = Errors(ERROR_MUST_BE_ADMIN).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN).error.description

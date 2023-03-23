@@ -36,12 +36,12 @@ def search_cars(typeS,search,client_id):
 @app.route('/clients/client_details', methods=('GET', 'POST'))
 def client_details():
     cars_projects_list_header = [
-        {'label': 'Placa', 'class': 'col-1'},
-        {'label': 'Marca', 'class': 'col-2'},
-        {'label': 'Modelo', 'class': 'col-1'},
+        {'label': 'License Plate', 'class': 'col-1'},
+        {'label': 'Brand', 'class': 'col-2'},
+        {'label': 'Model', 'class': 'col-1'},
         {'label': 'Color', 'class': 'col-1'},
-        {'label': 'Problema', 'class': 'col-5'},
-        {'label': 'actions', 'class': 'col-1'}
+        {'label': 'Issue', 'class': 'col-5'},
+        {'label': 'Actions', 'class': 'col-1'}
     ]
 
     client_id = request.args['id']

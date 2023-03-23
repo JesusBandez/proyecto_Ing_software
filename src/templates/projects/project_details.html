@@ -6,7 +6,26 @@
 
 <div class="card border-light mb-3">
   <div class="card-header">
-    <h3 class="text-center my-4">Project '{{context['id']}}' details</h3>
+    <h3 class="text-end my-4">
+    <div class="d-inline p-2">Project '{{context['id']}}' details</div>
+    <div class="d-inline p-2">
+      <div class="d-inline p-2" style="margin-left: 370px;">
+      <button method="post" class="btn btn-outline-success"
+          name="{{context['id']}}" value="{{context['id']}}" title="EDIT" 
+          formaction="{{url_for('edit_project')}}">
+              <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+      </button>
+
+      <a id="editProject" href="{{url_for('edit_project',id=context['id'])}}"
+        class="btn btn-outline-success"title ="Edit Project"><i class="fa-solid fa-pencil"></i></a>
+      <a id="toggleProject" href="{{url_for('toggle_project_availability')}}"
+        class="btn btn-outline-danger"title ="Enable/Disable Project"><i class="fa-solid fa-ban"></i></a>
+      <a id="printProject" href="{{url_for('print_project', id=context['id'])}}"
+        class="btn btn-outline-primary" title ="Print Project"><i class="fa-solid fa-print"></i></a>    
+    </div>
+    </div>
+  </h3>    
+    
   </div>
   <div class="card-body" style="background-color: #36494E;">
   </div>
@@ -57,6 +76,37 @@
               </div>
             </td>
           </tr>
+
+          <!--
+          <tr>
+            <th>              
+              Vehicle:
+              </th>
+              <td>
+              <div style="display: flex;">
+              <div  class="p-2">
+              {% if context['vehicle']%}
+              <h6>{{context['vehicle']}}</h6>
+              {% else %}
+              <h6>Without vehicle assigned</h6>
+              {% endif%}
+              </div>
+              {% set x = ''%}
+              <div>
+                {% if context['vehicle']%}
+                <a id="editVehicle" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
+                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;" title="Edit vehicle for project"> <i class="fa-solid fa-user-pen"></i></a>
+                <a id="removeVehicle" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}" 
+                  href="{{url_for('remove_manager', id=context['id'])}}" style="background-color: #2A4494; color:#f0f0f0;"
+                  title="Remove project's vehicle"> <i class="fa-solid fa-user-xmark"></i> </a>
+                {% else %}
+                <a id="editVehicle" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
+                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;" title="Select vehicle for project"> <i class="fa-solid fa-user-plus"></i>  </a>
+                {% endif%}
+                </div>
+              </div>
+            </td>
+          </tr>-->
       </tbody>
     </table>    
   </div>

@@ -68,9 +68,10 @@ def create_default_departments():
 
 def init_db_records():
     create_default_users()
-    create_default_projects()
+    #create_default_projects()
     create_default_clients()
     create_default_departments()
+    '''
     project = db.session.query(Project).filter_by(id=1).first()
     users = db.session.query(User).all()
     project.users.extend(users[1:])
@@ -80,7 +81,7 @@ def init_db_records():
 
     user = users[0]
     projects = db.session.query(Project).all()
-    user.projects.extend(projects)
+    user.projects.extend(projects)'''
     db.session.commit()
 
 

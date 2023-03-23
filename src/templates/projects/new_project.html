@@ -35,6 +35,210 @@
                                         type="date" value="{{ project_to_edit.finish if project_to_edit else '' }}" />
                                     </div>
                                 </div>
+
+                                <div>
+                                <label style="font-weight:bold;" for="vehicle">Vehicle:</label><br>
+                                </div>
+
+
+                                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+                                <script type="text/javascript">
+                                    window.onload = init;
+                                    var car_url = "/ajaxlivesearch";
+                                    var manager_url = "/ajaxlivesearchmanager"
+                                    function init(){
+                                      load_data('',car_url);
+                                      load_data('',manager_url);
+                                      $('#search_text').keyup(function(){
+                                        var search = $(this).val();
+                                        console.log(search);
+                                        if(search != undefined){
+                                        load_data(search);
+                                       }else{
+                                        load_data('');
+                                       }
+                                      });
+                                    };
+                                    function load_data(search,url)
+                                      {
+                                       $.ajax({
+                                        url:url,
+                                        method:"POST",
+                                        data:{ search : search },
+                                        type : 'POST',
+                                        success:function(data)
+                                        {
+                                            if (url == car_url){
+                                                $('#result').html(data);
+                                                $("#result").append(data.htmlresponse);
+                                            }
+                                            else{
+                                                $('#result2').html(data);
+                                                $("#result2").append(data.htmlresponse);
+                                            }
+                                        }
+                                       });
+                                      }
+                                    function handleChange(value,url){
+                                        if(value != undefined){
+                                        load_data(value,url);
+                                       }else{
+                                        load_data('',url);
+                                       }
+                                    }
+                                    function handleSave(url){
+                                        if (url == car_url){
+                                            //$('#selected_car').css('opacity', '1.0');
+                                            //document.getElementById("p1").innerHTML = selected;
+                                            document.getElementById("car_selection").value = selected;
+                                            }
+                                        else{
+                                            //$('#selected_manager').css('opacity', '1.0');
+                                            //document.getElementById("p2").innerHTML = selected;
+                                            document.getElementById("manager_selection").value = selected;
+
+                                        }
+                                    }
+                                </script>
+
+                                <input type="text" id="car_selection" name="car_selection" class="form-control" placeholder="Add a Car" aria-label="Add a Car" readonly="true" required>
+                                
+                                <!--<div id = "selected_car" style="opacity: 0.0;"> 
+                                    License Plate = <b id="p1">Hello World!</b>
+
+                                </div>-->
+
+                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                style="background-color: #2A4494; color:#f0f0f0;">
+                                  Select a vehicle:
+                                </button>
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Select a Car:</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        
+                                          <div class="d-inline p-2 text-white">
+                                          <input
+                                            type="search"
+                                            class="form-control rounded"
+                                            placeholder="Search"
+                                            aria-label="Search"
+                                            aria-describedby="search-addon"
+                                            name="search_text"
+                                            onchange='handleChange(this.value,"/ajaxlivesearch");'
+                                          />
+                                        </div>
+
+                                        <div id="result"></div>
+
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="handleSave('/ajaxlivesearch');" data-bs-dismiss="modal">Save changes</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+
+
+
+                                <div>
+                                <label style="font-weight:bold;" for="description">Department:</label><br>
+                                </div>
+                                <select class="form-select" name="department" aria-label="Select a department:">
+                                    {%- for dept in all_departments %}
+                                        <option value="{{dept.description}}">{{dept.description}}</option>
+                                    {% endfor -%}
+                                </select>
+
+
+                                <div>
+                                <label style="font-weight:bold;" for="manager">Manager:</label><br>
+                                </div>
+
+                                <input type="text" id="manager_selection" name="manager_selection" class="form-control" placeholder="Add a Manager" aria-label="Add a Manager" readonly="true" required>
+
+                                <!--
+                                <div id = "selected_manager" style="opacity: 0.0;"> 
+                                    Name = <b id="p2">Hello World!</b>
+                                </div>-->
+
+
+                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal2"
+                                style="background-color: #2A4494; color:#f0f0f0;">
+                                  Select a project manager:
+                                </button>
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Select a manager:</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        
+                                          <div class="d-inline p-2 text-white">
+                                          <input
+                                            type="search"
+                                            class="form-control rounded"
+                                            placeholder="Search"
+                                            aria-label="Search"
+                                            aria-describedby="search-addon"
+                                            name="search_text"
+                                            onchange='handleChange(this.value,"/ajaxlivesearchmanager");'
+                                          />
+                                        </div>
+
+                                        <div id="result2"></div>
+
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="handleSave('/ajaxlivesearchmanager');" data-bs-dismiss="modal">Save changes</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+
+
+                                <div>
+                                <label style="font-weight:bold;" for="issue">Issue:</label><br>
+                                </div>
+                                <textarea type="text" name="issue" id="issue" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
+                                <div>
+                                <label style="font-weight:bold;" for="solutions">Solution:</label><br>
+                                </div>
+                                <textarea type="text" name="solution" id="solution" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
+                                <div>
+                                <label style="font-weight:bold;" for="description">Amount ($):</label><br>
+                                </div>
+                                <input type="number"
+                                    class="form-control rounded"
+                                    placeholder="0.00$"
+                                    aria-label="amount"
+                                    aria-describedby="amount-addon"
+                                    name="amount"
+                                  />
+                                <div>
+                                <label style="font-weight:bold;" for="observations">Observations:</label><br>
+                                </div>
+                                <textarea type="text" name="observation" id="observation" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
+
                             </div>                            
                             <div class="form-group">
                                 <input type="submit" name="submit" class="btn btn-light btn-md mt-4" 
