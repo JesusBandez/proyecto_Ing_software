@@ -11,30 +11,28 @@
       <div class="d-inline p-2">
         <div class="d-inline p-2" style="margin-left: 370px;">
           <form method="post" class="d-inline-block">
-            <button class="btn btn-outline-success" name="id" value="{{context['id']}}"
-              title="Edit" formaction="{{url_for('edit_project')}}" 
-              {% if not (context['available'] and context['has_permissions']) %} disabled {%endif%}
-              >
+            <button class="btn btn-outline-success" name="id" value="{{context['id']}}" title="Edit"
+              formaction="{{url_for('edit_project')}}" {% if not (context['available'] and context['has_permissions'])
+              %} disabled {%endif%}>
               <i class="fa-solid fa-pencil" aria-hidden="true"></i>
             </button>
           </form>
           <form method="post" class="d-inline-block">
-            <button class="btn btn-outline-secondary" name="id" value="{{context['id']}}"
-              title="Enable/Disable" formaction="{{url_for('toggle_project_availability')}}">
+            <button class="btn btn-outline-secondary" name="id" value="{{context['id']}}" title="Enable/Disable"
+              formaction="{{url_for('toggle_project_availability')}}">
               <i class="fa-solid fa-ban" aria-hidden="true"></i>
             </button>
           </form>
           <form method="post" class="d-inline-block">
-            <button class="btn btn-outline-danger" name="id" value="{{context['id']}}"
-              title="Delete Project" formaction="{{url_for('remove_project')}}"
-              {% if not (context['available'] and context['has_permissions']) %} disabled {%endif%}
-              >
+            <button class="btn btn-outline-danger" name="id" value="{{context['id']}}" title="Delete Project"
+              formaction="{{url_for('remove_project')}}" {% if not (context['available'] and context['has_permissions'])
+              %} disabled {%endif%}>
               <i class="fa-solid fa-trash" aria-hidden="true"></i>
             </button>
-          </form> 
+          </form>
           <form method="post" class="d-inline-block">
-            <button class="btn btn-outline-primary" name="id" value="{{context['id']}}"
-              title="Print Project" formaction="{{url_for('print_project')}}">
+            <button class="btn btn-outline-primary" name="id" value="{{context['id']}}" title="Print Project"
+              formaction="{{url_for('print_project')}}">
               <i class="fa-solid fa-print" aria-hidden="true"></i>
             </button>
           </form>
@@ -81,7 +79,7 @@
                 <h6>Without manager assigned</h6>
                 {% endif%}
               </div>
-              {% set x = ''%}
+
               <div>
                 {% if context['manager']%}
                 <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
@@ -102,6 +100,31 @@
             </div>
           </td>
         </tr>
+        <tr>
+          <th>Vehicle Plate</th>
+          <td>
+            <div class="p-2">{{context['car_plate']}}</div>
+          </td>
+        </tr>
+        <tr>
+          <th>Issue</th>
+          <td>
+            <div class="p-2">{{context['issue']}}</div>
+          </td>
+        </tr>
+        <tr>
+          <th>Solution</th>
+          <td>
+            <div class="p-2">{{context['solution']}}</div>
+          </td>
+        </tr>
+        <tr>
+          <th>Observation</th>
+          <td>
+            <div class="p-2">{{context['observations']}}</div>
+          </td>
+        </tr>
+        
 
         <!--
           <tr>

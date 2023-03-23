@@ -56,6 +56,11 @@ def project_details():
             'start_date' : project.start.strftime(f'%m-%d-%Y'),
             'finish_date' : project.finish.strftime(f'%m-%d-%Y'),
             'manager': project_manager,
+            'car_plate': project.car,
+            'issue' : project.issue,
+            'solution' : project.solution,
+            'observations' : project.observations,
+
             'has_permissions' : has_permissions,
             'available' : project.available,
             'generate_action' : generate_action

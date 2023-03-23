@@ -111,8 +111,7 @@ def projects_list():
             manager_name = project.manager.first_name +" "+ project.manager.last_name
         else:
             manager_name = 'Without manager'
-        
-        
+                
         projects_list_body.append({
             'data' : [project.id, project.car, project.department, manager_name,
                     project.issue, project.solution, project.amount, project.observations],
