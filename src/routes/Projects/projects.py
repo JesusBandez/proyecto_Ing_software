@@ -283,7 +283,7 @@ def remove_project():
         
     project_id = request.form['id']
 
-    p = removing_project(project_id)
+    removing_project(project_id)
     
     return redirect(url_for('projects_list'))
 
@@ -305,9 +305,9 @@ def toggle_project_availability():
         flash(desc, 'error_description')
         return redirect(url_for('projects_list'))
 
-    changed = change_availability(request.form['id'])
+    change_availability(request.form['id'])
     
-    return redirect(url_for('projects_list'))
+    return redirect(url_for('project_details', id=request.form['id']))
 
 @app.route('/projects/print_project', methods=['POST'])
 def print_project():

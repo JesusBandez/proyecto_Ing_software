@@ -1,31 +1,42 @@
 {% extends "base.html" %}
 {% block title %}<title>Project Details</title>
-{% include  'generics/icon.html' %}  
+{% include 'generics/icon.html' %}
 {% endblock %}
 {% block body %}
 
 <div class="card border-light mb-3">
   <div class="card-header">
     <h3 class="text-end my-4">
-    <div class="d-inline p-2">Project '{{context['id']}}' details</div>
-    <div class="d-inline p-2">
-      <div class="d-inline p-2" style="margin-left: 370px;">
-      <button method="post" class="btn btn-outline-success"
-          name="{{context['id']}}" value="{{context['id']}}" title="EDIT" 
-          formaction="{{url_for('edit_project')}}">
+      <div class="d-inline p-2">Project '{{context['id']}}' details</div>
+      <div class="d-inline p-2">
+        <div class="d-inline p-2" style="margin-left: 370px;">
+          <form method="post" class="d-inline-block">
+            <button class="btn btn-outline-success" name="id" value="{{context['id']}}"
+              title="Edit" formaction="{{url_for('edit_project')}}">
               <i class="fa-solid fa-pencil" aria-hidden="true"></i>
-      </button>
-
-      <a id="editProject" href="{{url_for('edit_project',id=context['id'])}}"
-        class="btn btn-outline-success"title ="Edit Project"><i class="fa-solid fa-pencil"></i></a>
-      <a id="toggleProject" href="{{url_for('toggle_project_availability')}}"
-        class="btn btn-outline-danger"title ="Enable/Disable Project"><i class="fa-solid fa-ban"></i></a>
-      <a id="printProject" href="{{url_for('print_project', id=context['id'])}}"
-        class="btn btn-outline-primary" title ="Print Project"><i class="fa-solid fa-print"></i></a>    
-    </div>
-    </div>
-  </h3>    
-    
+            </button>
+          </form>
+          <form method="post" class="d-inline-block">
+            <button class="btn btn-outline-secondary" name="id" value="{{context['id']}}"
+              title="Enable/Disable" formaction="{{url_for('toggle_project_availability')}}">
+              <i class="fa-solid fa-ban" aria-hidden="true"></i>
+            </button>
+          </form>
+          <form method="post" class="d-inline-block">
+            <button class="btn btn-outline-danger" name="id" value="{{context['id']}}"
+              title="Delete Project" formaction="{{url_for('remove_project')}}">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+            </button>
+          </form> 
+          <form method="post" class="d-inline-block">
+            <button class="btn btn-outline-primary" name="id" value="{{context['id']}}"
+              title="Print Project" formaction="{{url_for('print_project')}}">
+              <i class="fa-solid fa-print" aria-hidden="true"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </h3>
   </div>
   <div class="card-body" style="background-color: #36494E;">
   </div>
@@ -37,47 +48,58 @@
       <tbody>
         <tr>
           <th>Description</th>
-          <td><div  class="p-2">{{context['description']}}</div></td>
+          <td>
+            <div class="p-2">{{context['description']}}</div>
+          </td>
         </tr>
         <tr>
           <th>Start Date</th>
-          <td><div  class="p-2">{{context['start_date']}}</div></td>
+          <td>
+            <div class="p-2">{{context['start_date']}}</div>
+          </td>
         </tr>
         <tr>
           <th>Finish Date</th>
-          <td><div  class="p-2">{{context['finish_date']}}</div></td>
+          <td>
+            <div class="p-2">{{context['finish_date']}}</div>
+          </td>
         </tr>
         <tr>
-            <th>              
-              Managed by:
-              </th>
-              <td>
-              <div style="display: flex;">
-              <div  class="p-2">
-              {% if context['manager']%}
-              <h6>{{context['manager']}}</h6>
-              {% else %}
-              <h6>Without manager assigned</h6>
-              {% endif%}
+          <th>
+            Managed by:
+          </th>
+          <td>
+            <div style="display: flex;">
+              <div class="p-2">
+                {% if context['manager']%}
+                <h6>{{context['manager']}}</h6>
+                {% else %}
+                <h6>Without manager assigned</h6>
+                {% endif%}
               </div>
               {% set x = ''%}
               <div>
                 {% if context['manager']%}
                 <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
-                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;" title="Edit project manager"> <i class="fa-solid fa-user-pen"></i></a>
-                <a id="removeManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}" 
-                  href="{{url_for('remove_manager', id=context['id'])}}" style="background-color: #2A4494; color:#f0f0f0;"
-                  title="Remove project manager"> <i class="fa-solid fa-user-xmark"></i> </a>
+                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}"
+                  style="background-color: #2A4494; color:#f0f0f0;" title="Edit project manager"> <i
+                    class="fa-solid fa-user-pen"></i></a>
+                <a id="removeManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
+                  href="{{url_for('remove_manager', id=context['id'])}}"
+                  style="background-color: #2A4494; color:#f0f0f0;" title="Remove project manager"> <i
+                    class="fa-solid fa-user-xmark"></i> </a>
                 {% else %}
                 <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
-                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;" title="Select project manager"> <i class="fa-solid fa-user-plus"></i>  </a>
+                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}"
+                  style="background-color: #2A4494; color:#f0f0f0;" title="Select project manager"> <i
+                    class="fa-solid fa-user-plus"></i> </a>
                 {% endif%}
-                </div>
               </div>
-            </td>
-          </tr>
+            </div>
+          </td>
+        </tr>
 
-          <!--
+        <!--
           <tr>
             <th>              
               Vehicle:
@@ -108,7 +130,7 @@
             </td>
           </tr>-->
       </tbody>
-    </table>    
+    </table>
   </div>
 </div>
 
@@ -116,16 +138,17 @@
   <div class="col">
     <div class="container-sm mb-2" style="text-align: right;">
       {% if not context['has_permissions']%}
-      <a class="btn btn-light disabled" disabled style="background-color: #2A4494; color:#f0f0f0;"
-      title="Add Users"><i class="fa-solid fa-plus"></i></a>
-      <a class="btn btn-danger disabled" disabled title ="Remove Users"><i class="fa-solid fa-minus"></i></a>
+      <a class="btn btn-light disabled" disabled style="background-color: #2A4494; color:#f0f0f0;" title="Add Users"><i
+          class="fa-solid fa-plus"></i></a>
+      <a class="btn btn-danger disabled" disabled title="Remove Users"><i class="fa-solid fa-minus"></i></a>
       {% else %}
-      <a id="addUser" href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-light" style="background-color: #2A4494; color:#f0f0f0;" title="Add Users"><i class="fa-solid fa-plus"></i></a>
-      <a id="removeUser" href="{{url_for('manage_project', id=context['id'], mode='Remove')}}"
-        class="btn btn-danger"title ="Remove Users"><i class="fa-solid fa-minus"></i></a>
+      <a id="addUser" href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-light"
+        style="background-color: #2A4494; color:#f0f0f0;" title="Add Users"><i class="fa-solid fa-plus"></i></a>
+      <a id="removeUser" href="{{url_for('manage_project', id=context['id'], mode='Remove')}}" class="btn btn-danger"
+        title="Remove Users"><i class="fa-solid fa-minus"></i></a>
       {% endif %}
     </div>
-  </div>  
+  </div>
 </div>
 {% include 'generics/generic_list.html' %}
 {% endblock %}

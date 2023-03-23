@@ -57,6 +57,8 @@ def project_details():
             'finish_date' : project.finish.strftime(f'%m-%d-%Y'),
             'manager': project_manager,
             'has_permissions' : has_permissions,
+            'available' : project.available,
+            'generate_action' : generate_action
         },   
         list_context= {
                 'list_header': users_projects_list_header,
