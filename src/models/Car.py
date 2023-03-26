@@ -10,6 +10,7 @@ class Car(db.Model):
     color = db.Column(db.String(100))
     issue = db.Column(db.String(200))
     owner = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    associated_projects = db.relationship('Project', backref='projects')
 
     def __init__(self, license_plate, brand, model, year, serial_car, serial_engine, color, issue, owner):
         self.license_plate = license_plate

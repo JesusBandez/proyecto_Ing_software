@@ -7,7 +7,7 @@ class Project(db.Model):
     start = db.Column(db.DateTime())
     finish = db.Column(db.DateTime())
     available = db.Column(db.Boolean)
-    car = db.Column(db.String(10), db.ForeignKey('car.license_plate', ondelete='SET NULL'), nullable=True)
+    car = db.Column(db.String(10), db.ForeignKey('car.license_plate'), nullable=True)
     department = db.Column(db.Integer, db.ForeignKey('department.id'), nullable=True)
     issue = db.Column(db.String(255))
     solution = db.Column(db.String(255))
