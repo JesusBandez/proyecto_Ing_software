@@ -72,14 +72,12 @@
           </th>
           <td>
             <div style="display: flex;">
-              <div class="p-2">
-                {% if context['manager']%}
+              <div class="p-2">               
                 <h6>{{context['manager']}}</h6>
-                {% else %}
-                <h6>Without manager assigned</h6>
-                {% endif%}
               </div>
-
+              <!-- 
+                Voy a dejar esto comentado, nos puede interesar un boton que nos lleve a la vista de detalles
+                del usuario manager. Tambien puede aplicar para el vehiculo.
               <div>
                 {% if context['manager']%}
                 <a id="editManager" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
@@ -96,6 +94,7 @@
                   style="background-color: #2A4494; color:#f0f0f0;" title="Select project manager"> <i
                     class="fa-solid fa-user-plus"></i> </a>
                 {% endif%}
+              -->
               </div>
             </div>
           </td>

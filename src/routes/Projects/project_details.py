@@ -47,7 +47,7 @@ def project_details():
     if manager:
         project_manager = ' '.join([manager.first_name, manager.last_name])
     else:
-        project_manager = None
+        project_manager = 'Without manager assigned'
 
     car_plate = project.car if project.car else 'N/A'
  

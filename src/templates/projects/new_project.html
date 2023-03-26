@@ -22,7 +22,7 @@
                                 <div>
                                 <label style="font-weight:bold;" for="description">Project's Description:</label><br>
                                 </div>
-                                <textarea type="text" name="description" id="description" class="form-control" 
+                                <textarea maxlength="255" type="text" name="description" id="description" class="form-control" 
                                   required>{{project_to_edit.description | default('')}}</textarea>
                                 <div class="row">
                                     <div class="col">
@@ -224,11 +224,13 @@
                                 <div>
                                 <label style="font-weight:bold;" for="issue">Issue:</label><br>
                                 </div>
-                                <textarea type="text" name="issue" id="issue" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
+                                <textarea type="text" name="issue" id="issue" class="form-control" maxlength="255"
+                                  required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
                                 <div>
                                 <label style="font-weight:bold;" for="solutions">Solution:</label><br>
                                 </div>
-                                <textarea type="text" name="solution" id="solution" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
+                                <textarea type="text" name="solution" id="solution" class="form-control" maxlength="255"
+                                  required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
                                 <div>
                                 <label style="font-weight:bold;" for="description">Amount ($):</label><br>
                                 </div>
@@ -246,7 +248,8 @@
                                 <div>
                                 <label style="font-weight:bold;" for="observations">Observations:</label><br>
                                 </div>
-                                <textarea type="text" name="observation" id="observation" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
+                                <textarea type="text" name="observation" id="observation" class="form-control" maxlength="255"
+                                  required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
 
                             </div>                            
                             <div class="form-group">
