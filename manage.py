@@ -34,10 +34,14 @@ def create_default_projects():
     DEPARTMENTS = db.session.query(Department).all()
     USERS = db.session.query(User).all()
     projects = [
-        Project("Project 1 test", date.today(), date.today() + timedelta(days=1), CARS[0].license_plate, DEPARTMENTS[2].id,
-        'Necesita alineacion', 'Hay que alinearlo', 'Golpe en el capo', USERS[0].id, 23.2),
-
+        Project("Alineacion de vehiculo", date.today(), date.today() + timedelta(days=1), CARS[0].license_plate, DEPARTMENTS[2].id,
+        'Necesita alineacion', 'Hay que alinearlo', 'Golpe en el capo', USERS[0].id, 30.0),
+        Project("Rellenado de carroceria", date.today(), date.today() + timedelta(days=1), CARS[1].license_plate, DEPARTMENTS[1].id,
+        'Raya en el capo', 'Aplicacion de masilla de relleno y pintura', 'N/A', USERS[1].id,20),
+        Project("Limpieza", date.today(), date.today() + timedelta(days=1), CARS[2].license_plate, DEPARTMENTS[3].id,
+        'Tapiceria embarrada de grasa', 'Limpieza completa', 'Asientos rotos', USERS[2].id, 32),
     ]
+
     db.session.add_all(projects)
     db.session.commit() 
 
@@ -54,7 +58,7 @@ def create_default_clients():
     clients = db.session.query(Client).all()
     cars = [
         Car('ATD820', 'Chevrolet', 'Sedan', 2000,'PJ12345U123456P', 'SD76216K946258D', 'blanco', 'Alineacion', clients[0].id),
-        Car('PTK630', 'Toyota', 'Hatchback', 2003,'LM97845U123136K', 'LM63845U123648S', 'azul', 'Cambio de aceite', clients[0].id),
+        Car('PTK630', 'Toyota', 'Hatchback', 2003,'LM97845U123136K', 'LM63845U123648S', 'azul', 'Raya en el capo', clients[0].id),
         Car('RT5031', 'Jeep', 'SUV', 2006,'GF97845U978456K', 'AR63845U123879D', 'amarillo', 'Limpieza de tapiceria', clients[1].id),
         Car('CX30EW', 'Nissan', 'Crossover', 2015,'HL9RT64897845ZF', 'PK61485G54387SA', 'amarillo', 'Croche', clients[2].id)
     ]
