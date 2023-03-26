@@ -112,9 +112,14 @@ def projects_list():
             manager_name = project.manager.first_name +" "+ project.manager.last_name
         else:
             manager_name = 'Without manager'
-        print(project.car)
+        
+        
+        car_plate = project.car if project.car else 'N/A'
+        
+       
+
         projects_list_body.append({
-            'data' : [project.id, project.car, project.department, manager_name,
+            'data' : [project.id, car_plate, project.department, manager_name,
                     project.issue, project.solution, project.amount, project.observations],
             'actions' : [generate, budget_project, remove]
             })

@@ -48,6 +48,8 @@ def project_details():
         project_manager = ' '.join([manager.first_name, manager.last_name])
     else:
         project_manager = None
+
+    car_plate = project.car if project.car else 'N/A'
  
     return render_template('projects/project_details.html',        
         context={
@@ -56,7 +58,7 @@ def project_details():
             'start_date' : project.start.strftime(f'%m-%d-%Y'),
             'finish_date' : project.finish.strftime(f'%m-%d-%Y'),
             'manager': project_manager,
-            'car_plate': project.car,
+            'car_plate': car_plate,
             'issue' : project.issue,
             'solution' : project.solution,
             'observations' : project.observations,
