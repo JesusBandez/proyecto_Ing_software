@@ -50,6 +50,9 @@ def project_details():
         project_manager = 'Without manager assigned'
 
     car_plate = project.car if project.car else 'N/A'
+
+    department_description = (
+        project.associated_department.description if project.associated_department else 'N/A')
  
     return render_template('projects/project_details.html',        
         context={
@@ -59,6 +62,7 @@ def project_details():
             'finish_date' : project.finish.strftime(f'%m-%d-%Y'),
             'manager': project_manager,
             'car_plate': car_plate,
+            'department' : department_description,
             'issue' : project.issue,
             'solution' : project.solution,
             'observations' : project.observations,

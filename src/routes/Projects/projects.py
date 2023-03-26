@@ -113,8 +113,6 @@ def projects_list():
         else:
             manager_name = 'Without manager'       
         
-
-
         car_plate = project.car if project.car else 'N/A'
         
         department_description = (
