@@ -12,7 +12,7 @@
         <div class="d-inline p-2" style="margin-left: 370px;">
           <form method="post" class="d-inline-block">
             <button class="btn btn-outline-success" name="id" value="{{context['id']}}" title="Edit"
-              formaction="{{url_for('edit_project')}}" {% if not (context['available'] and context['has_permissions'])
+              formaction="{{url_for('new_project')}}" {% if not (context['available'] and context['has_permissions'])
               %} disabled {%endif%}>
               <i class="fa-solid fa-pencil" aria-hidden="true"></i>
             </button>

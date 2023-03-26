@@ -88,7 +88,8 @@ def projects_list():
 
     projects_list_body = []
     for project in PROJECTS:
-    
+        db.session.commit()
+        print(project.description)
         generate = generate_action(project.id,
             'generate_project', button_class='btn btn-outline-primary',
             text_class='fa-regular fa-rectangle-list',
@@ -111,7 +112,7 @@ def projects_list():
             manager_name = project.manager.first_name +" "+ project.manager.last_name
         else:
             manager_name = 'Without manager'
-                
+        print(project.car)
         projects_list_body.append({
             'data' : [project.id, project.car, project.department, manager_name,
                     project.issue, project.solution, project.amount, project.observations],
@@ -127,8 +128,10 @@ def projects_list():
             })
 
 # Agregar proyectos
-@app.route('/projects/new_project')
+@app.route('/projects/new_project', methods=['POST', 'GET'])
 def new_project():
+    "Muestra el formulario para agregar o editar un proyecto"
+
     if not has_role('admin'):
         title = Errors(ERROR_MUST_BE_ADMIN).error.title
         desc = Errors(ERROR_MUST_BE_ADMIN).error.description
@@ -136,20 +139,30 @@ def new_project():
         flash(title, 'error_title') 
         flash(desc, 'error_description')
         return redirect(url_for('projects_list'))    
-    "Muestra el formulario para agregar o editar un proyecto"
+    
     department = db.session.query(Department).all()
-    return render_template('projects/new_project.html', project_to_edit=None, all_departments = department)
+
+    project, manager = None, None
+    if request.form.get('id'):
+        project = db.session.query(Project).filter_by(
+            id=request.form.get('id')).first()
+        
+        if project.manager_id:
+            manager = db.session.query(User).filter_by(id=project.manager_id).first()
+            manager = ' '.join([str(manager.id), manager.first_name,  manager.last_name])
+
+    return render_template('projects/new_project.html', project_to_edit=project, 
+        all_departments = department, manager=manager)
 
 
 def adding_new_project(id_project_to_edit, description, start_date, close_date,car,department,
         manager,issue,solution,amount,obs):
-    project_car = db.session.query(Car).filter_by(license_plate=car).first()
-    m = manager.split(" ")
-    project_manager = db.session.query(User).filter_by(id=int(m[0])).first()
+    
+    manager_id = int(manager.split(" ")[0])  
 
     if not id_project_to_edit:
-        project = Project(description, start_date, close_date,project_car.license_plate,department,
-            issue,solution,obs, project_manager.id, amount)
+        project = Project(description, start_date, close_date,car,department,
+            issue,solution,obs, manager_id, amount)
         log = Logger('Adding project')
         db.session.add_all([log, project])        
         db.session.flush()
@@ -160,12 +173,12 @@ def adding_new_project(id_project_to_edit, description, start_date, close_date,c
             'description' : description,
             'start' : start_date,
             'finish' : close_date,  
-            'car' : project_car.license_plate,
+            'car' : car,
             'department' : department,
             'issue' : issue,
             'solution' : solution,
             'observations' : obs,
-            'manager_id' : project_manager.id,
+            'manager_id' : manager_id,
             'amount' : amount        
             }
         db.session.query(Project).filter_by(
@@ -215,27 +228,6 @@ def generate_project():
     # TODO: No se que hace esta vaina pero la voy a usar para los detalles
     print("Generando")
     return redirect(url_for('project_details', id=request.args['id']))
-
-@app.route('/projects/list/edit_project', methods=['POST'])
-def edit_project():
-    #"Editar proyecto"
-    if not has_role('admin'):
-        title = Errors(ERROR_MUST_BE_ADMIN).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('projects_list'))
-    project = db.session.query(Project).filter_by(
-        id=request.form['id']).first()
-    edit_context = {
-        'id' : project.id,
-        'description': project.description,
-        'start' : project.start.date(),
-        'finish' : project.finish.date(),
-        'users' : project.users
-    }
-    return render_template('projects/new_project.html', project_to_edit=edit_context)
 
 def removing_project(project_id):
     project = db.session.query(Project).filter_by(id=project_id).first()

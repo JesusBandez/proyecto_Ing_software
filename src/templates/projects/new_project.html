@@ -22,17 +22,18 @@
                                 <div>
                                 <label style="font-weight:bold;" for="description">Project's Description:</label><br>
                                 </div>
-                                <textarea type="text" name="description" id="description" class="form-control" required>{{project_to_edit.description if project_to_edit else '' }}</textarea>
+                                <textarea type="text" name="description" id="description" class="form-control" 
+                                  required>{{project_to_edit.description | default('')}}</textarea>
                                 <div class="row">
                                     <div class="col">
                                         <label style="font-weight:bold;" for="s_date">Start Date: </label>
                                         <input id="s_date" name="s_date" class="form-control" required
-                                            type="date" value="{{ project_to_edit.start if project_to_edit else '' }}">
+                                            type="date" value="{{ project_to_edit.start.date() if project_to_edit else ''}}">
                                     </div>
                                     <div class="col">
                                         <label style="font-weight:bold;" for="c_date">Close Date: </label>
                                         <input id="c_date" name="c_date" class="form-control" required
-                                        type="date" value="{{ project_to_edit.finish if project_to_edit else '' }}" />
+                                        type="date" value="{{ project_to_edit.finish.date() if project_to_edit else ''}}" />
                                     </div>
                                 </div>
 
@@ -102,7 +103,9 @@
                                     }
                                 </script>
 
-                                <input type="text" id="car_selection" name="car_selection" class="form-control" placeholder="Add a Car" aria-label="Add a Car" readonly="true" required>
+                                <input type="text" id="car_selection" name="car_selection" class="form-control" placeholder="Add a Car" 
+                                  aria-label="Add a Car" onkeydown="event.preventDefault()" autocomplete="off" 
+                                  value="{{project_to_edit.car if project_to_edit}}" required>
                                 
                                 <!--<div id = "selected_car" style="opacity: 0.0;"> 
                                     License Plate = <b id="p1">Hello World!</b>
@@ -166,7 +169,9 @@
                                 <label style="font-weight:bold;" for="manager">Manager:</label><br>
                                 </div>
 
-                                <input type="text" id="manager_selection" name="manager_selection" class="form-control" placeholder="Add a Manager" aria-label="Add a Manager" readonly="true" required>
+                                <input type="text" id="manager_selection" name="manager_selection" class="form-control" 
+                                  placeholder="Add a Manager" aria-label="Add a Manager" value="{{manager if manager else ''}}"
+                                  onkeydown="event.preventDefault()" autocomplete="off" required>
 
                                 <!--
                                 <div id = "selected_manager" style="opacity: 0.0;"> 
@@ -233,6 +238,10 @@
                                     aria-label="amount"
                                     aria-describedby="amount-addon"
                                     name="amount"
+                                    min="0"
+                                    step="0.01"
+                                    value="{{project_to_edit.amount}}"
+                                    required
                                   />
                                 <div>
                                 <label style="font-weight:bold;" for="observations">Observations:</label><br>
