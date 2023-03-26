@@ -160,7 +160,7 @@
                                 </div>
                                 <select class="form-select" name="department" aria-label="Select a department:">
                                     {%- for dept in all_departments %}
-                                        <option value="{{dept.description}}">{{dept.description}}</option>
+                                        <option value="{{dept.id}}">{{dept.description}}</option>
                                     {% endfor -%}
                                 </select>
 

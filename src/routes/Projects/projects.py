@@ -111,15 +111,17 @@ def projects_list():
         if project.manager:
             manager_name = project.manager.first_name +" "+ project.manager.last_name
         else:
-            manager_name = 'Without manager'
+            manager_name = 'Without manager'       
         
-        
+
+
         car_plate = project.car if project.car else 'N/A'
         
-       
+        department_description = (
+            project.associated_department.description if project.associated_department else 'N/A')
 
         projects_list_body.append({
-            'data' : [project.id, car_plate, project.department, manager_name,
+            'data' : [project.id, car_plate, department_description, manager_name,
                     project.issue, project.solution, project.amount, project.observations],
             'actions' : [generate, budget_project, remove]
             })
@@ -212,7 +214,7 @@ def add_new_project():
     id_project_to_edit = request.form.get('id_project')
     description = request.form['description']
     car = request.form['car_selection'] #la placa
-    department = request.form['department']  #la descripcion
+    department = request.form['department']
     manager = request.form['manager_selection'] #id nombre apellido
     issue = request.form['issue']
     solution = request.form['solution']

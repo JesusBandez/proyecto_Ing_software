@@ -30,12 +30,16 @@ def create_default_users():
     db.session.commit()
 
 def create_default_projects():
-    projects = [Project("Project 1 test", date.today(), date.today() + timedelta(days=1)),
-        Project("Project 2 test", date.today(), date.today() + timedelta(days=3)),
-        Project("Project 3 test", date.today(), date.today() + timedelta(days=2))
+    CARS = db.session.query(Car).all()
+    DEPARTMENTS = db.session.query(Department).all()
+    USERS = db.session.query(User).all()
+    projects = [
+        Project("Project 1 test", date.today(), date.today() + timedelta(days=1), CARS[0].license_plate, DEPARTMENTS[2].id,
+        'Necesita alineacion', 'Hay que alinearlo', 'Golpe en el capo', USERS[0].id, 23.2),
+
     ]
     db.session.add_all(projects)
-    db.session.commit()
+    db.session.commit() 
 
 def create_default_clients():
     clients = [
@@ -67,10 +71,10 @@ def create_default_departments():
 
 
 def init_db_records():
-    create_default_users()
-    #create_default_projects()
+    create_default_users()    
     create_default_clients()
     create_default_departments()
+    create_default_projects()
     '''
     project = db.session.query(Project).filter_by(id=1).first()
     users = db.session.query(User).all()

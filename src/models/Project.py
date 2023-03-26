@@ -7,16 +7,17 @@ class Project(db.Model):
     start = db.Column(db.DateTime())
     finish = db.Column(db.DateTime())
     available = db.Column(db.Boolean)
-    car = db.Column(db.String(10), db.ForeignKey('car.license_plate'), nullable=True)
-    department = db.Column(db.Integer, db.ForeignKey('department.id'), nullable=True)
     issue = db.Column(db.String(255))
     solution = db.Column(db.String(255))
     observations = db.Column(db.String(255))
     users = db.relationship('User', secondary=user_project, backref='projects')
-    manager_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     amount = db.Column(db.Float())
 
-    def __init__(self, description, start, finish,car,department,
+    car = db.Column(db.String(10), db.ForeignKey('car.license_plate'), nullable=True)
+    department = db.Column(db.Integer, db.ForeignKey('department.id'), nullable=True)
+    manager_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+    def __init__(self, description, start, finish, car, department,
             issue,solution,observations, manager_id,amount, available=True):
         self.description = description
         self.start = start
