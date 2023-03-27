@@ -1,6 +1,6 @@
 from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory,jsonify
 from src.lib.generate_action import generate_action
-from src.routes.auth import has_role
+from src.routes.auth import has_role, is_project_manager
 from src.routes.Projects import project_details
 from src.models import db
 from src.models.Project import Project
@@ -294,25 +294,47 @@ def print_project():
     ]
     project_id = request.form['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
-    show_project = {
-        'id' : project.id,
-        'description' : project.description,
-        'start_date' : project.start.strftime(f'%m-%d-%Y'),
-        'finish_date' : project.finish.strftime(f'%m-%d-%Y')
-    }
     
     users_list_body = []
     for user in project.users:
         users_list_body.append({
             'data' : [user.id, user.first_name, user.last_name, user.job]
         })
+    
+    has_permissions = has_role('admin') or is_project_manager(project)
+    
+    manager = db.session.query(User).filter_by(id=project.manager_id).first()
+    if manager:
+        project_manager = ' '.join([manager.first_name, manager.last_name])
+    else:
+        project_manager = 'Without manager assigned'
 
-    rendered = render_template('print_project/print_project.html',
-                               context=show_project,
-                               list_context= {
-                                    'list_header': users_projects_list_header,
-                                    'list_body' : users_list_body
-                                })
+    car_plate = project.car if project.car else 'N/A'
+
+    department_description = (
+        project.associated_department.description if project.associated_department else 'N/A')
+
+    rendered = render_template('projects/project_details.html',        
+        context={
+            'id' : project.id,
+            'description' : project.description,
+            'start_date' : project.start.strftime(f'%m-%d-%Y'),
+            'finish_date' : project.finish.strftime(f'%m-%d-%Y'),
+            'manager': project_manager,
+            'car_plate': car_plate,
+            'department' : department_description,
+            'issue' : project.issue,
+            'solution' : project.solution,
+            'observations' : project.observations,
+            'amount' : str(project.amount)+'$',
+            'has_permissions' : has_permissions,
+            'available' : project.available,
+            'generate_action' : generate_action
+        },   
+        list_context= {
+                'list_header': users_projects_list_header,
+                'list_body' : users_list_body
+            }) 
     
     if (os.name == 'nt') :
         pathToWkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
