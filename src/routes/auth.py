@@ -2,7 +2,7 @@ from flask import session, flash, redirect, url_for, request
 from src.models import db
 
 from functools import wraps
-from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER,ERROR_MUST_BE_ADMIN_DELETE_USER, ERROR_MUST_BE_ADMIN_NEW_USER, ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT,ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT,ERROR_MUST_BE_ADMIN_ADD_CLIENT
+from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER,ERROR_MUST_BE_ADMIN_DELETE_USER, ERROR_MUST_BE_ADMIN_NEW_USER, ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT,ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT,ERROR_MUST_BE_ADMIN_ADD_CLIENT,ERROR_EXISTS_LICENSE_PLATE
 from src.models.Project import Project
 
 
@@ -73,7 +73,10 @@ def decorator(func):
         if name== "new_car" and not has_role('opera'):
             error_display(ERROR_MUST_BE_ADMIN)
             return redirect(url_for('client_details'))
-        if (name== "add_new_car" or name == "remove_car") and not has_role('opera'):
+        if name== "add_new_car" and not has_role('opera'):
+            error_display(ERROR_EXISTS_LICENSE_PLATE)
+            return redirect(url_for('client_details'))
+        if name == "remove_car" and not has_role('opera'):
             error_display(ERROR_MUST_BE_ADMIN)
             return redirect(url_for('client_details'))
 

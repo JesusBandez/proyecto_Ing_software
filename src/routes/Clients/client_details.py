@@ -168,12 +168,6 @@ def add_new_car():
     issue = request.form['issue']
 
     c = adding_new_car(car_to_edit,owner_id,owner,license_plate,brand,model,year,serial_engine,serial_car,color,issue)
-    if c==False:
-        title = Errors(ERROR_EXISTS_LICENSE_PLATE).error.title
-        desc = Errors(ERROR_EXISTS_LICENSE_PLATE).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
 
     return redirect(url_for('client_details', id=owner_id))
 
