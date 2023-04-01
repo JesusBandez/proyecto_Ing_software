@@ -1,6 +1,6 @@
 from flask import after_this_request, render_template, request,redirect, url_for, flash
 from src.lib.generate_action import generate_action
-from src.routes.auth import has_role
+from src.routes.auth import has_role, decorator
 from src.models.Client import Client
 from src.routes.Clients import client_details
 from src.models.Logger import Logger
@@ -88,15 +88,9 @@ def clients_list():
 
 # Agregar clientes
 @app.route('/clients/new_clients')
+@decorator
 def new_client():
     "Muestra el formulario para agregar o editar un cliente"
-    if not has_role('opera'):
-        title = Errors(ERROR_MUST_BE_ADMIN_ADD_CLIENT).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_ADD_CLIENT).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('clients_list'))
 
     client = db.session.query(Client).filter_by(id=request.args.get('id')).first()
     birthdate = None

@@ -1,6 +1,6 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from src.lib.generate_action import generate_action
-from src.routes.auth import has_role, is_project_manager
+from src.routes.auth import has_role, is_project_manager, decorator
 from src.models import db
 from src.models.Project import Project
 from src.models.User import User
@@ -78,12 +78,10 @@ def project_details():
 
 
 @app.route('/projects/manage_project_users')
+@decorator
 def manage_project():
     """Agregar o eliminar usuarios del proyecto """
     project = db.session.query(Project).filter_by(id=request.args['id']).first()
-    error_happened = False
-    if not has_role('admin') and not is_project_manager(project):
-        error_happened = True
         
     users_projects_list_header = [
         {'label': 'Id', 'class': 'col-1'},
@@ -127,13 +125,6 @@ def manage_project():
             'data' : [user.id, user.first_name, user.last_name],
             'actions' : [button]
         })
-    if error_happened:
-        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('projects_list'))
         
     return render_template('projects/manage_project_users.html',
         context={
@@ -147,9 +138,7 @@ def manage_project():
 
 
 def adding_user_to_project(project_id,user_id):
-    project = db.session.query(Project).filter_by(id=project_id).first()
-    if not has_role('admin') and not is_project_manager(project):
-        return False     
+    project = db.session.query(Project).filter_by(id=project_id).first()     
     
     user = db.session.query(User).filter_by(id=user_id).first()
     project.users.append(user)
@@ -161,25 +150,17 @@ def adding_user_to_project(project_id,user_id):
     return project
 
 @app.route('/projects/manage_project_users/add', methods=["POST"])
+@decorator
 def add_user_to_project():
     "Agrega un usuario al proyecto"
     project_id = request.form['project_id']
     user_id = request.form['id']
     p = adding_user_to_project(project_id,user_id)
-    if p == False:
-        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('projects_list')) 
     
     return redirect(url_for('manage_project', mode='Add', id=request.form['project_id']))
 
 def removing_user_from_project(project_id,user_id):
     project = db.session.query(Project).filter_by(id=project_id).first()
-    if not has_role('admin') and not is_project_manager(project):
-        return False
 
     user = db.session.query(User).filter_by(id=user_id).first()
     log = Logger('Deleting user')
@@ -190,21 +171,20 @@ def removing_user_from_project(project_id,user_id):
 
 
 @app.route('/projects/manage_project_users/remove',  methods=["POST"])
+@decorator
 def remove_user_from_project():
     "Elimina un usuario del proyecto"
     project_id = request.form['project_id']
     user_id = request.form['id']
     p = removing_user_from_project(project_id,user_id)
-    if p == False:
-        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('projects_list')) 
     
     return redirect(url_for('manage_project', mode='Remove', id=request.form['project_id']))
 
+
+
+##########################################
+# ESTO YA NO DEBERIA EXISTIR
+#################################
 
 def editing_manager(project_id,manager_id):
     project = db.session.query(Project).filter_by(id=project_id).first()
@@ -261,3 +241,7 @@ def remove_manager():
         return redirect(url_for('project_details')) 
     
     return redirect(url_for('project_details', id=request.args['id']))
+
+##########################
+# EL MANAGER AHORA SE EDITA EN LA PARTE DE EDITAR PROYECTO
+###############################

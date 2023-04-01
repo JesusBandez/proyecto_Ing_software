@@ -1,6 +1,6 @@
 from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory
 from src.lib.generate_action import generate_action
-from src.routes.auth import has_role
+from src.routes.auth import has_role, decorator
 from src.models import db
 from src.models.Client import Client
 from src.models.Car import Car
@@ -98,15 +98,9 @@ def client_details():
 
 
 @app.route('/clients/client_details/new_car', methods=['GET', 'POST'])
+@decorator
 def new_car():    
     """Muestra el formulario para agregar o editar el carro de un cliente"""
-    if not has_role('opera'):
-        title = Errors(ERROR_MUST_BE_ADMIN).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('client_details'))
     car = db.session.query(Car).filter_by(
         license_plate=request.args.get('car_plate')).first()
     
@@ -156,17 +150,10 @@ def adding_new_car(car_to_edit,owner_id,owner,license_plate,brand,model,year,ser
 
 
 @app.route('/clients/client_details/add_car', methods=['GET', 'POST'])
+@decorator
 def add_new_car():
     """ Obtiene los datos para agregar un nuevo carro de un cliente y 
-        lo agrega al sistema """
-    if not has_role('opera'):
-        title = Errors(ERROR_MUST_BE_ADMIN).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('client_details'))       
-
+        lo agrega al sistema """ 
     car_to_edit = request.form.get('car_plate')
     owner_id = request.form['owner_id']
     owner = db.session.query(Client).filter_by(id=owner_id).first()
@@ -191,9 +178,6 @@ def add_new_car():
     return redirect(url_for('client_details', id=owner_id))
 
 def removing_car(license_plate,owner_id):
-    if not has_role('opera'):
-        return False
-
     car = db.session.query(Car).filter(
         Car.license_plate == license_plate,
         Car.owner == owner_id
@@ -207,20 +191,12 @@ def removing_car(license_plate,owner_id):
 
 
 @app.route('/clients/client_details/remove_car', methods=['GET', 'POST'])
+@decorator
 def remove_car():
     "Eliminar carro"
     license_plate = request.form['id']
     owner_id = request.form['owner_id']
 
     c = removing_car(license_plate,owner_id)
-
-    if c == False:
-        title = Errors(ERROR_MUST_BE_ADMIN).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('client_details'))
-
 
     return redirect(url_for('client_details', id=request.form['owner_id']))

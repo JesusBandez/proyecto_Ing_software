@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request, flash, session
-from src.routes.auth import has_role
+from src.routes.auth import has_role, decorator
 from src.routes.Users_list import user_details
 from src.models.User import User
 from src.models.Logger import Logger
@@ -84,16 +84,9 @@ def deleting(user_id):
     return [log,user]
 
 @app.route('/users_list/delete', methods=['GET', 'POST'])
+@decorator
 def delete_user():
     "Elimina a un usuario del sistema"
-
-    if not has_role('admin'):
-        title = Errors(ERROR_MUST_BE_ADMIN_DELETE_USER).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_DELETE_USER).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('users_lists'))
         
     user_id = request.form['id']
     z = deleting(user_id)
@@ -101,19 +94,10 @@ def delete_user():
     return redirect(url_for('users_lists'))
 
 
-
 @app.route('/users_list/new_user', methods=['POST', 'GET'])
+@decorator
 def new_user():
     "Renderiza el formulario de registro de nuevo usuario"
-    
-    if not has_role('admin'):
-        title = Errors(ERROR_MUST_BE_ADMIN_NEW_USER).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_NEW_USER).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('users_lists'))
-
     
     user_to_edit = db.session.query(User).filter_by(
             id=request.form.get('id')).first()

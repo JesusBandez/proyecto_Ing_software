@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash
 from src.lib.generate_action import generate_action
-from src.routes.auth import has_role
+from src.routes.auth import has_role, decorator
 from src.models.Department import Department
 from src.models.Logger import Logger
 from src.models import db
@@ -10,8 +10,6 @@ from . import app
 
 
 def search_departments(typeS, search):
-    print(typeS)
-    print(search)
     if not typeS or typeS == 'Search By':
         return db.session.query(Department).all()
 
@@ -19,7 +17,6 @@ def search_departments(typeS, search):
     if typeS == 'description':
         DEPARTMENTS = db.session.query(Department)\
             .filter(Department.description.ilike(f'%{search}%')).all()
-    print(DEPARTMENTS)
     if len(DEPARTMENTS) == 0:
         return db.session.query(Department).all()
 
@@ -68,11 +65,9 @@ def departments_list():
 
 
 @app.route('/departments/new_department')
+@decorator
 def new_department():
     "Muestra el formulario para agregar o editar un departamento"
-    if not has_role('admin'):
-        return Errors(ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT).flash(
-            app, 'departments_list')
 
     department = db.session.query(Department).filter_by(
             id=request.args.get('id')).first()
@@ -85,12 +80,10 @@ def new_department():
 
 
 @app.route('/departments/new_department/add_department', methods=['POST'])
+@decorator
 def add_new_department():
     """Obtiene los datos para agregar un nuevo departamento y 
         lo agrega al sistema"""
-    if not has_role('admin'):
-        return Errors(ERROR_MUST_BE_ADMIN).flash(
-            app, 'departments_list')
 
     department_to_edit = request.form.get('department_to_edit')
 
@@ -113,12 +106,10 @@ def add_new_department():
 
 
 @app.route('/departments/list/remove_project', methods=['GET', 'POST'])
+@decorator
 def remove_department():
     """Elimina un departamento del sistema"""
-    if not has_role('admin'):
-        return Errors(ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT).flash(
-            app, 'departments_list')
-
+   
     department = db.session.query(Department).filter_by(
         id=request.form['id']).first()
     log = Logger('Deleting department')

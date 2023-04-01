@@ -1,6 +1,6 @@
 from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory,jsonify
 from src.lib.generate_action import generate_action
-from src.routes.auth import has_role, is_project_manager
+from src.routes.auth import has_role, is_project_manager, decorator
 from src.routes.Projects import project_details
 from src.models import db
 from src.models.Project import Project
@@ -89,14 +89,14 @@ def projects_list():
     projects_list_body = []
     for project in PROJECTS:
         db.session.commit()
-        print(project.description)
+
         generate = generate_action(project.id,
-            'generate_project', button_class='btn btn-outline-primary',
+            'generate_project', button_class='btn bt-sm btn-outline-primary',
             text_class='fa-regular fa-rectangle-list',
             title="Project Details")
         
         remove = generate_action(project.id, 'remove_project', 'post',
-            button_class='btn btn-outline-danger',
+            button_class='btn bt-sm btn-outline-danger',
             title="Remove project",
             text_class='fa-solid fa-trash',
             disabled= not has_role('admin'))
@@ -105,8 +105,8 @@ def projects_list():
             'print_project', 'post',
             text_class='fa-solid fa-sack-dollar',
             title="Project Budget",
-            button_class='btn btn-outline-success', 
-            disabled = not has_role('user'))
+            button_class='btn bt-sm btn-outline-success', 
+            disabled = not has_role('admin')) #hasThatRole('budget_project'))
 
         if project.manager:
             manager_name = project.manager.first_name +" "+ project.manager.last_name
@@ -134,17 +134,9 @@ def projects_list():
 
 # Agregar proyectos
 @app.route('/projects/new_project', methods=['POST', 'GET'])
+@decorator
 def new_project():
     "Muestra el formulario para agregar o editar un proyecto"
-
-    if not has_role('admin'):
-        title = Errors(ERROR_MUST_BE_ADMIN).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('projects_list'))    
-    
     department = db.session.query(Department).all()
 
     project, manager = None, None
@@ -199,16 +191,11 @@ def adding_new_project(id_project_to_edit, description, start_date, close_date,c
 
 
 @app.route('/projects/new_project/add', methods=['POST'])
+@decorator
 def add_new_project():
     """Obtiene los datos para agregar un nuevo proyecto y 
         lo agrega al sistema"""
-    if not has_role('admin'):
-        title = Errors(ERROR_MUST_BE_ADMIN).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('projects_list'))
+    
     id_project_to_edit = request.form.get('id_project')
     description = request.form['description']
     car = request.form['car_selection'] #la placa
@@ -248,13 +235,6 @@ def removing_project(project_id):
 @app.route('/projects/list/remove_project', methods=['GET', 'POST'])
 def remove_project():
     "Eliminar proyecto"
-    if not has_role('admin'):
-        title = Errors(ERROR_MUST_BE_ADMIN).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('projects_list'))
         
     project_id = request.form['id']
 
@@ -272,13 +252,6 @@ def change_availability(project_id):
 @app.route('/projects/list/toggle_project_availability', methods=['POST'])
 def toggle_project_availability():
     "Habilitar/desabilitar proyecto"
-    if not has_role('admin'):
-        title = Errors(ERROR_MUST_BE_ADMIN).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('projects_list'))
 
     change_availability(request.form['id'])
     

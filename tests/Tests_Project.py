@@ -168,6 +168,17 @@ class Tests_Project_Selenium(Tests_Base):
           d.find_element('id', 'description').send_keys('Project 1')
           self.assertEqual(d.title, 'Add New Project' )
 
+    def test_add_user_to_project_correct(self):
+        print("Se agregan usuarios al proyecto")
+        with session(user=self.user1_params) as d:
+          d.maximize_window()
+          d.get(f'{self.home_page}/projects/project_details?id=1')
+          button = d.find_element('id','addUser')
+          d.execute_script("arguments[0].scrollIntoView(true);", button)
+          time.sleep(2)
+          button.click()
+          self.assertEqual(d.title, 'Manage Project')
+
     def test_add_user_to_project(self):
         print("Se agregan usuarios al proyecto")
         with session(user=self.user1_params) as d:
