@@ -54,7 +54,6 @@ def client_details():
             client = db.session.query(Client).filter_by(id=client_id).first()
             cars_found = client.cars
     except:
-        print(client_id)
         client = db.session.query(Client).filter_by(id=client_id).first()
         cars_found = client.cars
 
@@ -171,6 +170,7 @@ def add_new_car():
 
     return redirect(url_for('client_details', id=owner_id))
 
+@decorator
 def removing_car(license_plate,owner_id):
     car = db.session.query(Car).filter(
         Car.license_plate == license_plate,

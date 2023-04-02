@@ -136,7 +136,7 @@ def manage_project():
                 'list_body' : users_list_body
             })
 
-
+@decorator
 def adding_user_to_project(project_id,user_id):
     project = db.session.query(Project).filter_by(id=project_id).first()     
     
@@ -159,9 +159,10 @@ def add_user_to_project():
     
     return redirect(url_for('manage_project', mode='Add', id=request.form['project_id']))
 
+@decorator
 def removing_user_from_project(project_id,user_id):
     project = db.session.query(Project).filter_by(id=project_id).first()
-
+    
     user = db.session.query(User).filter_by(id=user_id).first()
     log = Logger('Deleting user')
     project.users.remove(user)
@@ -179,6 +180,12 @@ def remove_user_from_project():
     p = removing_user_from_project(project_id,user_id)
     
     return redirect(url_for('manage_project', mode='Remove', id=request.form['project_id']))
+
+
+
+
+
+
 
 
 

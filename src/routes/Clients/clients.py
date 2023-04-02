@@ -1,6 +1,6 @@
 from flask import after_this_request, render_template, request,redirect, url_for, flash
 from src.lib.generate_action import generate_action
-from src.routes.auth import has_role, decorator
+from src.routes.auth import has_role, decorator,error_display
 from src.models.Client import Client
 from src.routes.Clients import client_details
 from src.models.Logger import Logger
@@ -107,10 +107,8 @@ def new_client():
         'page_title' : page_title, 
     })
 
+@decorator
 def adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,address):
-    if not has_role('opera'):
-        return False
-
     if not client_to_edit:
         client = Client(ci, first_name, last_name, birth_date, mail, phone, address)
         log = Logger('Adding Client')
@@ -179,31 +177,19 @@ def add_new_client():
     e = editing_client(ci,client_to_edit,first_name,last_name,birth_date,phone,mail,address)
 
     if e[0] == False and e[1] == 0:
-        title = Errors(ERROR_CI_ALREADY_EXISTS).error.title
-        desc = Errors(ERROR_CI_ALREADY_EXISTS).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
+        error_display(ERROR_CI_ALREADY_EXISTS)
         return redirect(url_for('clients_list'))
     elif e[0] == False and e[1] == 1:
-        title = Errors(ERROR_MUST_BE_ADMIN).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
+        error_display(ERROR_MUST_BE_ADMIN)
         return redirect(url_for('clients_list'))
-    
 
     if client_to_edit != None:
         return redirect(url_for('clients_list'))
 
     return redirect(url_for('client_details', id=e[1].id))
 
-
-def removing_client(client_id):
-    if not has_role('opera'):
-        return False
-    
+@decorator
+def removing_client(client_id):    
     client = db.session.query(Client).filter_by(id=client_id).first()
     for car in client.cars:
         db.session.delete(car)
@@ -215,16 +201,10 @@ def removing_client(client_id):
     return client
 
 @app.route('/clients/list/remove_project', methods=['GET', 'POST'])
+@decorator
 def remove_client():
     "Eliminar client"
     client_id = request.form['id']
     c = removing_client(client_id)
-    if c == False:
-        title = Errors(ERROR_MUST_BE_ADMIN_DELETE_CLIENT).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_DELETE_CLIENT).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('clients_list'))
 
     return redirect(url_for('clients_list'))

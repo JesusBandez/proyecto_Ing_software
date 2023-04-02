@@ -106,7 +106,7 @@ def projects_list():
             text_class='fa-solid fa-sack-dollar',
             title="Project Budget",
             button_class='btn bt-sm btn-outline-success', 
-            disabled = not has_role('admin')) #hasThatRole('budget_project'))
+            disabled = not has_role('admin'))
 
         if project.manager:
             manager_name = project.manager.first_name +" "+ project.manager.last_name
@@ -150,7 +150,6 @@ def new_project():
 
     return render_template('projects/new_project.html', project_to_edit=project, 
         all_departments = department, manager=manager)
-
 
 def adding_new_project(id_project_to_edit, description, start_date, close_date,car,department,
         manager,issue,solution,amount,obs):

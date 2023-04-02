@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request, flash, session
-from src.routes.auth import has_role, decorator
+from src.routes.auth import has_role, decorator, error_display
 from src.routes.Users_list import user_details
 from src.models.User import User
 from src.models.Logger import Logger
@@ -167,21 +167,13 @@ def add_new_user():
     already_exists = verify_user_exist(client_to_edit,username)
 
     if already_exists:
-        title = Errors(ERROR_USERNAME_ALREADY_USED).error.title
-        desc = Errors(ERROR_USERNAME_ALREADY_USED).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
+        error_display(ERROR_USERNAME_ALREADY_USED)
         return redirect(url_for('users_lists'))
 
     if not client_to_edit:
         user = create_user(f_name, l_name,username, password, role, job)
         if user[1] == False:
-            title = Errors(ERROR_USERNAME_ALREADY_USED).error.title
-            desc = Errors(ERROR_USERNAME_ALREADY_USED).error.description
-            flash(True, 'error')
-            flash(title, 'error_title') 
-            flash(desc, 'error_description')
+            error_display(ERROR_USERNAME_ALREADY_USED)
             return redirect(url_for('new_user'))
     else:
 

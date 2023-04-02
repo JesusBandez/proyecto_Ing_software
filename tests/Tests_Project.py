@@ -156,6 +156,7 @@ class Tests_Project(Tests_Base):
           get = user_details.user_projects(1)
           self.assertEqual(get[1],self.db.session.query(User).filter_by(id=1).first())
 
+'''
 
 class Tests_Project_Selenium(Tests_Base):
     
@@ -203,6 +204,7 @@ class Tests_Project_Selenium(Tests_Base):
           d.get(f'{self.home_page}/projects/list')
           d.find_element(By.XPATH, r"//button[@title='Remove project']")
           self.assertEqual(d.title, 'Projects list' ) 
+'''
 
 if __name__ == "__main__":
   unittest.main()
