@@ -1,9 +1,15 @@
 pipeline {
   agent any
   stages {
-    stage('') {
+    stage('Requirements') {
       steps {
-        git(url: 'https://github.com/JesusBandez/proyecto_Ing_software', branch: 'produccion')
+        sh ' pip install -r requirements.txt'
+      }
+    }
+
+    stage('Tests') {
+      steps {
+        sh 'cd ./tests && python3 -m unittest Tests_*.py'
       }
     }
 
