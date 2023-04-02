@@ -6,7 +6,7 @@ from main import users_list,  app
 
 
 
-class Tests_Users(Tests_Base):
+class Tests_Users_Unit(Tests_Base):
 
     def test_create_user_duplicated_username_db(self):
       with app.app_context():

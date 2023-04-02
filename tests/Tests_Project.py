@@ -10,7 +10,7 @@ from datetime import datetime
 
 import time
 
-class Tests_Project(Tests_Base):
+class Tests_Project_Unit(Tests_Base):
 
     def test_create_project(self):
       with app.app_context():

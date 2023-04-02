@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import Select
 from src import errors
 from src.models.Department import Department
 
-class Tests_Login(Tests_Base):
+class Tests_Login_Selenium(Tests_Base):
 
     def test_bad_password(self):
         print("Contrasena equivocada")
