@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('') {
       steps {
-        git(url: 'https://github.com/JesusBandez/proyecto_Ing_software', branch: 'produccion')
+        sh 'cd ./tests && python3 -m unittest Tests_*.py'
       }
     }
 
