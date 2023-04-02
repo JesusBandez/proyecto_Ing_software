@@ -7,7 +7,7 @@ from src.models.Client import Client
 from src.models.Car import Car
 
 
-class Tests_Client(Tests_Base):
+class Tests_Client_Unit(Tests_Base):
     def test_adding_client_admin(self):
       with self.app.test_request_context(), self.app.test_client() as c:
         flask_session['user'] = {
