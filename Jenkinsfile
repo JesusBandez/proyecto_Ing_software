@@ -9,7 +9,7 @@ pipeline {
 
     stage('Tests') {
       steps {
-        sh 'cd ./tests && python3 -m unittest Tests_*.py -v'
+        sh 'cd ./tests && xvfb-run python3 -m unittest Tests_*.py -v'
       }
     }
 
