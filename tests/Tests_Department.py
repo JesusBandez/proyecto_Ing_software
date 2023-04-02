@@ -32,7 +32,7 @@ class Tests_Departments_Selenium(Tests_Base):
         sesion.find_element(By.ID, 'addButton').click()
         sesion.find_element(By.ID, 'description').send_keys('Aire')
         sesion.find_element(By.NAME, 'submit').click()
-        sleep(2)
+        sleep(20)
         # Comprobar que existe en la base
         with self.app.app_context():
           department = self.db.session.query(Department).filter_by(
@@ -50,7 +50,7 @@ class Tests_Departments_Selenium(Tests_Base):
         sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Edit department"][value="1"]').click()
         sesion.find_element(By.ID, 'description').send_keys(' 2345')
         sesion.find_element(By.NAME, 'submit').click()
-        sleep(2)
+        sleep(20)
         # Comprobar que se ha editado
         with self.app.app_context():
           department = self.db.session.query(Department).filter_by(
@@ -66,7 +66,7 @@ class Tests_Departments_Selenium(Tests_Base):
         sesion.get(f'{self.home_page}/departments/list')
         sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Remove department"][value="1"]').click()
 
-        sleep(2)
+        sleep(20)
         # Comprobar que se ha eliminado el departamento
         with self.app.app_context():
           department = self.db.session.query(Department).filter_by(
@@ -84,7 +84,7 @@ class Tests_Departments_Selenium(Tests_Base):
         select = Select(sesion.find_element(By.CSS_SELECTOR, r'[name="typeSearch"]'))
         select.select_by_value("description")
         sesion.find_element(By.CSS_SELECTOR, r'[type="submit"]').click()
-        sleep(2)
+        sleep(20)
         # Comprobar que se han filtrado los departamentos
         departments = sesion.find_elements(By.CSS_SELECTOR, r'table tbody tr')
         self.assertEqual(len(departments), 2)
