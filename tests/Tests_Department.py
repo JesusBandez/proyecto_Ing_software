@@ -75,14 +75,14 @@ class Tests_Departments_Selenium(Tests_Base):
       # Buscar el departamento a eliminar
       with session() as sesion:
         sesion.get(f'{self.home_page}/departments/list')
-        sesion.find_element(By.CSS_SELECTOR, r'[type="search"]').send_keys('La')
+        sesion.find_element(By.CSS_SELECTOR, r'[type="search"]').send_keys('ca')
         select = Select(sesion.find_element(By.CSS_SELECTOR, r'[name="typeSearch"]'))
         select.select_by_value("description")
         sesion.find_element(By.CSS_SELECTOR, r'[type="submit"]').click()
         
         # Comprobar que se han filtrado los departamentos
         departments = sesion.find_elements(By.CSS_SELECTOR, r'table tbody tr')
-        self.assertEqual(len(departments), 2)
+        self.assertEqual(len(departments), 1)
     
 
 if __name__ == "__main__":
