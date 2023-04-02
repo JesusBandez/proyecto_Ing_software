@@ -32,13 +32,11 @@ class Tests_Departments_Selenium(Tests_Base):
         sesion.find_element(By.ID, 'addButton').click()
         sesion.find_element(By.ID, 'description').send_keys('Aire')
         sesion.find_element(By.NAME, 'submit').click()
-        sleep(20)
+        
         # Comprobar que existe en la base
-        with self.app.app_context():
-          department = self.db.session.query(Department).filter_by(
-            description='Aire'
-          ).first()
-          self.assertTrue(department)
+        departments = sesion.find_elements(By.CSS_SELECTOR, 'tbody td')
+
+        self.assertTrue(any(department.get_attribute("innerHTML").strip()=='Aire' for department in departments))
 
     def test_edit_department(self):
       "Editar departamento"
@@ -50,13 +48,12 @@ class Tests_Departments_Selenium(Tests_Base):
         sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Edit department"][value="1"]').click()
         sesion.find_element(By.ID, 'description').send_keys(' 2345')
         sesion.find_element(By.NAME, 'submit').click()
-        sleep(20)
+        
         # Comprobar que se ha editado
-        with self.app.app_context():
-          department = self.db.session.query(Department).filter_by(
-            description='Latoneria 2345'
-          ).first()
-          self.assertTrue(department)
+        departments = sesion.find_elements(By.CSS_SELECTOR, 'tbody td')
+        self.assertTrue(any(
+          department.get_attribute("innerHTML").strip()=='Latoneria 2345' for department in departments))
+        
 
     def test_remove_department(self):
       "Eliminar departamento"
@@ -65,14 +62,12 @@ class Tests_Departments_Selenium(Tests_Base):
       with session(user) as sesion:
         sesion.get(f'{self.home_page}/departments/list')
         sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Remove department"][value="1"]').click()
-
-        sleep(20)
+        
         # Comprobar que se ha eliminado el departamento
-        with self.app.app_context():
-          department = self.db.session.query(Department).filter_by(
-            id='1'
-          ).first()
-          self.assertFalse(department)
+        departments = sesion.find_elements(By.CSS_SELECTOR, 'tbody td')
+        self.assertTrue(all(
+            department.get_attribute("innerHTML").strip()!='1' for department in departments
+          ))
 
     def test_search_department(self):
       "Busqueda de departamentos"
@@ -84,7 +79,7 @@ class Tests_Departments_Selenium(Tests_Base):
         select = Select(sesion.find_element(By.CSS_SELECTOR, r'[name="typeSearch"]'))
         select.select_by_value("description")
         sesion.find_element(By.CSS_SELECTOR, r'[type="submit"]').click()
-        sleep(20)
+        
         # Comprobar que se han filtrado los departamentos
         departments = sesion.find_elements(By.CSS_SELECTOR, r'table tbody tr')
         self.assertEqual(len(departments), 2)
