@@ -9,7 +9,7 @@ pipeline {
 
     stage('Tests') {
       steps {
-        sh 'cd ./tests && python3 -m unittest Tests_*.py -v -k Unit '
+        sh 'cd ./tests && python3 -m unittest Tests_*.py -v'
       }
     }
 
