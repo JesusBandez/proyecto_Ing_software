@@ -4,7 +4,7 @@ from src.lib.generate_action import generate_action
 from src.lib.class_create_button import ListDepartments
 
 
-from src.routes.auth import has_role, decorator
+from src.routes.auth import has_role, require_permissions
 from src.models.Department import Department
 from src.models.Logger import Logger
 from src.models import db
@@ -48,7 +48,7 @@ def departments_list():
 
 
 @app.route('/departments/new_department')
-@decorator
+@require_permissions
 def new_department():
     "Muestra el formulario para agregar o editar un departamento"
 
@@ -63,7 +63,7 @@ def new_department():
 
 
 @app.route('/departments/new_department/add_department', methods=['POST'])
-@decorator
+@require_permissions
 def add_new_department():
     """Obtiene los datos para agregar un nuevo departamento y 
         lo agrega al sistema"""
@@ -89,7 +89,7 @@ def add_new_department():
 
 
 @app.route('/departments/list/remove_project', methods=['GET', 'POST'])
-@decorator
+@require_permissions
 def remove_department():
     """Elimina un departamento del sistema"""
    

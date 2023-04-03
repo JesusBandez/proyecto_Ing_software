@@ -2,7 +2,7 @@ from flask import after_this_request, render_template, request, send_file, sessi
 from src.lib.generate_action import generate_action
 from src.lib.class_create_button import ListClientsCars
 
-from src.routes.auth import has_role, decorator, error_display
+from src.routes.auth import has_role, require_permissions, error_display
 from src.models import db
 from src.models.Client import Client
 from src.models.Car import Car
@@ -70,7 +70,7 @@ def client_details():
 
 
 @app.route('/clients/client_details/new_car', methods=['GET', 'POST'])
-@decorator
+@require_permissions
 def new_car():    
     """Muestra el formulario para agregar o editar el carro de un cliente"""
     car = db.session.query(Car).filter_by(
@@ -122,7 +122,7 @@ def adding_new_car(car_to_edit,owner_id,owner,license_plate,brand,model,year,ser
 
 
 @app.route('/clients/client_details/add_car', methods=['GET', 'POST'])
-@decorator
+@require_permissions
 def add_new_car():
     """ Obtiene los datos para agregar un nuevo carro de un cliente y 
         lo agrega al sistema """ 
@@ -146,7 +146,7 @@ def add_new_car():
 
     return redirect(url_for('client_details', id=owner_id))
 
-@decorator
+@require_permissions
 def removing_car(license_plate,owner_id):
     car = db.session.query(Car).filter(
         Car.license_plate == license_plate,
@@ -161,7 +161,7 @@ def removing_car(license_plate,owner_id):
 
 
 @app.route('/clients/client_details/remove_car', methods=['GET', 'POST'])
-@decorator
+@require_permissions
 def remove_car():
     "Eliminar carro"
     license_plate = request.form['id']

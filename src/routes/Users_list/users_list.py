@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request, flash, session
-from src.routes.auth import has_role, decorator, error_display
+from src.routes.auth import has_role, require_permissions, error_display
 from src.routes.Users_list import user_details
 
 from src.lib.class_create_button import ListUsersList
@@ -61,7 +61,7 @@ def deleting(user_id):
     return [log,user]
 
 @app.route('/users_list/delete', methods=['GET', 'POST'])
-@decorator
+@require_permissions
 def delete_user():
     "Elimina a un usuario del sistema"
         
@@ -72,7 +72,7 @@ def delete_user():
 
 
 @app.route('/users_list/new_user', methods=['POST', 'GET'])
-@decorator
+@require_permissions
 def new_user():
     "Renderiza el formulario de registro de nuevo usuario"
     

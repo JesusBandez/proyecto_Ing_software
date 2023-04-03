@@ -126,7 +126,7 @@ class Tests_Project_Unit(Tests_Base):
 class Tests_Project_Selenium(Tests_Base):
     
     def test_create_project(self):
-        print("Creacion de proyecto")
+
         with session(user=self.user1_params) as d:
           d.get(f'{self.home_page}/projects/list')
           d.find_element(By.XPATH, r'//a[@title="Add New Project"]').click()
@@ -135,7 +135,7 @@ class Tests_Project_Selenium(Tests_Base):
           self.assertEqual(d.title, 'Add New Project' )
 
     def test_add_user_to_project_correct(self):
-        print("Se agregan usuarios al proyecto")
+
         with session(user=self.user1_params) as d:
           d.maximize_window()
           d.get(f'{self.home_page}/projects/project_details?id=1')
@@ -146,7 +146,6 @@ class Tests_Project_Selenium(Tests_Base):
           self.assertEqual(d.title, 'Manage Project')
 
     def test_add_user_to_project(self):
-        print("Se agregan usuarios al proyecto")
         with session(user=self.user1_params) as d:
           d.get(f'{self.home_page}/projects/project_details?id=1')
           d.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -155,7 +154,6 @@ class Tests_Project_Selenium(Tests_Base):
           self.assertEqual(d.title, 'Manage Project')
 
     def test_delete_user_in_project(self):
-        print("Se eliminan usuarios del proyecto")
         with session(user=self.user1_params) as d:
           d.get(f'{self.home_page}/projects/project_details?id=1')
           d.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -164,7 +162,6 @@ class Tests_Project_Selenium(Tests_Base):
           self.assertEqual(d.title, 'Manage Project' )
 
     def test_delete_project(self):
-        print("Eliminar proyecto de usuario")
         with session(user=self.user1_params) as d:
           d.get(f'{self.home_page}/projects/list')
           d.find_element(By.XPATH, r"//button[@title='Remove project']")

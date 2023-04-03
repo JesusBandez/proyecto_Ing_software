@@ -2,7 +2,7 @@ from flask import after_this_request, render_template, request,redirect, url_for
 from src.lib.generate_action import generate_action
 from src.lib.class_create_button import ListClients
 
-from src.routes.auth import has_role, decorator,error_display
+from src.routes.auth import has_role, require_permissions,error_display
 from src.models.Client import Client
 from src.routes.Clients import client_details
 from src.models.Logger import Logger
@@ -57,7 +57,7 @@ def clients_list():
 
 # Agregar clientes
 @app.route('/clients/new_clients')
-@decorator
+@require_permissions
 def new_client():
     "Muestra el formulario para agregar o editar un cliente"
 
@@ -76,7 +76,7 @@ def new_client():
         'page_title' : page_title, 
     })
 
-@decorator
+@require_permissions
 def adding_client(client_to_edit,ci,first_name,last_name,birth_date,phone,mail,address):
     if not client_to_edit:
         client = Client(ci, first_name, last_name, birth_date, mail, phone, address)
@@ -157,7 +157,7 @@ def add_new_client():
 
     return redirect(url_for('client_details', id=e[1].id))
 
-@decorator
+@require_permissions
 def removing_client(client_id):    
     client = db.session.query(Client).filter_by(id=client_id).first()
     for car in client.cars:
@@ -170,7 +170,7 @@ def removing_client(client_id):
     return client
 
 @app.route('/clients/list/remove_project', methods=['GET', 'POST'])
-@decorator
+@require_permissions
 def remove_client():
     "Eliminar client"
     client_id = request.form['id']

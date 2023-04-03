@@ -34,7 +34,7 @@ def error_display(error_type):
     flash(title, 'error_title') 
     flash(desc, 'error_description')
 
-def decorator(func):
+def require_permissions(func):
     @wraps(func)
     def inner1(*args, **kwargs):
         name = func.__name__

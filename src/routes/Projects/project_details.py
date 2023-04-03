@@ -2,7 +2,7 @@ from flask import render_template, request, session, redirect, url_for, flash
 from src.lib.generate_action import generate_action
 from src.lib.class_create_button import ListProjectsUser, ListManageProjectUsers
 
-from src.routes.auth import has_role, is_project_manager, decorator
+from src.routes.auth import has_role, is_project_manager, require_permissions
 from src.models import db
 from src.models.Project import Project
 from src.models.User import User
@@ -64,7 +64,7 @@ def project_details():
 
 
 @app.route('/projects/manage_project_users')
-@decorator
+@require_permissions
 def manage_project():
     """Agregar o eliminar usuarios del proyecto """
     project = db.session.query(Project).filter_by(id=request.args['id']).first()
@@ -78,10 +78,7 @@ def manage_project():
         users = [user for user in all_users if user not in project.users]
     else:
         users = project.users
-    print()
-    print(project)
-    print()
-    print()
+
     A = ListManageProjectUsers(users,mode,project)
     A.button_to_create()
     users_list_body = A.list_table()
@@ -97,7 +94,7 @@ def manage_project():
                 'list_body' : users_list_body
             })
 
-@decorator
+@require_permissions
 def adding_user_to_project(project_id,user_id):
     project = db.session.query(Project).filter_by(id=project_id).first()     
     
@@ -111,7 +108,7 @@ def adding_user_to_project(project_id,user_id):
     return project
 
 @app.route('/projects/manage_project_users/add', methods=["POST"])
-@decorator
+@require_permissions
 def add_user_to_project():
     "Agrega un usuario al proyecto"
     project_id = request.form['project_id']
@@ -120,7 +117,7 @@ def add_user_to_project():
     
     return redirect(url_for('manage_project', mode='Add', id=request.form['project_id']))
 
-@decorator
+@require_permissions
 def removing_user_from_project(project_id,user_id):
     project = db.session.query(Project).filter_by(id=project_id).first()
     
@@ -133,7 +130,7 @@ def removing_user_from_project(project_id,user_id):
 
 
 @app.route('/projects/manage_project_users/remove',  methods=["POST"])
-@decorator
+@require_permissions
 def remove_user_from_project():
     "Elimina un usuario del proyecto"
     project_id = request.form['project_id']

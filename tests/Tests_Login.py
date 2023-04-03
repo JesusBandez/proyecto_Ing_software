@@ -10,7 +10,7 @@ from src.models.Department import Department
 class Tests_Login_Selenium(Tests_Base):
 
     def test_bad_password(self):
-        print("Contrasena equivocada")
+
         with driver() as d:
           d.get(f'{self.home_page}/login')
           d.find_element('id', 'username').send_keys(self.user1_params['username'])
@@ -19,7 +19,7 @@ class Tests_Login_Selenium(Tests_Base):
           self.assertEqual(d.title, 'Login' )
 
     def test_non_existent_user(self):
-      print("Usuario no existente")
+
       with driver() as d:
         d.get(f'{self.home_page}/login')
         d.find_element('id', 'username').send_keys('nonexistent')
@@ -28,7 +28,7 @@ class Tests_Login_Selenium(Tests_Base):
         self.assertEqual(d.title, 'Login' )  
 
     def test_login(self):
-        print("Login y logout correcto")
+
         with session(user=self.user1_params) as d:
           self.assertEqual(d.title, 'User details' )  
    

@@ -2,7 +2,7 @@ from flask import after_this_request, render_template, request, send_file, sessi
 from src.lib.generate_action import generate_action
 from src.lib.class_create_button import ListProjects
 
-from src.routes.auth import has_role, is_project_manager, decorator
+from src.routes.auth import has_role, is_project_manager, require_permissions
 from src.routes.Projects import project_details
 from src.models import db
 from src.models.Project import Project
@@ -90,7 +90,7 @@ def projects_list():
 
 # Agregar proyectos
 @app.route('/projects/new_project', methods=['POST', 'GET'])
-@decorator
+@require_permissions
 def new_project():
     "Muestra el formulario para agregar o editar un proyecto"
     department = db.session.query(Department).all()
@@ -146,7 +146,7 @@ def adding_new_project(id_project_to_edit, description, start_date, close_date,c
 
 
 @app.route('/projects/new_project/add', methods=['POST'])
-@decorator
+@require_permissions
 def add_new_project():
     """Obtiene los datos para agregar un nuevo proyecto y 
         lo agrega al sistema"""
@@ -173,7 +173,7 @@ def add_new_project():
 def generate_project():
     "Generar proyecto"
     # TODO: No se que hace esta vaina pero la voy a usar para los detalles
-    print("Generando")
+
     return redirect(url_for('project_details', id=request.args['id']))
 
 def removing_project(project_id):

@@ -63,5 +63,4 @@ def remove_event():
 @app.route('/event_logger/foo_event', methods=('GET', 'POST'))
 def foo_event():
     # TODO: No tengo idea de que debe hacer esto
-    print('Foo evento')
     return redirect(url_for('logger'))
