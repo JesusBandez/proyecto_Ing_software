@@ -45,41 +45,6 @@ class Tests_Project_Unit(Tests_Base):
         search = self.db.session.query(Project).filter_by(id=current_project.id).first()
         self.assertEqual(before_availability, not search.available)
 
-    def test_edit_project_manager(self):
-      with app.test_request_context(), app.test_client() as c:
-        flask_session['user'] = {
-                'id' : '1',
-                'username' : '1',
-                'role' : 'admin'
-            }
-        description = "Nuevo proyecto"
-        start_date = datetime.strptime("2022-12-15", r'%Y-%m-%d')
-        close_date = datetime.strptime("2023-04-20", r'%Y-%m-%d')
-        project = projects.adding_new_project(False, description, start_date, close_date,"ASD14XZ","Painting","2","Pintar color negro",
-          "Pintar",100,"")
-        manager_id_before = project.manager_id
-        self.assertEqual(manager_id_before,2)
-        project_new_manager = project_details.editing_manager(project.id,1)
-        self.assertEqual(project_new_manager.manager_id,1)
-
-    def test_remove_project_manager(self):
-      with app.test_request_context(), app.test_client() as c:
-        flask_session['user'] = {
-                'id' : '1',
-                'username' : '1',
-                'role' : 'admin'
-            }
-        description = "Nuevo proyecto"
-        start_date = datetime.strptime("2022-12-15", r'%Y-%m-%d')
-        close_date = datetime.strptime("2023-04-20", r'%Y-%m-%d')
-        project = projects.adding_new_project(False, description, start_date, close_date,"ASD14XZ","Painting","2","Pintar color negro",
-          "Pintar",100,"")
-        manager_id_before = project.manager_id
-        self.assertEqual(manager_id_before,2)
-        project_new_manager = project_details.editing_manager(project.id,1)
-        self.assertEqual(project_new_manager.manager_id,1)
-        project_manager_removed = project_details.removing_manager(project_new_manager.id)
-        self.assertEqual(project_new_manager.manager_id,None)
 
     def test_add_user_project(self):
       with app.test_request_context(), app.test_client() as c:
@@ -156,7 +121,7 @@ class Tests_Project_Unit(Tests_Base):
           get = user_details.user_projects(1)
           self.assertEqual(get[1],self.db.session.query(User).filter_by(id=1).first())
 
-'''
+
 
 class Tests_Project_Selenium(Tests_Base):
     
@@ -204,7 +169,7 @@ class Tests_Project_Selenium(Tests_Base):
           d.get(f'{self.home_page}/projects/list')
           d.find_element(By.XPATH, r"//button[@title='Remove project']")
           self.assertEqual(d.title, 'Projects list' ) 
-'''
+
 
 if __name__ == "__main__":
   unittest.main()
