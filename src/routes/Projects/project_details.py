@@ -54,7 +54,8 @@ def project_details():
             'amount' : str(project.amount)+'$',
             'has_permissions' : has_permissions,
             'available' : project.available,
-            'generate_action' : generate_action
+            'generate_action' : generate_action,
+            'is_project_manager' : is_project_manager(project)
         },   
         list_context= {
                 'list_header': users_projects_list_header,
@@ -78,7 +79,7 @@ def manage_project():
     else:
         users = project.users
 
-    A = ListManageProjectUsers(users,mode,project_id)
+    A = ListManageProjectUsers(users,mode,project)
     A.button_to_create()
     users_list_body = A.list_table()
     users_projects_list_header = A.header

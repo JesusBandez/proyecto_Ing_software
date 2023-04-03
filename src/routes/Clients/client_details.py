@@ -2,7 +2,7 @@ from flask import after_this_request, render_template, request, send_file, sessi
 from src.lib.generate_action import generate_action
 from src.lib.class_create_button import ListClientsCars
 
-from src.routes.auth import has_role, decorator
+from src.routes.auth import has_role, decorator, error_display
 from src.models import db
 from src.models.Client import Client
 from src.models.Car import Car
@@ -140,6 +140,9 @@ def add_new_car():
     issue = request.form['issue']
 
     c = adding_new_car(car_to_edit,owner_id,owner,license_plate,brand,model,year,serial_engine,serial_car,color,issue)
+    if c == False:
+        error_display(ERROR_EXISTS_LICENSE_PLATE)
+        return redirect(url_for('client_details', id=owner_id))
 
     return redirect(url_for('client_details', id=owner_id))
 

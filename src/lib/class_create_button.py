@@ -1,11 +1,13 @@
 
 from abc import ABC, abstractmethod
 from src.lib.generate_action import generate_action
-from src.routes.auth import has_role
+from src.routes.auth import has_role, is_project_manager
 
 
 def generate_button(argument,x):
     output = None
+    print("AH")
+    print(argument["disable"])
     if "hiddens" in argument.keys() and "value_name" in argument.keys():
         output = generate_action(x,
             argument["name"], button_class=argument["button_class"],
@@ -66,9 +68,9 @@ class ListProjects(ListBody):
             {"button_class":'btn bt-sm btn-outline-primary', "text_class" : 'fa-regular fa-rectangle-list',
             "title":"Project Details", "name":'generate_project', "disable":False},
             {"button_class":'btn bt-sm btn-outline-danger', "text_class" : 'fa-solid fa-trash',
-            "title":"Remove project", "name":'remove_project', "disable":not has_role('admin')},
+            "title":"Remove project", "name":'remove_project', "disable":not has_role('admin') and not has_role('mngr')},
             {"button_class":'btn bt-sm btn-outline-success', "text_class" : 'fa-solid fa-sack-dollar',
-            "title":"Project Budget", "name":'print_project',"disable":not has_role('admin')}
+            "title":"Project Budget", "name":'print_project',"disable":not has_role('admin') and not has_role('mngr')}
         ]
         self.header = [
             {'label': 'Id', 'class': 'col'},
@@ -121,7 +123,7 @@ class ListManageProjectUsers(ListBody):
         self.lists = lists
         self.mode = mode
         self.args = []
-        self.project_id = pid
+        self.project = pid
         self.header = [
             {'label': 'Id', 'class': 'col-1'},
             {'label': 'First name', 'class': 'col-6'},
@@ -130,16 +132,20 @@ class ListManageProjectUsers(ListBody):
         ]
 
     def button_to_create(self):
-        input_hidden = [{'name' : 'project_id', 'data' : self.project_id}]
+        input_hidden = [{'name' : 'project_id', 'data' : self.project.id}]
         if self.mode == 'Edit_manager':
             self.args = [{"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-check',
-            "title":"Select as manager", "name":'edit_manager', "disable":False, "method" : 'post', "hiddens" : input_hidden}]
+            "title":"Select as manager", "name":'edit_manager', "disable": not is_project_manager(self.project), 
+            "method" : 'post', "hiddens" : input_hidden}]
+        
         elif self.mode == "Add":
             self.args = [{"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-plus',
-            "title":"Add user", "name":'add_user_to_project', "disable":False, "method" : 'post', "hiddens" : input_hidden}]
+            "title":"Add user", "name":'add_user_to_project', "disable": not is_project_manager(self.project), 
+            "method" : 'post', "hiddens" : input_hidden}]
         else:
             self.args = [{"button_class":'btn btn-outline-danger', "text_class" : 'fa fa-trash',
-            "title":"Remove user", "name":'remove_user_from_project', "disable":False, "method" : 'post', "hiddens" : input_hidden}]
+            "title":"Remove user", "name":'remove_user_from_project', "disable":not is_project_manager(self.project),
+            "method" : 'post', "hiddens" : input_hidden}]
 
     def data(self,x):
         return [x.id, x.first_name, x.last_name]
@@ -155,7 +161,7 @@ class ListUsersList(ListBody):
             {"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-eye',
             "title":"View the projects associated with the user", "name":'user_details', "disable":False},
             {"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-pencil',
-            "title":"Edit the user", "name":'new_user', "method":"post", "disable":False}
+            "title":"Edit the user", "name":'new_user', "method":"post", "disable": not has_role('admin')}
         ]
         self.header = [
             {'label': 'Id', 'class': 'col-1'},

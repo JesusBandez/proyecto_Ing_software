@@ -76,9 +76,9 @@ class ErrorType:
         elif n==ERROR_INCORRECT_PASSWORD:
             return "The entered password is incorrect."
         elif n==ERROR_MUST_BE_ADMIN_ADD_CLIENT:
-            return "You have to be an administrator to add a client."
+            return "You have to be an administrator or analyst of operations to add a client."
         elif n==ERROR_MUST_BE_ADMIN_DELETE_CLIENT:
-            return "You have to be an administrator to delete a client."
+            return "You have to be an administrator or analyst of operations to delete a client."
         elif n==ERROR_EXISTS_LICENSE_PLATE:
             return "The license plate that has been introduced already belongs to an existing car in the system."
         elif n==ERROR_CI_ALREADY_EXISTS:

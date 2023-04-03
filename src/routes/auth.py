@@ -38,7 +38,7 @@ def decorator(func):
     @wraps(func)
     def inner1(*args, **kwargs):
         name = func.__name__
-        if not has_role('admin') and (name=="new_project" or name=="add_new_project" or name=="remove_project" or 
+        if (not has_role('admin') and not has_role('mngr')) and (name=="new_project" or name=="add_new_project" or name=="remove_project" or 
             name == "toggle_project_availability"):
             error_display(ERROR_MUST_BE_ADMIN)
             return redirect(url_for('projects_list'))
@@ -48,6 +48,7 @@ def decorator(func):
             if not has_role('admin') and not is_project_manager(project):
                 error_display(ERROR_MUST_BE_ADMIN_AND_MANAGER)
                 return redirect(url_for('projects_list'))
+
         if name == "delete_user" and not has_role('admin'):
             error_display(ERROR_MUST_BE_ADMIN_DELETE_USER)
             return redirect(url_for('users_lists'))
@@ -63,18 +64,18 @@ def decorator(func):
         if name == "remove_department" and not has_role('admin'):
             error_display(ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT)
             return redirect(url_for('departments_list'))
+
         if name == "new_client" and not has_role('opera'):
             error_display(ERROR_MUST_BE_ADMIN_ADD_CLIENT)
             return redirect(url_for('clients_list'))
         if name== "new_car" and not has_role('opera'):
+            owner_id = request.form['owner_id']
             error_display(ERROR_MUST_BE_ADMIN)
-            return redirect(url_for('client_details'))
-        if name== "add_new_car" and not has_role('opera'):
-            error_display(ERROR_EXISTS_LICENSE_PLATE)
-            return redirect(url_for('client_details'))
+            return redirect(url_for('client_details',id=owner_id))
         if name == "remove_car" and not has_role('opera'):
+            owner_id = request.form['owner_id']
             error_display(ERROR_MUST_BE_ADMIN)
-            return redirect(url_for('client_details'))
+            return redirect(url_for('client_details',id=owner_id))
         if name == "remove_client" and not has_role('opera'):
             error_display(ERROR_MUST_BE_ADMIN_DELETE_CLIENT)
             return redirect(url_for('clients_list'))
@@ -108,6 +109,9 @@ def has_role(role='user'):
 
     elif role == 'opera':
         return session.get('user')['role'] in ['opera', 'admin']
+
+    elif role == 'mngr':
+        return session.get('user')['role'] == 'mngr'
 
     elif role == 'admin':
         return session.get('user')['role'] == 'admin'

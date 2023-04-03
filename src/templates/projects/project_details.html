@@ -19,7 +19,8 @@
           </form>
           <form method="post" class="d-inline-block">
             <button class="btn btn-outline-secondary" name="id" value="{{context['id']}}" title="Enable/Disable"
-              formaction="{{url_for('toggle_project_availability')}}">
+              formaction="{{url_for('toggle_project_availability')}}" {% if not context['is_project_manager']
+              %} disabled {%endif%}>
               <i class="fa-solid fa-ban" aria-hidden="true"></i>
             </button>
           </form>
