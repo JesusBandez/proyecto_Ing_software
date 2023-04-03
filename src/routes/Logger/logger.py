@@ -1,5 +1,7 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from src.lib.generate_action import generate_action
+from src.lib.class_create_button import ListEvents
+
 from src.models import db
 from src.models.Logger import Logger
 
@@ -24,15 +26,6 @@ def search_events(typeS,search):
 
 @app.route('/event_logger', methods=('GET', 'POST'))
 def logger():
-    users_list_header = [
-        {'label': 'Id', 'class': 'col-1'},
-        {'label': 'Event', 'class': 'col-3'},
-        # {'label': 'Module', 'class': 'col-1'},
-        {'label': 'Date', 'class': 'col-2'},
-        {'label': 'Hour', 'class': 'col-1'},
-        {'label': 'Actions', 'class': 'col-2'},
-    ]
-
     try:
         typeS = request.form['typeSearch']
         search = request.form['search']
@@ -42,23 +35,9 @@ def logger():
     except:
         EVENTS = db.session.query(Logger).all()
 
-    events_list_body = []
-    for event in EVENTS:
-        remove = generate_action(event.id, 'remove_event', 'post',
-            button_class='btn btn-sm btn-outline-danger w-100',
-            title="Remove event",
-            text_class='fa-solid fa-trash')
-
-        foo = generate_action(event.id,
-            'foo_event', button_class='btn btn-sm btn-outline-primary w-100',
-            title="Foo event",
-            text_class='fa-solid fa-table-list')
-        
-        events_list_body.append({
-            'data' : [event.id, event.event, 
-                    event.date.strftime(f'%m-%d-%Y'), event.hour.strftime(f'%H:%M:%S')],
-            'actions' : [remove, foo]
-            })
+    A = ListEvents(EVENTS)
+    events_list_body = A.list_table()
+    users_list_header = A.header
 
     return render_template('logger/logger.html',
         list_context= {

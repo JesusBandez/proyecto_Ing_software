@@ -1,5 +1,9 @@
 from flask import render_template, request, redirect, url_for, flash
 from src.lib.generate_action import generate_action
+
+from src.lib.class_create_button import ListDepartments
+
+
 from src.routes.auth import has_role, decorator
 from src.models.Department import Department
 from src.models.Logger import Logger
@@ -27,34 +31,13 @@ def search_departments(typeS, search):
 def departments_list():
     "Renderiza la lista con todos los departamentos del sistema"
 
-    departments_list_header = [
-        {'label': 'Id', 'class': 'col-1'},
-        {'label': 'Description', 'class': 'col'},
-        {'label': 'Actions', 'class': 'col-2'}, 
-    ]
-
     DEPARTMENTS = search_departments(
         request.args.get('typeSearch'), 
         request.args.get('search'))
 
-    departments_list_body = []
-    for department in DEPARTMENTS:
-        edit = generate_action(department.id, 'new_department', 'get', 
-            button_class='btn btn-sm btn-outline-success',
-            title="Edit department",
-            text_class='fa-solid fa-pencil',
-            disabled= not has_role('opera'))
-
-        remove = generate_action(department.id, 'remove_department', 'post',
-            button_class='btn btn-sm btn-outline-danger',
-            title="Remove department",
-            text_class='fa-solid fa-trash',
-            disabled= not has_role('opera'))
-        
-        departments_list_body.append({
-            'data' : [department.id, department.description],
-            'actions' : [edit, remove]
-            })
+    A = ListDepartments(DEPARTMENTS)
+    departments_list_body = A.list_table()
+    departments_list_header = A.header
      
     return render_template('departments/departments.html',
         has_role=has_role,

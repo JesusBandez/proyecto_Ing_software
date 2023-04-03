@@ -27,7 +27,6 @@ ELECTRONIC_MANAGER,ELECTRICITY_MANAGER,MECHANIC_SPECIALIST,STRUCTURE_SPECIALIST,
 ELECTRONIC_SPECIALIST,ELECTRICITY_SPECIALIST]
 
 
-
 def error_display(error_type):
     title = Errors(error_type).error.title
     desc = Errors(error_type).error.description

@@ -1,5 +1,7 @@
 from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory,jsonify
 from src.lib.generate_action import generate_action
+from src.lib.class_create_button import ListProjects
+
 from src.routes.auth import has_role, is_project_manager, decorator
 from src.routes.Projects import project_details
 from src.models import db
@@ -66,17 +68,6 @@ def search_projects(typeS,search):
 @app.route('/projects/list', methods=('GET', 'POST'))
 def projects_list():
     "Renderiza la lista con todos los proyectos del sistema"
-    users_list_header = [
-        {'label': 'Id', 'class': 'col'},
-        {'label': 'Car', 'class': 'col'},
-        {'label': 'Department', 'class': 'col'},
-        {'label': 'Manager', 'class': 'col'},
-        {'label': 'Issue', 'class': 'col'},
-        {'label': 'Solution', 'class': 'col'}, 
-        {'label': 'Amount ($)', 'class': 'col'},
-        {'label': 'Observations', 'class': 'col'},            
-        {'label': 'Actions', 'class': 'col'},        
-    ]
     try:
         typeS = request.form['typeSearch']
         search = request.form['search']
@@ -86,44 +77,9 @@ def projects_list():
     except:
         PROJECTS = db.session.query(Project).all()
 
-    projects_list_body = []
-    for project in PROJECTS:
-        db.session.commit()
-
-        generate = generate_action(project.id,
-            'generate_project', button_class='btn bt-sm btn-outline-primary',
-            text_class='fa-regular fa-rectangle-list',
-            title="Project Details")
-        
-        remove = generate_action(project.id, 'remove_project', 'post',
-            button_class='btn bt-sm btn-outline-danger',
-            title="Remove project",
-            text_class='fa-solid fa-trash',
-            disabled= not has_role('admin'))
-
-        budget_project = generate_action(project.id,            
-            'print_project', 'post',
-            text_class='fa-solid fa-sack-dollar',
-            title="Project Budget",
-            button_class='btn bt-sm btn-outline-success', 
-            disabled = not has_role('admin'))
-
-        if project.manager:
-            manager_name = project.manager.first_name +" "+ project.manager.last_name
-        else:
-            manager_name = 'Without manager'       
-        
-        car_plate = project.car if project.car else 'N/A'
-        
-        department_description = (
-            project.associated_department.description if project.associated_department else 'N/A')
-
-        projects_list_body.append({
-            'data' : [project.id, car_plate, department_description, manager_name,
-                    project.issue, project.solution, project.amount, project.observations],
-            'actions' : [generate, budget_project, remove]
-            })
-     
+    A = ListProjects(PROJECTS)
+    projects_list_body = A.list_table()
+    users_list_header = A.header
 
     return render_template('projects/projects.html',
         has_role=has_role,

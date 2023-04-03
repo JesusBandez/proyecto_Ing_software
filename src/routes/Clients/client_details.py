@@ -1,5 +1,7 @@
 from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory
 from src.lib.generate_action import generate_action
+from src.lib.class_create_button import ListClientsCars
+
 from src.routes.auth import has_role, decorator
 from src.models import db
 from src.models.Client import Client
@@ -35,15 +37,6 @@ def search_cars(typeS,search,client_id):
 
 @app.route('/clients/client_details', methods=('GET', 'POST'))
 def client_details():
-    cars_projects_list_header = [
-        {'label': 'License Plate', 'class': 'col-1'},
-        {'label': 'Brand', 'class': 'col-2'},
-        {'label': 'Model', 'class': 'col-1'},
-        {'label': 'Color', 'class': 'col-1'},
-        {'label': 'Issue', 'class': 'col-5'},
-        {'label': 'Actions', 'class': 'col-1'}
-    ]
-
     client_id = request.args['id']
 
     try:
@@ -59,30 +52,10 @@ def client_details():
 
     
     client = db.session.query(Client).filter_by(id=client_id).first() 
-    clients_cars = []
-    for car in cars_found:
-        remove_car = generate_action(car.license_plate, 'remove_car', 
-            method='post', 
-            button_class='btn btn-sm btn-outline-danger',
-            text_class='fa-solid fa-trash',
-            title='View user details',
-            disabled= not has_role('opera'),
-            hiddens= [{'name' : 'owner_id', 'data': client_id}])
 
-        edit = generate_action(car.license_plate, 'new_car', 
-            method='get', 
-            button_class='btn btn-sm btn-outline-success',
-            title="Edit project",
-            text_class='fa-solid fa-pencil',
-            disabled= not has_role('opera'),
-            hiddens= [{'name' : 'id', 'data': client_id}],
-            value_name='car_plate')
-
-        clients_cars.append({
-            'data' : [car.license_plate, car.brand, car.model, 
-                        car.color.capitalize(), car.issue],
-            'actions' : [edit, remove_car]
-        })
+    A = ListClientsCars(cars_found,client_id)
+    clients_cars = A.list_table()
+    cars_projects_list_header = A.header
         
     return render_template('clients/client_details.html',
                 has_role=has_role,

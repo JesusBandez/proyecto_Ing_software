@@ -1,6 +1,9 @@
 from flask import render_template, redirect, url_for, request, flash, session
 from src.routes.auth import has_role, decorator, error_display
 from src.routes.Users_list import user_details
+
+from src.lib.class_create_button import ListUsersList
+
 from src.models.User import User
 from src.models.Logger import Logger
 from src.models import db
@@ -25,16 +28,7 @@ def search_users(typeS,search):
 
 @app.route('/users_list', methods=['GET', 'POST'])
 def users_lists():
-    "Muestra la lista de usuarios del sistema"
-
-    users_list_header = [
-        {'label': 'Id', 'class': 'col-1'},
-        {'label': 'Login', 'class': 'col-2'},
-        {'label': 'First name', 'class': 'col-2'},
-        {'label': 'Last name', 'class': 'col-2'},
-        {'label': 'Role', 'class': 'col-2'},
-        {'label': 'Actions', 'class': 'col-2'}
-    ]
+    #"Muestra la lista de usuarios del sistema"
     try:
         typeS = request.form['typeSearch']
         search = request.form['search']
@@ -44,26 +38,9 @@ def users_lists():
     except:
         users = db.session.query(User).all()
 
-    users_list_body = []
-    for user in users:
-
-        delete = generate_action(user.id, 'delete_user', 'post', 
-            button_class='btn btn-outline-danger', text_class='fa fa-trash',
-            title="Delete user",
-            disabled=not has_role('admin'))           
-        
-        see_user = generate_action(user.id, 'user_details', 'get',
-                button_class='btn btn-outline-primary', text_class="fa-solid fa-eye",
-                title="View the projects associated with the user")
-
-        edit_user = generate_action(user.id, 'new_user', 'post',
-                button_class='btn btn-outline-primary', text_class="fa-solid fa-pencil",
-                title="Edit the user")
-
-        users_list_body.append({
-                'data' : [user.id, user.username, user.first_name, 
-                          user.last_name, user.job],               
-                'actions' : [see_user, edit_user, delete]})
+    A = ListUsersList(users)
+    users_list_body = A.list_table()
+    users_list_header = A.header
 
     return render_template(
         'users_list/users_list.html',

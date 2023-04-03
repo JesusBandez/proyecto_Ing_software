@@ -1,5 +1,7 @@
 from flask import after_this_request, render_template, request,redirect, url_for, flash
 from src.lib.generate_action import generate_action
+from src.lib.class_create_button import ListClients
+
 from src.routes.auth import has_role, decorator,error_display
 from src.models.Client import Client
 from src.routes.Clients import client_details
@@ -34,17 +36,6 @@ def search_clients(typeS,search):
 def clients_list():
     "Renderiza la lista con todos los clientes del sistema"
 
-    clients_list_header = [
-        {'label': 'C.I.', 'class': 'col-1'},
-        {'label': 'Name', 'class': 'col-1'},
-        {'label': 'Lastname', 'class': 'col-1'},
-        {'label': 'Birthdate', 'class': 'col-1'},
-        {'label': 'Phone Number', 'class': 'col-2'},
-        {'label': 'Mail', 'class': 'col-2'},
-        {'label': 'Address', 'class': 'col-2'},
-        {'label': 'Actions', 'class': 'col-2'}, 
-    ]
-
     try:
         typeS = request.form['typeSearch']
         search = request.form['search']
@@ -54,31 +45,9 @@ def clients_list():
     except:
         CLIENTS = db.session.query(Client).all()
 
-    clients_list_body = []
-    for client in CLIENTS:
-        see_cars = generate_action(client.id, 'client_details', method='get',
-            button_class='btn btn-sm btn-outline-primary',
-            text_class='fa fa-car',
-            title="See client information")
-
-        edit = generate_action(client.id, 'new_client', method='get', 
-            button_class='btn btn-sm btn-outline-success',
-            title="Edit client",
-            text_class='fa-solid fa-pencil',
-            disabled= not has_role('opera'))
-
-        remove = generate_action(client.id, 'remove_client', 'post',
-            button_class='btn btn-sm btn-outline-danger',
-            title="Remove client",
-            text_class='fa-solid fa-trash',
-            disabled= not has_role('opera'))
-        
-        clients_list_body.append({
-            'data' : [client.ci, client.first_name, 
-                    client.last_name, client.birth_date.strftime(f'%m-%d-%Y'), client.phone, client.mail, client.address],
-            'actions' : [see_cars, edit, remove]
-            })
-     
+    A = ListClients(CLIENTS)
+    clients_list_body = A.list_table()
+    clients_list_header = A.header
     return render_template('clients/clients.html',
         has_role=has_role,
         list_context= {

@@ -1,5 +1,8 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from src.lib.generate_action import generate_action
+from src.lib.class_create_button import ListProjectsOfUser
+
+
 from src.routes.auth import has_role
 from src.models import db
 from src.models.Project import Project
@@ -10,37 +13,21 @@ from . import app
 
 def user_projects(user_id):
     user = db.session.query(User).filter_by(id=user_id).first()
-    projects = db.session.query(Project).all()    
-    projects_user_is = []
-    for p in projects :
-        for u in p.users:
-            see_project = generate_action(p.id, 'project_details', 
-                button_class='btn btn-outline-primary',
-                text_class="fa-solid fa-eye",
-                title="View project details")
-            if (u.id == user.id):
-                projects_user_is.append({
-                    'data' : [p.id, p.description, p.start.strftime(f'%m-%d-%Y'), p.finish.strftime(f'%m-%d-%Y')],
-                    'actions' : [see_project]
-                })
-    return [projects_user_is,user]
+    projects = db.session.query(Project).all()
+    A = ListProjectsOfUser(projects,user)
+    projects_user_is = A.list_table()
+    header = A.header
+    return [projects_user_is,user,header]
 
 @app.route('/users_list/user_details')
 def user_details():
     """Renderiza la vista con la lista de proyectos de un usuario.
         El Id del usuario se obtiene por url args"""
-    
-    users_projects_list_header = [
-        {'label': 'Id', 'class': 'col-1'},
-        {'label': 'Description', 'class': 'col-6'},
-        {'label': 'Start', 'class': 'col-2'},
-        {'label': 'End', 'class': 'col-2'},
-        {'label' : 'actions', 'class': 'col-1'} 
-    ] 
     user_id = request.args['id']
     get = user_projects(user_id)
     projects_user_is = get[0]
     user = get[1]
+    users_projects_list_header = get[2]
     return render_template('users_list/user_details.html',
         context={
             'username' : user.username,
