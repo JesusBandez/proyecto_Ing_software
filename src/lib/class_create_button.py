@@ -14,7 +14,7 @@ def generate_button(argument,x):
             disabled = argument["disable"],
             method = argument["method"] if "method" in argument.keys() else "get",
             hiddens = argument["hiddens"],
-            value_name = argument["hiddens"])
+            value_name = argument["value_name"])
     elif "hiddens" in argument.keys():
         output = generate_action(x,
             argument["name"], button_class=argument["button_class"],
