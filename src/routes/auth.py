@@ -45,7 +45,7 @@ def decorator(func):
         if name == "manage_project":
             project = db.session.query(Project).filter_by(id=request.args['id']).first()
             mode = request.args['mode'] #Aqui se puede agarrar el modo de manage project
-            if not has_role('admin') and not is_project_manager(project):
+            if not has_role('admin') and not has_role('mngr') and not is_project_manager(project):
                 error_display(ERROR_MUST_BE_ADMIN_AND_MANAGER)
                 return redirect(url_for('projects_list'))
 

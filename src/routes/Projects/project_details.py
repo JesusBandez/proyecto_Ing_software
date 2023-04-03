@@ -22,7 +22,7 @@ def project_details():
     project_id = request.args['id']
     project = db.session.query(Project).filter_by(id=project_id).first()
 
-    has_permissions = has_role('admin') or is_project_manager(project)
+    has_permissions = has_role('mngr') or has_role('admin') or is_project_manager(project)
 
     manager = db.session.query(User).filter_by(id=project.manager_id).first()
     if manager:
@@ -78,7 +78,10 @@ def manage_project():
         users = [user for user in all_users if user not in project.users]
     else:
         users = project.users
-
+    print()
+    print(project)
+    print()
+    print()
     A = ListManageProjectUsers(users,mode,project)
     A.button_to_create()
     users_list_body = A.list_table()
@@ -138,75 +141,3 @@ def remove_user_from_project():
     p = removing_user_from_project(project_id,user_id)
     
     return redirect(url_for('manage_project', mode='Remove', id=request.form['project_id']))
-
-
-
-
-
-
-
-
-
-##########################################
-# ESTO YA NO DEBERIA EXISTIR
-#################################
-
-def editing_manager(project_id,manager_id):
-    project = db.session.query(Project).filter_by(id=project_id).first()
-
-    if not has_role('admin') and not is_project_manager(project):
-        return False
-
-    project.manager_id = manager_id
-
-    db.session.commit()
-    return project
-
-@app.route('/projects/manage_project_users/select_manager',  methods=["POST"])
-def edit_manager():
-    "Selecciona el gerente para el proyecto"
-
-    project_id = request.form['project_id']
-    manager_id = request.form['id']
-    p = editing_manager(project_id,manager_id)
-    if p == False:
-        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('project_details', id=request.form['project_id']))
-
-    return redirect(url_for('project_details', id=request.form['project_id']))
-    
-
-def removing_manager(project_id):
-    project = db.session.query(Project).filter_by(id=project_id).first()
-    if not has_role('admin') and not is_project_manager(project):
-        return False
-
-    project.manager_id = None
-
-    db.session.commit()
-    return project
-
-
-@app.route('/projects/manage_project_users/remove_manager')
-def remove_manager():
-    "Elimina el gerente actual para el proyecto"
-
-    project_id = request.args['id']
-    p = removing_manager(project_id)
-    if p == False:
-        title = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.title
-        desc = Errors(ERROR_MUST_BE_ADMIN_AND_MANAGER).error.description
-        flash(True, 'error')
-        flash(title, 'error_title') 
-        flash(desc, 'error_description')
-        return redirect(url_for('project_details')) 
-    
-    return redirect(url_for('project_details', id=request.args['id']))
-
-##########################
-# EL MANAGER AHORA SE EDITA EN LA PARTE DE EDITAR PROYECTO
-###############################

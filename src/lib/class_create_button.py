@@ -130,19 +130,17 @@ class ListManageProjectUsers(ListBody):
         ]
 
     def button_to_create(self):
-        input_hidden = [{'name' : 'project_id', 'data' : self.project.id}]
-        if self.mode == 'Edit_manager':
-            self.args = [{"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-check',
-            "title":"Select as manager", "name":'edit_manager', "disable": not is_project_manager(self.project), 
-            "method" : 'post', "hiddens" : input_hidden}]
+        input_hidden = [{'name' : 'project_id', 'data' : self.project.id}]        
         
-        elif self.mode == "Add":
+        if self.mode == "Add":
             self.args = [{"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-plus',
-            "title":"Add user", "name":'add_user_to_project', "disable": not is_project_manager(self.project), 
+            "title":"Add user", "name":'add_user_to_project', "disable": (not is_project_manager(self.project)
+                and not has_role('admin') and not has_role('mngr')), 
             "method" : 'post', "hiddens" : input_hidden}]
         else:
             self.args = [{"button_class":'btn btn-outline-danger', "text_class" : 'fa fa-trash',
-            "title":"Remove user", "name":'remove_user_from_project', "disable":not is_project_manager(self.project),
+            "title":"Remove user", "name":'remove_user_from_project', "disable":(not is_project_manager(self.project)
+                and not has_role('admin') and not has_role('mngr')),
             "method" : 'post', "hiddens" : input_hidden}]
 
     def data(self,x):
