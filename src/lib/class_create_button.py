@@ -6,8 +6,6 @@ from src.routes.auth import has_role, is_project_manager
 
 def generate_button(argument,x):
     output = None
-    print("AH")
-    print(argument["disable"])
     if "hiddens" in argument.keys() and "value_name" in argument.keys():
         output = generate_action(x,
             argument["name"], button_class=argument["button_class"],
