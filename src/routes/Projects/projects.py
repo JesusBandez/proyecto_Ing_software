@@ -191,8 +191,7 @@ def removing_project(project_id):
 def remove_project():
     "Eliminar proyecto"
         
-    project_id = request.form['id']
-
+    project_id = request.args['id']                         
     removing_project(project_id)
     
     return redirect(url_for('projects_list'))
