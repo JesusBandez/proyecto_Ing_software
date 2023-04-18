@@ -315,3 +315,23 @@ class ListClientsCars(ListBody):
                     'actions' : actions
                     })
         return list_body
+    
+class ListMeasuresList(ListBody):
+    #measures_lists
+    def __init__(self, lists):
+        self.lists = lists
+        self.args = [
+            {"button_class":'btn btn-outline-danger', "text_class" : 'fa fa-trash',
+            "title":"Delete measure", "name":'delete_measure', "method":"post", "disable":not has_role('admin')},
+            {"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-pencil',
+            "title":"Edit the measure", "name":'new_measure', "method":"post", "disable": not has_role('admin')}
+        ]
+        self.header = [
+            {'label': 'Id', 'class': 'col-1'},
+            {'label': 'Dimension', 'class': 'col-2'},
+            {'label': 'Unit', 'class': 'col-2'},
+            {'label': 'Actions', 'class': 'col-2'}
+        ]
+
+    def data(self,x):
+        return [x.id, x.dimension, x.unit]

@@ -11,6 +11,7 @@ from src.routes.Projects import projects, project_details
 from src.routes.Logger import logger
 from src.routes.Clients import clients, client_details
 from src.routes.Departments import departments
+from src.routes.Measures import measures
 
 
 db.init_app(app)

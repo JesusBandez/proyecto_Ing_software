@@ -12,6 +12,7 @@ ERROR_EXISTS_LICENSE_PLATE = 9
 ERROR_CI_ALREADY_EXISTS = 10
 ERROR_MUST_BE_ADMIN_ADD_DEPARTMENT = 11
 ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT = 12
+ERROR_MEASURE_ALREADY_EXISTS = 13
 
 class Errors(): 
     def __init__(self,number):
@@ -59,6 +60,8 @@ class ErrorType:
             return "ERROR: Cannot create new department"
         elif n==ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT:
             return "ERROR: Cannot delete department"
+        elif n==ERROR_MEASURE_ALREADY_EXISTS:
+            return "ERROR: Measure already exists"
 
     def description(self,n):
         if n==ERROR_MUST_BE_ADMIN:
@@ -87,3 +90,5 @@ class ErrorType:
             return "To create a department you must be an administrator."
         elif n==ERROR_MUST_BE_ADMIN_DELETE_DEPARTMENT:
             return "To delete a department you must be an administrator."
+        elif n==ERROR_MEASURE_ALREADY_EXISTS:
+            return "Add a measure that isn't already in the system."

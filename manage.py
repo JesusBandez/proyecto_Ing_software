@@ -7,6 +7,7 @@ from src.models.Client import Client
 from src.models.Car import Car
 from src.models.Logger import Logger
 from src.models.Department import Department
+from src.models.Measures import Measures
 
 
 
@@ -73,12 +74,20 @@ def create_default_departments():
     db.session.add_all(DEPARTMENTS)
     db.session.commit()
 
+def create_default_measures():
+    MEASURES = [
+        Measures(8, 'Pulgadas'), Measures(10, 'Pulgadas'), Measures(12, 'Pulgadas')
+    ]
+    db.session.add_all(MEASURES)
+    db.session.commit()
+
 
 def init_db_records():
     create_default_users()    
     create_default_clients()
     create_default_departments()
     create_default_projects()
+    create_default_measures()
     '''
     project = db.session.query(Project).filter_by(id=1).first()
     users = db.session.query(User).all()
