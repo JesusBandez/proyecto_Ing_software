@@ -16,15 +16,14 @@ def generate_action(value=None, redirect_function=None, method="get", col_size='
                     <i class="{kwargs.get('text_class')}" aria-hidden="true"></i>
             </button>
         """
-    hidden = ''
+    atrs = ''
     if kwargs.get('hiddens'):
-        for hidden in kwargs.get('hiddens'):
-            hidden = f'<input name="{hidden["name"]}" value="{hidden["data"]}" type="hidden">\n'
-
+        for hidden in kwargs.get('hiddens'):            
+            atrs += f'<input name="{hidden["name"]}" value="{hidden["data"]}" type="hidden">'
     return f"""
     <div class="col{col_size}">
         <form method="{method}">
-            {hidden}          
+            {atrs}          
             {button}        
         </form>
     </div>

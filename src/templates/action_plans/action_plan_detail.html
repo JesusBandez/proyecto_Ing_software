@@ -63,6 +63,7 @@
     </table>
   </div>
 </div>
+
 <div id="humantalent" class="card border-light">
   <div class="card-body" style="background-color: #36494E;"></div>
   <div class="card-header">
@@ -92,7 +93,7 @@
           <a class="btn btn-secondary disabled" disabled title="Register new action plan"><i
               class="fa-solid fa-plus"></i></a>
           {% else %}
-          <a href="{{url_for('new_action_plan', project_id=context['id'])}}" class="btn btn-light"
+          <a href="{{url_for('new_human_talent', project_id=context['project_id'], plan_id=context['plan'].id)}}" class="btn btn-light"
             style="background-color: #2A4494; color:#f0f0f0;" title="Register new action plan"><i
               class="fa-solid fa-plus"></i></a>
           {% endif %}

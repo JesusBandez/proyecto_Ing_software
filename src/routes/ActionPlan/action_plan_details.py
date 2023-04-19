@@ -23,11 +23,12 @@ def action_plan_details():
     plan = db.session.query(ActionPlan).filter_by(
         id=plan_id
     ).first()
-    print(plan.human_talents)
-    list_talents = ListHumanTalents(plan.human_talents, project_id)
+
+    list_talents = ListHumanTalents(plan.human_talents, project_id, plan_id)
     return render_template('action_plans/action_plan_detail.html',
         has_role=has_role,      
-        context={ 'plan' : plan
+        context={ 'plan' : plan,
+            'project_id' : project_id,
             },   
         talents_list_context= {
             'list_header': list_talents.header,
@@ -41,7 +42,22 @@ def action_plan_details():
 @app.route('/projects/action_plan_details/new_human_talent')
 def new_human_talent():
     """ Muestra el formulario para un nuevo talento"""
-    return redirect(url_for('action_plan_details'))
+    talent_to_edit = request.args.get('id')
+    project_id = request.args.get('project_id')
+
+    talent = None
+    if talent_to_edit:
+        talent = db.session.query(HumanTalent).filter_by(id=talent_to_edit).first()
+        title = 'Edit Human Talent'
+    else:
+        title = 'Add Human Talent'
+
+    return render_template('action_plans/new_human_talent.html', 
+        context={
+            'talent': talent,
+            'project_id' : project_id,
+            'title' : title,
+        })
 
 
 @app.route('/projects/action_plan_details/remove_human_talent')

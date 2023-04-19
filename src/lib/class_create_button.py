@@ -365,15 +365,15 @@ class ListActionPlansList(ListBody):
 
 class ListHumanTalents(ListBody):
     #Human talents
-    def __init__(self, lists, project_id):
+    def __init__(self, lists, project_id, plan_id):
         self.lists = lists
         self.args = [
             {"button_class":'btn btn-outline-danger', "text_class" : 'fa fa-trash',
-            "title":"Delete action plan", "name":'remove_human_talent', "method":"post", "disable":not has_role('admin'), 
-            "hiddens" : [{'name' : 'project_id', 'data' : project_id}]},
+            "title":"Delete Human Talent", "name":'remove_human_talent', "method":"post", "disable":not has_role('admin'), 
+            "hiddens" : [{'name' : 'project_id', 'data' : project_id}, {'name' : 'plan_id', 'data' : plan_id}]},
             {"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-pencil',
-            "title":"Edit the action_plan", "name":'new_human_talent', "method":"post", "disable": not has_role('admin'),
-            "hiddens" : [{'name' : 'project_id', 'data' : project_id}]},
+            "title":"Edit Human Talent", "name":'new_human_talent', "method":"get", "disable": not has_role('admin'),
+            "hiddens" : [{'name' : 'project_id', 'data' : project_id}, {'name' : 'plan_id', 'data' : plan_id}]},
         ]
         self.header = [
             {'label': 'Id', 'class': 'col-1'},
