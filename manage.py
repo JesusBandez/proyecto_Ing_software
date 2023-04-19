@@ -90,8 +90,8 @@ def create_default_measures():
 def create_default_action_plans():
     USERS = db.session.query(User).all()
     ACTION_PLANS = [
-        ActionPlan('Preparar la superficie', 'Lijado de superficie', date.today(), date.today() + timedelta(days=1), 20, USERS[0].id, 50, 0),
-        ActionPlan('Preparar la superficie', 'Remover la pintura', date.today(), date.today() + timedelta(days=2), 20, USERS[1].id, 100, 0),
+        ActionPlan('Preparar la superficie', 'Lijado de superficie', date.today(), date.today() + timedelta(days=1), 20, USERS[0].id, 50, 2),
+        ActionPlan('Preparar la superficie', 'Remover la pintura', date.today(), date.today() + timedelta(days=2), 20, USERS[1].id, 100, 2),
         ActionPlan('Preparar la superficie', 'Enmasillar', date.today(), date.today() + timedelta(days=5), 20, USERS[2].id, 120, 1)
     ]
     db.session.add_all(ACTION_PLANS)

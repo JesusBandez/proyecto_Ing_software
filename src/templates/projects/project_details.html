@@ -41,8 +41,7 @@
       </div>
     </h3>
   </div>
-  <div class="card-body" style="background-color: #36494E;">
-  </div>
+  <div class="card-body" style="background-color: #36494E;"></div>
 </div>
 
 <div class="container">
@@ -152,25 +151,78 @@
     </table>
   </div>
 </div>
+<div class="card border-light">
+  <div class="card-body" style="background-color: #36494E;"></div>
+  <div class="card-header">
+    <h3 class="text-center">Action Plans</h1>      
+  </div>  
+</div>
+<div class="container">
+  <div style="text-align: right;">
+    <div class="container" style="width:50%;display:flex;">
+      <form class="input-group flex p-2" action="{{url_for('measures_lists')}}" method="post">
+        <div class="d-inline p-2 text-white">
+          <select class="form-select" name="typeSearch">
+            <option selected>Search by: </option>
+            <option value="dimension">Dimension</option>
+            <option value="unit">Unit</option>
+          </select>
+        </div>
+        <div class="d-inline p-2 text-white">
+          <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+            aria-describedby="search-addon" name="search" />
+        </div>
+        <div class="d-inline p-2 text-white">
+          <button type="submit" name="submit" class="btn btn-light btn-md"
+            style="background-color: #2A4494; color:#f0f0f0;" title="Search"><i class="fas fa-search"></i></button>
 
-<div class="row container-fluid mt-1 mx-auto" style="display: flex;">
-  <div class="col">
-    <div class="container-sm mb-2" style="text-align: right;">
-      {% if not context['has_permissions']%}
-      <a class="btn btn-light disabled" disabled style="background-color: #2A4494; color:#f0f0f0;" title="Add Users"><i
-          class="fa-solid fa-plus"></i></a>
-      <a class="btn btn-danger disabled" disabled title="Remove Users"><i class="fa-solid fa-minus"></i></a>
-      {% else %}
-      <a id="addUser" href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-light"
-        style="background-color: #2A4494; color:#f0f0f0;" title="Add Users"><i class="fa-solid fa-plus"></i></a>
-      <a id="removeUser" href="{{url_for('manage_project', id=context['id'], mode='Remove')}}" class="btn btn-danger"
-        title="Remove Users"><i class="fa-solid fa-minus"></i></a>
-      {% endif %}
+          {% if not has_role('admin')%}
+          <a class="btn btn-secondary disabled" disabled title="Register new action plan"><i
+              class="fa-solid fa-plus"></i></a>
+          {% else %}
+          <a href="{{url_for('new_action_plan')}}" class="btn btn-light"
+            style="background-color: #2A4494; color:#f0f0f0;" title="Register new action plan"><i
+              class="fa-solid fa-plus"></i></a>
+          {% endif %}
+        </div>
+      </form>
     </div>
   </div>
+  {% with list_context=actions_plans_list_context %}
+    {% include 'generics/generic_list.html' %}
+  {% endwith %}
 </div>
+
+
+<div class="card border-light mb-3 mt-3">
+  <div class="card-body" style="background-color: #36494E;"></div>
+  <div class="card-header">
+    <h3 class="text-end">
+      <div class="d-inline p-2">Users in Project</div>      
+      <div class="d-inline p-2" style="margin-left: 500px;">
+        <form method="post" class="d-inline-block">
+          {% if not context['has_permissions']%}
+          <a class="btn btn-outline-success disabled" disabled  title="Add Users"><i
+              class="fa-solid fa-plus"></i></a>
+          <a class="btn btn-outline-danger disabled" disabled title="Remove Users"><i class="fa-solid fa-minus"></i></a>
+          {% else %}
+          <a id="addUser" href="{{url_for('manage_project', id=context['id'], mode='Add')}}" class="btn btn-outline-success"
+             title="Add Users"><i class="fa-solid fa-plus"></i></a>
+          <a id="removeUser" href="{{url_for('manage_project', id=context['id'], mode='Remove')}}" class="btn btn-outline-danger"
+            title="Remove Users"><i class="fa-solid fa-minus"></i></a>
+          {% endif %}
+
+        </form>
+      </div>
+    </h3>
+  </div>  
+</div>
+
 {% with list_context=users_list_context %}
   {% include 'generics/generic_list.html' %}
 {% endwith %}
+
+
+
 
 {% endblock %}

@@ -1,6 +1,6 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from src.lib.generate_action import generate_action
-from src.lib.class_create_button import ListProjectsUser, ListManageProjectUsers
+from src.lib.class_create_button import ListProjectsUser, ListManageProjectUsers, ListActionPlansList
 
 from src.routes.auth import has_role, is_project_manager, require_permissions
 from src.models import db
@@ -36,8 +36,10 @@ def project_details():
         project.associated_department.description if project.associated_department else 'N/A')
     
     list_project_users = ListProjectsUser(project.users)
-    
-    return render_template('projects/project_details.html',        
+    list_action_plans = ListActionPlansList(project.action_plans)
+
+    return render_template('projects/project_details.html',
+        has_role=has_role,      
         context={
             'id' : project.id,
             'description' : project.description,
@@ -54,11 +56,16 @@ def project_details():
             'available' : project.available,
             'generate_action' : generate_action,
             'is_project_manager' : is_project_manager(project)
-        },   
+            },   
         users_list_context= {
                 'list_header': list_project_users.header,
                 'list_body' : list_project_users.list_table()
-            })
+            },
+        actions_plans_list_context = {
+                'list_header': list_action_plans.header,
+                'list_body' : list_action_plans.list_table()
+        }
+            )
 
 
 @app.route('/projects/manage_project_users')

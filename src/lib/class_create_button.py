@@ -354,8 +354,8 @@ class ListActionPlansList(ListBody):
             {'label': 'End Date', 'class': 'col-2'},
             {'label': 'Hours', 'class': 'col-1'},
             {'label': 'Responsible', 'class': 'col-1'},
-            {'label': 'Cost', 'class': 'col-2'},
-            {'label': 'Actions', 'class': 'col-4'}
+            {'label': 'Cost', 'class': 'col-1'},
+            {'label': 'Actions', 'class': 'col-1'}
         ]
 
     def data(self,x):
