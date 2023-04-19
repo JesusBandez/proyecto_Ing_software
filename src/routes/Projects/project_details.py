@@ -36,7 +36,7 @@ def project_details():
         project.associated_department.description if project.associated_department else 'N/A')
     
     list_project_users = ListProjectsUser(project.users)
-    list_action_plans = ListActionPlansList(project.action_plans)
+    list_action_plans = ListActionPlansList(project.action_plans, project_id)
 
     return render_template('projects/project_details.html',
         has_role=has_role,      

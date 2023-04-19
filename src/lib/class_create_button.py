@@ -338,13 +338,15 @@ class ListMeasuresList(ListBody):
     
 class ListActionPlansList(ListBody):
     #action_plans_lists
-    def __init__(self, lists):
+    def __init__(self, lists, project_id):
         self.lists = lists
         self.args = [
             {"button_class":'btn btn-outline-danger', "text_class" : 'fa fa-trash',
-            "title":"Delete action plan", "name":'delete_action_plan', "method":"post", "disable":not has_role('admin')},
+            "title":"Delete action plan", "name":'delete_action_plan', "method":"post", "disable":not has_role('admin'), 
+            "hiddens" : [{'name' : 'project_id', 'data' : project_id}]},
             {"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-pencil',
-            "title":"Edit the action_plan", "name":'new_action_plan', "method":"post", "disable": not has_role('admin')}
+            "title":"Edit the action_plan", "name":'new_action_plan', "method":"post", "disable": not has_role('admin'),
+            }
         ]
         self.header = [
             {'label': 'Id', 'class': 'col-1'},

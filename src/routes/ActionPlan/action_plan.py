@@ -22,29 +22,6 @@ def search_action_plans(typeS,search):
         action_plans = db.session.query(ActionPlan).all()
     return action_plans
 
-@app.route('/action_plans_list', methods=['GET', 'POST'])
-def action_plans_lists():
-    #"Muestra la lista de medidas del sistema"
-    try:
-        typeS = request.form['typeSearch']
-        search = request.form['search']
-        action_plans = search_action_plans(typeS,search)
-        if action_plans.count() == 0:
-            action_plans = db.session.query(ActionPlan).all()
-    except:
-        action_plans = db.session.query(ActionPlan).all()
-
-    A = ListActionPlansList(action_plans)
-    action_plans_list_body = A.list_table()
-    action_plans_list_header = A.header
-
-    return render_template(
-        'action_plans/action_plans_list.html',
-        has_role=has_role,
-        list_context= {
-            'list_header': action_plans_list_header,
-            'list_body' : action_plans_list_body,
-        })
 
 def deleting(action_plan_id):
     action_plan = db.session.query(ActionPlan).filter_by(id=action_plan_id).first()
@@ -62,9 +39,10 @@ def delete_action_plan():
     "Elimina un plan de accion del sistema"
         
     action_plan_id = request.form['id']
-    z = deleting(action_plan_id)
+    deleting(action_plan_id)
+    project_id = request.form['project_id']
     
-    return redirect(url_for('action_plans_lists'))
+    return redirect(f"{url_for('project_details', id=project_id)}#actionplan")
 
 
 @app.route('/action_plans_list/new_action_plan', methods=['POST', 'GET'])
@@ -117,10 +95,6 @@ def create_action_plan(action, activity, start_date, close_date, quantity, respo
     elif not cost:
         error = 'Cost is required.'
 
-    action_plan = db.session.query(ActionPlan).filter_by(activity=activity).first()
-    if action_plan:
-        error = f'Activity {activity} is already created.'
-
     if error:
         return [error,False]
 
@@ -134,17 +108,6 @@ def create_action_plan(action, activity, start_date, close_date, quantity, respo
         db.session.add(action_plan)
         db.session.commit()
         return [action_plan,True]
-
-
-def verify_action_plan_exist(guser_id, activity):
-    if guser_id is not None:
-        action_plan_id = int(guser_id)
-    else:
-        return False
-    action_plan = db.session.query(ActionPlan).filter_by(id=action_plan_id).first()
-    if action_plan != None and activity != action_plan.activity:
-        return True
-    return False
 
 
 @app.route('/action_plans_list/add_new_action_plan', methods=['POST'])
@@ -161,11 +124,6 @@ def add_new_action_plan():
 
     action_plan_to_edit = request.form.get('action_plan_to_edit')
 
-    already_exists = verify_action_plan_exist(action_plan_to_edit, activity)
-
-    if already_exists:
-        error_display(ERROR_ACTION_PLAN_ALREADY_EXISTS)
-        return redirect(url_for('action_plans_lists'))
 
     if not action_plan_to_edit:
         project = request.form['project_id']
