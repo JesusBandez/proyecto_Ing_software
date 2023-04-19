@@ -35,10 +35,8 @@ def project_details():
     department_description = (
         project.associated_department.description if project.associated_department else 'N/A')
     
-    A = ListProjectsUser(project.users)
-    users_list_body = A.list_table()
-    users_projects_list_header = A.header
-
+    list_project_users = ListProjectsUser(project.users)
+    
     return render_template('projects/project_details.html',        
         context={
             'id' : project.id,
@@ -57,9 +55,9 @@ def project_details():
             'generate_action' : generate_action,
             'is_project_manager' : is_project_manager(project)
         },   
-        list_context= {
-                'list_header': users_projects_list_header,
-                'list_body' : users_list_body
+        users_list_context= {
+                'list_header': list_project_users.header,
+                'list_body' : list_project_users.list_table()
             })
 
 

@@ -169,5 +169,8 @@
     </div>
   </div>
 </div>
-{% include 'generics/generic_list.html' %}
+{% with list_context=users_list_context %}
+  {% include 'generics/generic_list.html' %}
+{% endwith %}
+
 {% endblock %}
