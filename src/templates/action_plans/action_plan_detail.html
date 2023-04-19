@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}<title>Action Plan Details</title>
+{% include 'generics/icon.html' %}
+{% endblock %}
+{% block body %}
+
+<div class="card border-light mb-3">
+  <div class="card-header">
+    <h3 class="text-center my-4">
+      <div class="d-inline p-2">Action Plan '{{context['plan'].id}}' details</div>
+    </h3>
+  </div>
+  <div class="card-body" style="background-color: #36494E;"></div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>Action</th>
+          <td>
+            <div class="p-2">{{context['plan'].action}}</div>
+          </td>
+        </tr>
+        <tr>
+          <th>Activity</th>
+          <td>
+            <div class="p-2">{{context['plan'].activity}}</div>
+          </td>
+        </tr>
+        <tr>
+          <th>Start date</th>
+          <td>
+            <div class="p-2">{{context['plan'].start_date.date()}}</div>
+          </td>
+        </tr>       
+        <tr>
+          <th>Finish date</th>
+          <td>
+            <div class="p-2">{{context['plan'].finish_date.date()}}</div>
+          </td>
+        </tr>
+        <tr>
+          <th>hours</th>
+          <td>
+            <div class="p-2">{{context['plan'].hours}}</div>
+          </td>
+        </tr>
+        <tr>
+          <th>Responsible</th>
+          <td>
+            <div class="p-2">{{context['plan'].responsible}}</div>
+          </td>
+        </tr>
+        <tr>
+          <th>Cost</th>
+          <td>
+            <div class="p-2">{{context['plan'].cost}}</div>
+          </td>
+        </tr>        
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="humantalent" class="card border-light">
+  <div class="card-body" style="background-color: #36494E;"></div>
+  <div class="card-header">
+    <h3 class="text-center">Human Talent</h1>      
+  </div>  
+</div>
+<div class="container">
+  <div style="text-align: right;">
+    <div class="container" style="width:50%;display:flex;">
+      <form class="input-group flex p-2" action="{{url_for('measures_lists')}}" method="post">
+        <div class="d-inline p-2 text-white">
+          <select class="form-select" name="typeSearch">
+            <option selected>Search by: </option>
+            <option value="dimension">Dimension</option>
+            <option value="unit">Unit</option>
+          </select>
+        </div>
+        <div class="d-inline p-2 text-white">
+          <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+            aria-describedby="search-addon" name="search" />
+        </div>
+        <div class="d-inline p-2 text-white">
+          <button type="submit" name="submit" class="btn btn-light btn-md"
+            style="background-color: #2A4494; color:#f0f0f0;" title="Search"><i class="fas fa-search"></i></button>
+
+          {% if not has_role('admin')%}
+          <a class="btn btn-secondary disabled" disabled title="Register new action plan"><i
+              class="fa-solid fa-plus"></i></a>
+          {% else %}
+          <a href="{{url_for('new_action_plan', project_id=context['id'])}}" class="btn btn-light"
+            style="background-color: #2A4494; color:#f0f0f0;" title="Register new action plan"><i
+              class="fa-solid fa-plus"></i></a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+  {% with list_context=actions_plans_list_context %}
+    {% include 'generics/generic_list.html' %}
+  {% endwith %}
+
+
+
+  <div id="supplies" class="card border-light">
+    <div class="card-body" style="background-color: #36494E;"></div>
+    <div class="card-header">
+      <h3 class="text-center">Supplies</h1>      
+    </div>  
+  </div>
+  <div class="container">
+    <div style="text-align: right;">
+      <div class="container" style="width:50%;display:flex;">
+        <form class="input-group flex p-2" action="{{url_for('measures_lists')}}" method="post">
+          <div class="d-inline p-2 text-white">
+            <select class="form-select" name="typeSearch">
+              <option selected>Search by: </option>
+              <option value="dimension">Dimension</option>
+              <option value="unit">Unit</option>
+            </select>
+          </div>
+          <div class="d-inline p-2 text-white">
+            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+              aria-describedby="search-addon" name="search" />
+          </div>
+          <div class="d-inline p-2 text-white">
+            <button type="submit" name="submit" class="btn btn-light btn-md"
+              style="background-color: #2A4494; color:#f0f0f0;" title="Search"><i class="fas fa-search"></i></button>
+  
+            {% if not has_role('admin')%}
+            <a class="btn btn-secondary disabled" disabled title="Register new action plan"><i
+                class="fa-solid fa-plus"></i></a>
+            {% else %}
+            <a href="{{url_for('new_action_plan', project_id=context['id'])}}" class="btn btn-light"
+              style="background-color: #2A4494; color:#f0f0f0;" title="Register new action plan"><i
+                class="fa-solid fa-plus"></i></a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% with list_context=users_list_context %}
+  {% include 'generics/generic_list.html' %}
+{% endwith %}
+
+
+
+
+{% endblock %}

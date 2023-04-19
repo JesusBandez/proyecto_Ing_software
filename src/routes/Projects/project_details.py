@@ -10,8 +10,6 @@ from src.models.Logger import Logger
 from datetime import datetime
 
 from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER
-
-
 from . import app
 
 @app.route('/projects/project_details')
