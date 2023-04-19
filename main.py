@@ -12,6 +12,7 @@ from src.routes.Logger import logger
 from src.routes.Clients import clients, client_details
 from src.routes.Departments import departments
 from src.routes.Measures import measures
+from src.routes.ActionPlan import action_plan
 
 
 db.init_app(app)

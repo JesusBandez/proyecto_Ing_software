@@ -335,3 +335,28 @@ class ListMeasuresList(ListBody):
 
     def data(self,x):
         return [x.id, x.dimension, x.unit]
+    
+class ListActionPlansList(ListBody):
+    #action_plans_lists
+    def __init__(self, lists):
+        self.lists = lists
+        self.args = [
+            {"button_class":'btn btn-outline-danger', "text_class" : 'fa fa-trash',
+            "title":"Delete action plan", "name":'delete_action_plan', "method":"post", "disable":not has_role('admin')},
+            {"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-pencil',
+            "title":"Edit the action_plan", "name":'new_action_plan', "method":"post", "disable": not has_role('admin')}
+        ]
+        self.header = [
+            {'label': 'Id', 'class': 'col-1'},
+            {'label': 'Action', 'class': 'col-2'},
+            {'label': 'Activity', 'class': 'col-2'},
+            {'label': 'Start Date', 'class': 'col-2'},
+            {'label': 'End Date', 'class': 'col-2'},
+            {'label': 'Hours', 'class': 'col-1'},
+            {'label': 'Responsible', 'class': 'col-1'},
+            {'label': 'Cost', 'class': 'col-2'},
+            {'label': 'Actions', 'class': 'col-4'}
+        ]
+
+    def data(self,x):
+        return [x.id, x.action, x.activity, x.start_date.strftime(f'%m-%d-%Y'), x.finish_date.strftime(f'%m-%d-%Y'), x.hours, x.responsible, x.cost]

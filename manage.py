@@ -8,6 +8,10 @@ from src.models.Car import Car
 from src.models.Logger import Logger
 from src.models.Department import Department
 from src.models.Measures import Measures
+from src.models.ActionPlan import ActionPlan
+from src.models.HumanTalent import HumanTalent
+from src.models.MaterialsSupplies import MaterialsSupplies
+
 
 
 
@@ -81,6 +85,37 @@ def create_default_measures():
     db.session.add_all(MEASURES)
     db.session.commit()
 
+def create_default_action_plans():
+    USERS = db.session.query(User).all()
+    ACTION_PLANS = [
+        ActionPlan('Preparar la superficie', 'Lijado de superficie', date.today(), date.today() + timedelta(days=1), 20, USERS[0].id, 50),
+        ActionPlan('Preparar la superficie', 'Remover la pintura', date.today(), date.today() + timedelta(days=2), 20, USERS[1].id, 100),
+        ActionPlan('Preparar la superficie', 'Enmasillar', date.today(), date.today() + timedelta(days=5), 20, USERS[2].id, 120)
+    ]
+    db.session.add_all(ACTION_PLANS)
+    db.session.commit()
+
+def create_default_human_talent():
+    USERS = db.session.query(User).all()
+    HUMAN_TALENT = [
+        HumanTalent('Preparar la superficie', 'Lijado de superficie', 24, 2, 5, USERS[0].id, 50),
+        HumanTalent('Preparar la superficie', 'Remover la pintura', 24, 2, 5, USERS[1].id, 100),
+        HumanTalent('Preparar la superficie', 'Enmasillar', 24, 2, 5, USERS[2].id, 120)
+    ]
+    db.session.add_all(HUMAN_TALENT)
+    db.session.commit()
+
+def create_default_materials():
+    USERS = db.session.query(User).all()
+    MEASURES = db.session.query(Measures).all()
+    MATERIALS = [
+        MaterialsSupplies('Preparar la superficie', 'Lijado de superficie', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[0].id, 120),
+        MaterialsSupplies('Preparar la superficie', 'Remover la pintura', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[1].id, 120),
+        MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 120)
+    ]
+    db.session.add_all(MATERIALS)
+    db.session.commit()
+
 
 def init_db_records():
     create_default_users()    
@@ -88,6 +123,9 @@ def init_db_records():
     create_default_departments()
     create_default_projects()
     create_default_measures()
+    create_default_action_plans()
+    create_default_human_talent()
+    create_default_materials()
     '''
     project = db.session.query(Project).filter_by(id=1).first()
     users = db.session.query(User).all()
