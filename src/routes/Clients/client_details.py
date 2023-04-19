@@ -22,15 +22,15 @@ from . import app
 def search_cars(typeS,search,client_id):
     client = db.session.query(Client).filter_by(id=client_id).first()
     if typeS == "number":
-        cars_found = db.session.query(Car).filter_by(Car.license_plate.ilike(int(search)),Car.owner.like(client.id))
+        cars_found = db.session.query(Car).filter_by(Car.license_plate.ilike(int(f'%{search}%')),Car.owner.like(client.id))
     elif typeS == "brand":
-        cars_found = db.session.query(Car).filter(Car.brand.ilike(search),Car.owner.like(client.id))
+        cars_found = db.session.query(Car).filter(Car.brand.ilike(f'%{search}%'),Car.owner.like(client.id))
     elif typeS == "model":
-        cars_found = db.session.query(Car).filter(Car.model.ilike(search),Car.owner.like(client.id))
+        cars_found = db.session.query(Car).filter(Car.model.ilike(f'%{search}%'),Car.owner.like(client.id))
     elif typeS == "year":
-        cars_found = db.session.query(Car).filter(Car.year.ilike(int(search)),Car.owner.like(client.id))
+        cars_found = db.session.query(Car).filter(Car.year.ilike(int(f'%{search}%')),Car.owner.like(client.id))
     elif typeS == "color":
-        cars_found = db.session.query(Car).filter(Car.color.ilike(search),Car.owner.like(client.id))
+        cars_found = db.session.query(Car).filter(Car.color.ilike(f'%{search}%'),Car.owner.like(client.id))
     else:
         cars_found = client.cars
     return cars_found

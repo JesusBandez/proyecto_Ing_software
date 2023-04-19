@@ -7,12 +7,24 @@ from src.models import db
 from src.models.Project import Project
 from src.models.User import User
 from src.models.Logger import Logger
+from src.models.ActionPlan import ActionPlan
 from datetime import datetime
 
 from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER
 from . import app
 
-@app.route('/projects/project_details')
+
+def searchActionPlan(typeS,search,project_id):
+    if typeS == "activity":
+        plan = db.session.query(ActionPlan).filter(ActionPlan.project == project_id, ActionPlan.activity.contains(search))
+    elif typeS == "action":
+        plan = db.session.query(ActionPlan).filter(ActionPlan.project == project_id, ActionPlan.action.contains(search))
+    elif typeS == "responsible":
+        plan = db.session.query(ActionPlan).filter(ActionPlan.project == project_id, ActionPlan.responsible.contains(search))
+    return plan
+
+
+@app.route('/projects/project_details', methods=('GET', 'POST'))
 def project_details():
     """Renderiza la vista con la lista de proyectos de un usuario.
         El Id del usuario se obtiene por url args"""
@@ -33,8 +45,16 @@ def project_details():
     department_description = (
         project.associated_department.description if project.associated_department else 'N/A')
     
+    try:
+        typeS = request.form['typeSearch']
+        search = request.form['search']
+        action_plans = searchActionPlan(typeS,search,project_id)
+        if action_plans.count() == 0:
+            action_plans = project.action_plans
+    except:
+        action_plans = project.action_plans
     list_project_users = ListProjectsUser(project.users)
-    list_action_plans = ListActionPlansList(project.action_plans, project_id)
+    list_action_plans = ListActionPlansList(action_plans, project_id)
 
     return render_template('projects/project_details.html',
         has_role=has_role,      

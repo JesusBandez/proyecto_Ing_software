@@ -17,15 +17,15 @@ from . import app
 
 def search_clients(typeS,search):
     if typeS == "ci":
-        users = db.session.query(Client).filter(Client.ci.ilike(search))
+        users = db.session.query(Client).filter(Client.ci.ilike(f'%{search}%'))
     elif typeS == "name":
-        users = db.session.query(Client).filter(Client.first_name.ilike(search))
+        users = db.session.query(Client).filter(Client.first_name.ilike(f'%{search}%'))
     elif typeS == "last":
-        users = db.session.query(Client).filter(Client.last_name.ilike(search))
+        users = db.session.query(Client).filter(Client.last_name.ilike(f'%{search}%'))
     elif typeS == "mail":
-        users = db.session.query(Client).filter(Client.mail.ilike(search))
+        users = db.session.query(Client).filter(Client.mail.ilike(f'%{search}%'))
     elif typeS == "phone":
-        users = db.session.query(Client).filter(Client.phone.ilike(search))
+        users = db.session.query(Client).filter(Client.phone.ilike(f'%{search}%'))
     else:
         users = db.session.query(Client).all()
     return users

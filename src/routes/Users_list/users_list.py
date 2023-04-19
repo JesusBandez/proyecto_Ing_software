@@ -15,13 +15,13 @@ from . import app
 
 def search_users(typeS,search):
     if typeS == "login":
-        users = db.session.query(User).filter(User.username.ilike(search))
+        users = db.session.query(User).filter(User.username.ilike(f'%{search}%'))
     elif typeS == "first":
-        users = db.session.query(User).filter(User.first_name.ilike(search))
+        users = db.session.query(User).filter(User.first_name.ilike(f'%{search}%'))
     elif typeS == "last":
-        users = db.session.query(User).filter(User.last_name.ilike(search))
+        users = db.session.query(User).filter(User.last_name.ilike(f'%{search}%'))
     elif typeS == "role":
-        users = db.session.query(User).filter(User.job.ilike(search))
+        users = db.session.query(User).filter(User.job.ilike(f'%{search}%'))
     else:
         users = db.session.query(User).all()
     return users

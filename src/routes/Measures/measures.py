@@ -13,9 +13,9 @@ from . import app
 
 def search_measures(typeS,search):
     if typeS == "dimension":
-        measures = db.session.query(Measures).filter(Measures.dimension.ilike(search))
+        measures = db.session.query(Measures).filter(Measures.dimension.ilike(f'%{search}%'))
     elif typeS == "unit":
-        measures = db.session.query(Measures).filter(Measures.unit.ilike(search))
+        measures = db.session.query(Measures).filter(Measures.unit.ilike(f'%{search}%'))
     else:
         measures = db.session.query(Measures).all()
     return measures
@@ -74,9 +74,9 @@ def new_measure():
             id=request.form.get('id')).first()
 
     if not measure_to_edit:
-        title = 'Register New Measure'
+        title = 'Register New Unit Of Measurement'
     else:
-        title = 'Edit Measure'
+        title = 'Edit Unit Of Measurement'
 
 
     return render_template('measures/new_measure.html', 
