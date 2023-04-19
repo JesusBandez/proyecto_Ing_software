@@ -12,7 +12,9 @@ class MaterialsSupplies(db.Model):
     responsible = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     total_amount = db.Column(db.Float())
 
-    def __init__(self, action, activity, category, description, quantity, measure, cost, responsible, amount):
+    action_plan = db.Column(db.Integer, db.ForeignKey('action_plan.id'), nullable=False)
+
+    def __init__(self, action, activity, category, description, quantity, measure, cost, responsible, action_plan):
         self.action = action
         self.activity = activity
         self.category = category
@@ -21,7 +23,8 @@ class MaterialsSupplies(db.Model):
         self.measure = measure
         self.cost = cost
         self.responsible = responsible
-        self.total_amount = amount
+        self.total_amount = float(cost)*float(quantity)
+        self.action_plan = action_plan
         
     def __repr__(self):
         return f"Materials Supplies Action: {self.action}, Responsible: {self.responsible}"
