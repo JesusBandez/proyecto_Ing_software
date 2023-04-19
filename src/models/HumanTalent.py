@@ -10,7 +10,9 @@ class HumanTalent(db.Model):
     responsible = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     total_amount = db.Column(db.Float())
 
-    def __init__(self, action, activity, time, quantity, cost, responsible, amount):
+    action_plan = db.Column(db.Integer, db.ForeignKey('action_plan.id'), nullable=False)
+
+    def __init__(self, action, activity, time, quantity, cost, responsible, amount, action_plan):
         self.action = action
         self.activity = activity
         self.time = time
@@ -18,6 +20,7 @@ class HumanTalent(db.Model):
         self.cost = cost
         self.responsible = responsible
         self.total_amount = amount
+        self.action_plan = action_plan
 
     def __repr__(self):
         return f"Human Talent Action: {self.action}, Responsible: {self.responsible}"
