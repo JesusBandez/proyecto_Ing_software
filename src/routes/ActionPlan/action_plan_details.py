@@ -15,7 +15,18 @@ from datetime import datetime
 from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER
 from . import app
 
-@app.route('/projects/action_plan_details')
+
+def searchTalents(typeS,search,plan_id):
+    if typeS == "activity":
+        talents = db.session.query(HumanTalent).filter(HumanTalent.plan == plan_id, HumanTalent.activity.contains(search))
+    elif typeS == "action":
+        talents = db.session.query(HumanTalent).filter(HumanTalent.plan == plan_id, HumanTalent.action.contains(search))
+    elif typeS == "responsible":
+        talents = db.session.query(HumanTalent).filter(HumanTalent.plan == plan_id, HumanTalent.responsible.contains(search))
+    return talents
+
+
+@app.route('/projects/action_plan_details', methods=('GET', 'POST'))
 def action_plan_details():
     """Renderiza los detalles de un plan de accion"""
     project_id = request.args['project_id']
@@ -24,7 +35,16 @@ def action_plan_details():
         id=plan_id
     ).first()
 
-    list_talents = ListHumanTalents(plan.human_talents, project_id, plan_id)
+    try:
+        typeS = request.form['typeSearch']
+        search = request.form['search']
+        talents = searchTalents(typeS,search,int(plan_id))
+        if talents.count() == 0:
+            talents = plan.human_talents
+    except:
+        talents = plan.human_talents
+
+    list_talents = ListHumanTalents(talents, project_id, plan_id)
     return render_template('action_plans/action_plan_detail.html',
         has_role=has_role,      
         context={ 'plan' : plan,
