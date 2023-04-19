@@ -362,3 +362,29 @@ class ListActionPlansList(ListBody):
 
     def data(self,x):
         return [x.id, x.action, x.activity, x.responsible, x.cost]
+
+class ListHumanTalents(ListBody):
+    #Human talents
+    def __init__(self, lists, project_id):
+        self.lists = lists
+        self.args = [
+            {"button_class":'btn btn-outline-danger', "text_class" : 'fa fa-trash',
+            "title":"Delete action plan", "name":'remove_human_talent', "method":"post", "disable":not has_role('admin'), 
+            "hiddens" : [{'name' : 'project_id', 'data' : project_id}]},
+            {"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-pencil',
+            "title":"Edit the action_plan", "name":'new_human_talent', "method":"post", "disable": not has_role('admin'),
+            "hiddens" : [{'name' : 'project_id', 'data' : project_id}]},
+        ]
+        self.header = [
+            {'label': 'Id', 'class': 'col-1'},
+            {'label': 'Action', 'class': 'col-2'},
+            {'label': 'Activity', 'class': 'col-2'},            
+            {'label': 'Time', 'class': 'col-1'},
+            {'label': 'Quantity', 'class': 'col-1'},
+            {'label': 'Responsible', 'class': 'col-1'},
+            {'label': 'Cost', 'class': 'col-1'},
+            {'label': 'Actions', 'class': 'col-1'}
+        ]
+
+    def data(self,x):
+        return [x.id, x.action, x.activity, x.time, x.quantity, x.responsible, x.total_amount]

@@ -13,7 +13,7 @@ from src.models.ActionPlan import ActionPlan
 from src.models.MaterialsSupplies import MaterialsSupplies
 
 
-ActionPlan.human_talents = db.relationship('HumanTalent', backref='related_action_plan')
+
 
 @app.shell_context_processor
 def make_shell_context():
