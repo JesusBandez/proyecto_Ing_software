@@ -8,12 +8,12 @@ from src.models.Car import Car
 from src.models.Logger import Logger
 from src.models.Department import Department
 from src.models.Measures import Measures
-from src.models.ActionPlan import ActionPlan
 from src.models.HumanTalent import HumanTalent
+from src.models.ActionPlan import ActionPlan
 from src.models.MaterialsSupplies import MaterialsSupplies
 
 
-
+ActionPlan.human_talents = db.relationship('HumanTalent', backref='related_action_plan')
 
 @app.shell_context_processor
 def make_shell_context():
@@ -99,6 +99,7 @@ def create_default_action_plans():
 
 def create_default_human_talent():
     USERS = db.session.query(User).all()
+    x = db.session.query(ActionPlan).filter_by(id=1).first()
     HUMAN_TALENT = [
         HumanTalent('Preparar la superficie', 'Lijado de superficie', 24, 2, 5, USERS[0].id, 50, 2),
         HumanTalent('Preparar la superficie', 'Remover la pintura', 24, 2, 5, USERS[1].id, 100, 2) ,

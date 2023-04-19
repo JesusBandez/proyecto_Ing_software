@@ -9,9 +9,10 @@ class ActionPlan(db.Model):
     hours = db.Column(db.Integer())
     responsible = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     cost = db.Column(db.Float())
+
     project = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     
-    human_talents = db.relationship('HumanTalent', backref='associated_plan')
+    
     
     def __init__(self, action, activity, start_date, finish_date, hours, responsible, cost, project):
         self.action = action
