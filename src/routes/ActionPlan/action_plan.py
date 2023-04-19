@@ -119,7 +119,7 @@ def add_new_action_plan():
     start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
     quantity = request.form['quantity']
-    responsible = request.form['responsible']
+    responsible = request.form['responsible_selection']
     cost = request.form['cost']    
 
     action_plan_to_edit = request.form.get('action_plan_to_edit')

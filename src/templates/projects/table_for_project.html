@@ -36,7 +36,7 @@ $('input[type="checkbox"]').on('change', function() {
         <td>{{x[1].first_name}} {{x[1].last_name}}</td>
       </tr>
       {% endfor -%}
-    {% else %}
+    {% else%}
       {%- for x in all_info %}   
       <tr>
         <td><input class="form-check-input" type="checkbox" id="{{x.id}} {{x.first_name}} {{x.last_name}}" value="" aria-label="..."></td>

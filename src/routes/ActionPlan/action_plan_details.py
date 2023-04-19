@@ -1,4 +1,4 @@
-from flask import render_template, request, session, redirect, url_for, flash
+from flask import render_template, request, session, redirect, url_for, flash,jsonify
 
 from src.lib.generate_action import generate_action
 from src.lib.class_create_button import ListHumanTalents
@@ -14,6 +14,22 @@ from datetime import datetime
 
 from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER
 from . import app
+
+
+@app.route("/ajaxlivesearchresp",methods=["POST","GET"])
+def ajaxlivesearchresp():
+    if request.method == 'POST':
+        search_word = request.form['search']
+
+        if search_word != '':
+            users = db.session.query(User).filter((User.first_name + User.last_name).contains(search_word)).all()
+        else:
+            users = db.session.query(User).all()
+        all_info = []
+        for user in users:
+            all_info.append(user)
+    return jsonify({'htmlresponse': render_template('action_plans/table_for_responsible.html', all_info=all_info)})
+     
 
 
 def searchTalents(typeS,search,plan_id):
@@ -91,7 +107,7 @@ def add_new_human_talent():
     activity = request.form['activity']
     time = request.form['time']
     quantity = request.form['quantity']
-    responsible = request.form['responsible']
+    responsible = request.form['responsible_selection']
     cost = request.form['cost']
 
     talent_to_edit = request.form.get('talent_to_edit')    

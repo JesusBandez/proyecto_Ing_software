@@ -52,8 +52,98 @@
                             <div>
                             <div class="form-group">
                                 <label style="font-weight:bold;" for="responsible">Responsible: </label><br>
-                                <input type="text" name="responsible" id="responsible" class="form-control" value="{{context['action_plan_to_edit'].responsible | default('')}}" required>
                             </div>
+
+                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+                                <script type="text/javascript">
+                                    window.onload = init;
+                                    var responsible_url = "/ajaxlivesearchresp";
+                                    function init(){
+                                      load_data('',responsible_url);
+                                      $('#search_text').keyup(function(){
+                                        var search = $(this).val();
+                                        console.log(search);
+                                        if(search != undefined){
+                                        load_data(search);
+                                       }else{
+                                        load_data('');
+                                       }
+                                      });
+                                    };
+                                    function load_data(search,url)
+                                      {
+                                       $.ajax({
+                                        url:url,
+                                        method:"POST",
+                                        data:{ search : search },
+                                        type : 'POST',
+                                        success:function(data)
+                                        {
+                                            if (url == responsible_url){
+                                                $('#result').html(data);
+                                                $("#result").append(data.htmlresponse);
+                                            }
+                                        }
+                                       });
+                                      }
+                                    function handleChange(value,url){
+                                        if(value != undefined){
+                                        load_data(value,url);
+                                       }else{
+                                        load_data('',url);
+                                       }
+                                    }
+                                    function handleSave(url){
+                                        document.getElementById("responsible_selection").value = selected;
+                                    }
+                                </script>
+
+                            <input type="text" id="responsible_selection" name="responsible_selection" class="form-control" placeholder="Add a Responsible" 
+                                  aria-label="Add a Responsible" onkeydown="event.preventDefault()" autocomplete="off" 
+                                  value="{{context['action_plan_to_edit'].responsible | default('')}}" required>
+
+
+                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                style="background-color: #2A4494; color:#f0f0f0;">
+                                  Select a responsible:
+                                </button>
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Select a Responsible:</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        
+                                          <div class="d-inline p-2 text-white">
+                                          <input
+                                            type="search"
+                                            class="form-control rounded"
+                                            placeholder="Search by name of the user"
+                                            aria-label="Search"
+                                            aria-describedby="search-addon"
+                                            name="search_text"
+                                            onchange='handleChange(this.value,"/ajaxlivesearchresp");'
+                                          />
+                                        </div>
+
+                                        <div id="result"></div>
+
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="handleSave('/ajaxlivesearchresp');" data-bs-dismiss="modal">Save changes</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+
                             <div>
                             <label style="font-weight:bold;" for="description">Cost ($):</label><br>
                             </div>
