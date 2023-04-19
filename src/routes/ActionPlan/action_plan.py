@@ -74,7 +74,11 @@ def new_action_plan():
     
     action_plan_to_edit = db.session.query(ActionPlan).filter_by(
             id=request.form.get('id')).first()
-    print(action_plan_to_edit)
+
+    project_id = request.args.get('project_id')
+    if action_plan_to_edit: 
+        project_id = action_plan_to_edit.project
+
     c_date = None
     s_date = None
     if not action_plan_to_edit:
@@ -84,12 +88,12 @@ def new_action_plan():
         c_date = action_plan_to_edit.finish_date.date()
         s_date = action_plan_to_edit.start_date.date()
 
-
+    print(project_id)
     return render_template('action_plans/new_action_plan.html', 
         context={
             'action_plan_to_edit': action_plan_to_edit,
             'title': title,
-            'project_id' : request.args.get('project_id'),
+            'project_id' : project_id,
             'c_date':c_date,
             's_date' : s_date
         })
