@@ -285,10 +285,10 @@ class ListClientsCars(ListBody):
         self.client_id = cid
         self.args = [
             {"button_class":'btn btn-sm btn-outline-danger', "text_class" : 'fa-solid fa-trash',
-            "title":"View user details", "name":'remove_car', "method" : "post" ,"disable":not has_role('opera'),
+            "title":"Remove car", "name":'remove_car', "method" : "post" ,"disable":not has_role('opera'),
             "hiddens" : [{'name' : 'owner_id', 'data': self.client_id}]},
             {"button_class":'btn btn-sm btn-outline-success', "text_class" : 'fa-solid fa-pencil',
-            "title":"Edit project", "name":'new_car', "disable":not has_role('opera'),
+            "title":"Edit car", "name":'new_car', "disable":not has_role('opera'),
             "hiddens" : [{'name' : 'id', 'data': self.client_id}] , "value_name" : 'car_plate'}
         ]
         self.header = [

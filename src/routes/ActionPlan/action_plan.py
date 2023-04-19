@@ -74,18 +74,24 @@ def new_action_plan():
     
     action_plan_to_edit = db.session.query(ActionPlan).filter_by(
             id=request.form.get('id')).first()
-    
+    print(action_plan_to_edit)
+    c_date = None
+    s_date = None
     if not action_plan_to_edit:
         title = 'Register New Action Plan'
     else:
         title = 'Edit Action Plan'
+        c_date = action_plan_to_edit.finish_date.date()
+        s_date = action_plan_to_edit.start_date.date()
 
 
     return render_template('action_plans/new_action_plan.html', 
         context={
             'action_plan_to_edit': action_plan_to_edit,
             'title': title,
-            'project_id' : request.args.get('project_id')
+            'project_id' : request.args.get('project_id'),
+            'c_date':c_date,
+            's_date' : s_date
         })
 
 
@@ -147,8 +153,7 @@ def add_new_action_plan():
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
     quantity = request.form['quantity']
     responsible = request.form['responsible']
-    cost = request.form['cost']
-    project = request.form['project_id']
+    cost = request.form['cost']    
 
     action_plan_to_edit = request.form.get('action_plan_to_edit')
 
@@ -159,6 +164,7 @@ def add_new_action_plan():
         return redirect(url_for('action_plans_lists'))
 
     if not action_plan_to_edit:
+        project = request.form['project_id']
         action_plan = create_action_plan(action, activity, start_date, close_date, 
                 quantity, responsible, cost, project)
 
@@ -170,16 +176,19 @@ def add_new_action_plan():
             'action': action,
             'activity': activity,
             'start_date': start_date,
-            'close_date': close_date,
-            'quantity': quantity,
+            'finish_date': close_date,
+            'hours': quantity,
             'responsible': responsible,
             'cost': cost,
         }
-        db.session.query(ActionPlan).filter_by(
+        action_plan = db.session.query(ActionPlan).filter_by(
             id=action_plan_to_edit).update(changes)
         log = Logger('Editing action plan')
         db.session.add(log)
+        action_plan = db.session.query(ActionPlan).filter_by(
+            id=action_plan_to_edit).first()
+        project = action_plan.project
 
     db.session.commit()
 
-    return redirect(url_for('project_details', id=project))
+    return redirect(f"{url_for('project_details', id=project)}#actionplan")

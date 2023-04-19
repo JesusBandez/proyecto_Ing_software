@@ -115,38 +115,6 @@
             <div class="p-2">{{context['amount']}}</div>
           </td>
         </tr>
-        
-
-        <!--
-          <tr>
-            <th>              
-              Vehicle:
-              </th>
-              <td>
-              <div style="display: flex;">
-              <div  class="p-2">
-              {% if context['vehicle']%}
-              <h6>{{context['vehicle']}}</h6>
-              {% else %}
-              <h6>Without vehicle assigned</h6>
-              {% endif%}
-              </div>
-              {% set x = ''%}
-              <div>
-                {% if context['vehicle']%}
-                <a id="editVehicle" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
-                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;" title="Edit vehicle for project"> <i class="fa-solid fa-user-pen"></i></a>
-                <a id="removeVehicle" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}" 
-                  href="{{url_for('remove_manager', id=context['id'])}}" style="background-color: #2A4494; color:#f0f0f0;"
-                  title="Remove project's vehicle"> <i class="fa-solid fa-user-xmark"></i> </a>
-                {% else %}
-                <a id="editVehicle" class="btn btn-light {{ 'disabled' if not context['has_permissions'] else '' }}"
-                  href="{{url_for('manage_project', id=context['id'], mode='Edit_manager')}}" style="background-color: #2A4494; color:#f0f0f0;" title="Select vehicle for project"> <i class="fa-solid fa-user-plus"></i>  </a>
-                {% endif%}
-                </div>
-              </div>
-            </td>
-          </tr>-->
       </tbody>
     </table>
   </div>
