@@ -17,6 +17,8 @@ class Project(db.Model):
     department = db.Column(db.Integer, db.ForeignKey('department.id'), nullable=True)
     manager_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
+    action_plans = db.relationship('ActionPlan', backref='associated_project')
+
     def __init__(self, description, start, finish, car, department,
             issue,solution,observations, manager_id,amount, available=True):
         self.description = description
