@@ -44,6 +44,7 @@ def new_human_talent():
     """ Muestra el formulario para un nuevo talento"""
     talent_to_edit = request.args.get('id')
     project_id = request.args.get('project_id')
+    action_plan_id = request.args.get('plan_id')
 
     talent = None
     if talent_to_edit:
@@ -57,10 +58,66 @@ def new_human_talent():
             'talent': talent,
             'project_id' : project_id,
             'title' : title,
+            'action_plan_id' : action_plan_id,
         })
 
+@app.route('/projects/action_plan_details/add_new_human_talent', methods=['POST'])
+def add_new_human_talent():
+    """ Agrega al talento al sistema"""    
+    project_id = request.form.get('project_id')
+    action_plan_id = request.form.get('action_plan_id')
 
-@app.route('/projects/action_plan_details/remove_human_talent')
+    action = request.form['action']
+    activity = request.form['activity']
+    time = request.form['time']
+    quantity = request.form['quantity']
+    responsible = request.form['responsible']
+    cost = request.form['cost']
+
+    talent_to_edit = request.form.get('talent_to_edit')    
+
+
+    if not talent_to_edit:
+        human_talent = HumanTalent(action, activity, time, 
+            quantity, cost, responsible, action_plan_id)
+        log = Logger('Adding human talent')
+        db.session.add(log)
+        db.session.add(human_talent)
+
+    else:
+        changes = {
+            'action': action,
+            'activity': activity,
+            'time': time,
+            'quantity': quantity,
+            'responsible': responsible,
+            'cost': cost,
+        }
+        db.session.query(HumanTalent).filter_by(
+            id=talent_to_edit).update(changes)
+        log = Logger('Editing Human talent')
+        db.session.add(log)
+
+
+    db.session.commit()    
+
+    return redirect(url_for('action_plan_details', project_id=project_id, id=action_plan_id)
+        + '#humantalent')
+
+
+@app.route('/projects/action_plan_details/remove_human_talent', methods=['POST'])
 def remove_human_talent():
     """ Elimina un human talent"""
-    return redirect(url_for('action_plan_details'))
+    project_id = request.form.get('project_id')
+    plan_id = request.form.get('plan_id')
+
+    human_talent = db.session.query(HumanTalent).filter_by(id=request.form.get('id')).first()
+
+    log = Logger('Deleting action plan')
+
+    db.session.add(log)
+    db.session.delete(human_talent)
+    db.session.commit()
+
+    return redirect(url_for('action_plan_details', project_id=project_id, id=plan_id)
+        + '#humantalent')

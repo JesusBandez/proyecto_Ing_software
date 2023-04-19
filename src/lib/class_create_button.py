@@ -382,7 +382,7 @@ class ListHumanTalents(ListBody):
             {'label': 'Time', 'class': 'col-1'},
             {'label': 'Quantity', 'class': 'col-1'},
             {'label': 'Responsible', 'class': 'col-1'},
-            {'label': 'Cost', 'class': 'col-1'},
+            {'label': 'Ammount', 'class': 'col-1'},
             {'label': 'Actions', 'class': 'col-1'}
         ]
 

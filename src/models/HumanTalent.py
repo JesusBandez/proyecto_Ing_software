@@ -12,14 +12,14 @@ class HumanTalent(db.Model):
 
     plan = db.Column(db.Integer, db.ForeignKey('action_plan.id'), nullable=False)
 
-    def __init__(self, action, activity, time, quantity, cost, responsible, amount, action_plan):
+    def __init__(self, action, activity, time, quantity, cost, responsible, action_plan):
         self.action = action
         self.activity = activity
         self.time = time
         self.quantity = quantity
         self.cost = cost
         self.responsible = responsible
-        self.total_amount = amount
+        self.total_amount = float(quantity)*float(cost)
         self.plan = action_plan
         
 
