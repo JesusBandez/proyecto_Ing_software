@@ -10,6 +10,7 @@
                 <div id="register-column" class="col-md-6">
                     <div id="register-box" class="col-md-12">
                         <form id="register-form" class="form" action="{{url_for('add_new_action_plan')}}" method="post">
+                            <input name="project_id" value="{{context['project_id']}}" type="hidden">
                             {% if context.get('action_plan_to_edit') %}
                             <input name="action_plan_to_edit" value="{{context['action_plan_to_edit'].id}}" type="hidden">
                             {% endif %}

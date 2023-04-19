@@ -151,7 +151,7 @@
     </table>
   </div>
 </div>
-<div class="card border-light">
+<div id="actionplan" class="card border-light">
   <div class="card-body" style="background-color: #36494E;"></div>
   <div class="card-header">
     <h3 class="text-center">Action Plans</h1>      
@@ -180,7 +180,7 @@
           <a class="btn btn-secondary disabled" disabled title="Register new action plan"><i
               class="fa-solid fa-plus"></i></a>
           {% else %}
-          <a href="{{url_for('new_action_plan')}}" class="btn btn-light"
+          <a href="{{url_for('new_action_plan', project_id=context['id'])}}" class="btn btn-light"
             style="background-color: #2A4494; color:#f0f0f0;" title="Register new action plan"><i
               class="fa-solid fa-plus"></i></a>
           {% endif %}
@@ -194,7 +194,7 @@
 </div>
 
 
-<div class="card border-light mb-3 mt-3">
+<div id="users" class="card border-light mb-3 mt-3">
   <div class="card-body" style="background-color: #36494E;"></div>
   <div class="card-header">
     <h3 class="text-end">

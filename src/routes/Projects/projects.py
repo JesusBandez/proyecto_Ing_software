@@ -172,9 +172,14 @@ def add_new_project():
 @app.route('/projects/list/generate_project', methods=['GET', 'POST'])
 def generate_project():
     "Generar proyecto"
-    # TODO: No se que hace esta vaina pero la voy a usar para los detalles
 
     return redirect(url_for('project_details', id=request.args['id']))
+
+@app.route('/projects/list/project_budget', methods=['GET', 'POST'])
+def project_budget():
+    "Presupesto del proyecto"   
+
+    return redirect(f"{url_for('project_details', id=request.args['id'])}#actionplan")
 
 def removing_project(project_id):
     project = db.session.query(Project).filter_by(id=project_id).first()

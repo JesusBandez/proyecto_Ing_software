@@ -5,6 +5,7 @@ from src.routes.auth import has_role, require_permissions, error_display
 from src.lib.class_create_button import ListActionPlansList
 
 from src.models.ActionPlan import ActionPlan
+from src.models.Project import Project
 from src.models.Logger import Logger
 from src.models import db
 from src.lib.generate_action import generate_action
@@ -73,7 +74,7 @@ def new_action_plan():
     
     action_plan_to_edit = db.session.query(ActionPlan).filter_by(
             id=request.form.get('id')).first()
-
+    
     if not action_plan_to_edit:
         title = 'Register New Action Plan'
     else:
@@ -84,10 +85,12 @@ def new_action_plan():
         context={
             'action_plan_to_edit': action_plan_to_edit,
             'title': title,
+            'project_id' : request.args.get('project_id')
         })
 
 
-def create_action_plan(action, activity, start_date, close_date, quantity, responsible, cost):
+def create_action_plan(action, activity, start_date, close_date, quantity, responsible, cost, project):
+
     error = None
     if not action:
         error = 'Action is required.'
@@ -112,7 +115,8 @@ def create_action_plan(action, activity, start_date, close_date, quantity, respo
         return [error,False]
 
     if error is None:
-        action_plan = ActionPlan(action, activity, start_date, close_date, quantity, responsible, cost)
+        action_plan = ActionPlan(action, activity, start_date, close_date, 
+            quantity, responsible, cost, project)
 
         log = Logger('Adding action plan')
 
@@ -144,6 +148,7 @@ def add_new_action_plan():
     quantity = request.form['quantity']
     responsible = request.form['responsible']
     cost = request.form['cost']
+    project = request.form['project_id']
 
     action_plan_to_edit = request.form.get('action_plan_to_edit')
 
@@ -154,10 +159,12 @@ def add_new_action_plan():
         return redirect(url_for('action_plans_lists'))
 
     if not action_plan_to_edit:
-        action_plan = create_action_plan(action, activity, start_date, close_date, quantity, responsible, cost)
+        action_plan = create_action_plan(action, activity, start_date, close_date, 
+                quantity, responsible, cost, project)
+
         if action_plan[1] == False:
             error_display(ERROR_ACTION_PLAN_ALREADY_EXISTS)
-            return redirect(url_for('new_action_plan'))
+            return redirect(url_for('new_action_plan', project_id=project))
     else:
         changes = {
             'action': action,
@@ -175,4 +182,4 @@ def add_new_action_plan():
 
     db.session.commit()
 
-    return redirect(url_for('action_plans_lists'))
+    return redirect(url_for('project_details', id=project))

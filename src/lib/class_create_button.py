@@ -68,7 +68,7 @@ class ListProjects(ListBody):
             {"button_class":'btn bt-sm btn-outline-danger', "text_class" : 'fa-solid fa-trash',
             "title":"Remove project", "name":'remove_project', "disable":not has_role('admin') and not has_role('mngr')},
             {"button_class":'btn bt-sm btn-outline-success', "text_class" : 'fa-solid fa-sack-dollar',
-            "title":"Project Budget", "name":'print_project',"disable":not has_role('admin') and not has_role('mngr')}
+            "title":"Project Budget", "name":'project_budget',"disable":not has_role('admin') and not has_role('mngr')}
         ]
         self.header = [
             {'label': 'Id', 'class': 'col'},
