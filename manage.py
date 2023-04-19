@@ -9,10 +9,11 @@ from src.models.Logger import Logger
 from src.models.Department import Department
 from src.models.Measures import Measures
 from src.models.HumanTalent import HumanTalent
-from src.models.ActionPlan import ActionPlan
 from src.models.MaterialsSupplies import MaterialsSupplies
+from src.models.ActionPlan import ActionPlan
 
 
+ActionPlan.supplies = db.relationship('MaterialsSupplies', backref='rel_action_plan')
 
 
 @app.shell_context_processor

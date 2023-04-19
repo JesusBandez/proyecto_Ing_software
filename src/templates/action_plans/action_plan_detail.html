@@ -103,9 +103,9 @@
     </div>
   </div>
 </div>
-  {% with list_context=talents_list_context %}
-    {% include 'generics/generic_list.html' %}
-  {% endwith %}
+{% with list_context=talents_list_context %}
+  {% include 'generics/generic_list.html' %}
+{% endwith %}
 
 
 
@@ -147,6 +147,9 @@
       </div>
     </div>
   </div>
+{% with list_context=supplies_plans_list_context %}
+  {% include 'generics/generic_list.html' %}
+{% endwith %}
 
 
 
