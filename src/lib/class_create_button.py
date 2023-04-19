@@ -2,6 +2,9 @@
 from abc import ABC, abstractmethod
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role, is_project_manager
+from src.models.User import User
+from src.models import db
+
 
 
 def generate_button(argument,x):
@@ -361,7 +364,8 @@ class ListActionPlansList(ListBody):
         ]
 
     def data(self,x):
-        return [x.id, x.action, x.activity, x.responsible, x.cost]
+        r = db.session.query(User).filter(User.id == x.responsible).first()
+        return [x.id, x.action, x.activity, r.first_name + " " + r.last_name, x.cost]
 
 class ListHumanTalents(ListBody):
     #Human talents
@@ -387,4 +391,5 @@ class ListHumanTalents(ListBody):
         ]
 
     def data(self,x):
-        return [x.id, x.action, x.activity, x.time, x.quantity, x.responsible, x.total_amount]
+        r = db.session.query(User).filter(User.id == x.responsible).first()
+        return [x.id, x.action, x.activity, x.time, x.quantity, r.first_name + " " + r.last_name, x.total_amount]
