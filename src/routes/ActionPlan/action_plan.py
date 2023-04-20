@@ -82,7 +82,7 @@ def new_action_plan():
         })
 
 
-def create_action_plan(action, activity, start_date, close_date, quantity, responsible, cost, project):
+def create_action_plan(action, activity, start_date, close_date, quantity, responsible, project):
 
     error = None
     if not action:
@@ -97,15 +97,13 @@ def create_action_plan(action, activity, start_date, close_date, quantity, respo
         error = 'Quantity is required.'
     elif not responsible:
         error = 'Responsible is required.'
-    elif not cost:
-        error = 'Cost is required.'
 
     if error:
         return [error,False]
 
     if error is None:
         action_plan = ActionPlan(action, activity, start_date, close_date, 
-            quantity, responsible, cost, project)
+            quantity, responsible, project)
 
         log = Logger('Adding action plan')
 
@@ -124,8 +122,7 @@ def add_new_action_plan():
     start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
     quantity = request.form['quantity']
-    responsible = request.form['responsible_selection']
-    cost = request.form['cost']    
+    responsible = request.form['responsible_selection']   
 
     action_plan_to_edit = request.form.get('action_plan_to_edit')
 
@@ -133,7 +130,7 @@ def add_new_action_plan():
     if not action_plan_to_edit:
         project = request.form['project_id']
         action_plan = create_action_plan(action, activity, start_date, close_date, 
-                quantity, responsible, cost, project)
+                quantity, responsible, project)
 
         if action_plan[1] == False:
             error_display(ERROR_ACTION_PLAN_ALREADY_EXISTS)
@@ -146,7 +143,6 @@ def add_new_action_plan():
             'finish_date': close_date,
             'hours': quantity,
             'responsible': responsible,
-            'cost': cost,
         }
         action_plan = db.session.query(ActionPlan).filter_by(
             id=action_plan_to_edit).update(changes)

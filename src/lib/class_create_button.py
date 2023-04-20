@@ -367,7 +367,7 @@ class ListActionPlansList(ListBody):
         r = db.session.query(User).filter(User.id == x.responsible).first()
             
         return [x.id, x.action, x.activity, r.first_name + " " + r.last_name, 
-            x.plan_cost()]
+            f'{x.plan_cost()}$']
 
 class ListHumanTalents(ListBody):
     #Human talents

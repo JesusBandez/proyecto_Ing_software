@@ -15,14 +15,13 @@ class ActionPlan(db.Model):
     human_talents = db.relationship('HumanTalent', backref='related_action_plan')
     supplies = db.relationship('MaterialsSupplies', backref='rel_action_plan')
     
-    def __init__(self, action, activity, start_date, finish_date, hours, responsible, cost, project):
+    def __init__(self, action, activity, start_date, finish_date, hours, responsible, project):
         self.action = action
         self.activity = activity
         self.start_date = start_date
         self.finish_date = finish_date
         self.hours = hours
         self.responsible = responsible
-        self.cost = cost
         self.project = project
 
     def __repr__(self):

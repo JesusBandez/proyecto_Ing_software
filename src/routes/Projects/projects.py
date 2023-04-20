@@ -108,13 +108,13 @@ def new_project():
         all_departments = department, manager=manager)
 
 def adding_new_project(id_project_to_edit, description, start_date, close_date,car,department,
-        manager,issue,solution,amount,obs):
+        manager,issue,solution,obs):
     
     manager_id = int(manager.split(" ")[0])  
 
     if not id_project_to_edit:
         project = Project(description, start_date, close_date,car,department,
-            issue,solution,obs, manager_id, amount)
+            issue,solution,obs, manager_id)
         log = Logger('Adding project')
         db.session.add_all([log, project])        
         db.session.flush()
@@ -130,8 +130,7 @@ def adding_new_project(id_project_to_edit, description, start_date, close_date,c
             'issue' : issue,
             'solution' : solution,
             'observations' : obs,
-            'manager_id' : manager_id,
-            'amount' : amount        
+            'manager_id' : manager_id,      
             }
         db.session.query(Project).filter_by(
             id=id_project_to_edit).update(changes)
@@ -157,14 +156,13 @@ def add_new_project():
     department = request.form['department']
     manager = request.form['manager_selection'] #id nombre apellido
     issue = request.form['issue']
-    solution = request.form['solution']
-    amount = request.form['amount']
+    solution = request.form['solution']    
     obs = request.form['observation']
     start_date = datetime.strptime(request.form['s_date'], r'%Y-%m-%d')
     close_date = datetime.strptime(request.form['c_date'], r'%Y-%m-%d')
     
     project = adding_new_project(id_project_to_edit, description, start_date, close_date,car,department,
-        manager,issue,solution,amount,obs)
+        manager,issue,solution,obs)
             
     return redirect(url_for('project_details', id=project.id))
 
