@@ -6,8 +6,13 @@
 
 <div class="card border-light mb-3">
   <div class="card-header">
-    <h3 class="text-center my-4">
+    <h3 class="text-end my-4">
       <div class="d-inline p-2">Action Plan '{{context['plan'].id}}' details</div>
+      <div class="d-inline p-2">
+        <a class="btn btn-outline-primary" style="margin-left: 410px;" href="{{url_for('project_details', id=context['project_id'])}}">
+        Go Back
+      </a>
+      </div>
     </h3>
   </div>
   <div class="card-body" style="background-color: #36494E;"></div>
