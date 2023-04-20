@@ -102,8 +102,3 @@ Para iniciar el servidor se debe correr desde el entorno virtual el siguiente co
 Una vez iniciado el servidor, para inicializar la base de datos, se puede ingresar el siguiente link:
 
 	http://127.0.0.1:5000/restart_bbdd
-
-O también se pueden colocar los siguientes comandos (una vez ejecutado el entorno virtual):
-
-	flask --app manage shell
-	init_db()
