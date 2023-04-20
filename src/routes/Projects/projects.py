@@ -184,6 +184,11 @@ def removing_project(project_id):
 
     log = Logger('Editing project')
     for plan in project.action_plans:
+        for element in plan.supplies:        
+            db.session.delete(element)
+        for element in plan.human_talents:        
+            db.session.delete(element)
+        
         db.session.delete(plan)
 
     db.session.add(log)

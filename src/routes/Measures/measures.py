@@ -92,14 +92,7 @@ def create_measure(dimension, unit):
         error = 'Dimension is required.'
     elif not unit:
         error = 'Unit is required.'
-
-    measure = db.session.query(Measures).filter_by(dimension=dimension).first()
-    if measure:
-        error = f'Dimension {dimension} is already created.'
-
-    if error:
-        return [error,False]
-
+        
     if error is None:
         measure = Measures(dimension, unit)
 
