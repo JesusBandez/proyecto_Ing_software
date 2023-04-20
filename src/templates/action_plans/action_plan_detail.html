@@ -54,9 +54,9 @@
           </td>
         </tr>
         <tr>
-          <th>Cost</th>
+          <th>Total Cost</th>
           <td>
-            <div class="p-2">{{context['plan'].cost}}</div>
+            <div class="p-2">{{context['total_project_cost']}}$</div>
           </td>
         </tr>        
       </tbody>
@@ -106,6 +106,9 @@
 {% with list_context=talents_list_context %}
   {% include 'generics/generic_list.html' %}
 {% endwith %}
+<div class="text-center">
+  <h5>Total Human Talent Cost: {{context['total_talent_cost']}}$</h5>
+</div>
 
 
 
@@ -150,9 +153,8 @@
 {% with list_context=supplies_plans_list_context %}
   {% include 'generics/generic_list.html' %}
 {% endwith %}
-
-
-
-
+<div class="text-center mb-5">
+  <h5>Total Supplies Cost: {{context['total_supplies_cost']}}$</h5>
+</div>
 
 {% endblock %}

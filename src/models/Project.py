@@ -35,3 +35,6 @@ class Project(db.Model):
 
     def __repr__(self):
         return f"Project id: {self.id}, Description: {self.description}, Users: {self.users}"
+
+    def project_cost(self):
+        return sum(plan.plan_cost() for plan in self.action_plans)

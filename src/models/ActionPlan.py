@@ -27,4 +27,14 @@ class ActionPlan(db.Model):
 
     def __repr__(self):
         return f"Action Plan Action: {self.action}, Responsible: {self.responsible}"
+
+    def human_talent_costs(self):
+        return sum(human_talent.cost*human_talent.quantity for human_talent in self.human_talents)
+
+    def supplies_costs(self):
+        return sum(supply.cost*supply.quantity for supply in self.supplies)
+
+    def plan_cost(self):
+        return self.human_talent_costs() + self.supplies_costs()
+        
         

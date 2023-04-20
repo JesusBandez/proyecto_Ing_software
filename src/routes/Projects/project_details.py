@@ -56,6 +56,7 @@ def project_details():
     list_project_users = ListProjectsUser(project.users)
     list_action_plans = ListActionPlansList(action_plans, project_id)
 
+
     return render_template('projects/project_details.html',
         has_role=has_role,      
         context={
@@ -69,7 +70,7 @@ def project_details():
             'issue' : project.issue,
             'solution' : project.solution,
             'observations' : project.observations,
-            'amount' : str(project.amount)+'$',
+            'amount' : f'{project.project_cost()}$',
             'has_permissions' : has_permissions,
             'available' : project.available,
             'generate_action' : generate_action,
