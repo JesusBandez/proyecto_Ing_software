@@ -3,7 +3,7 @@ from Tests_Base import Tests_Base, session
 
 
 from main import measures,  app
-from src import errors
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 #create_measure(dimension, unit)   return [measure,True]
@@ -29,7 +29,6 @@ class Tests_Measures_Unit(Tests_Base):
 
 class Tests_Measures_Selenium(Tests_Base):
         
-
     def test_remove_measure(self):
       "Eliminar measure"
       # Buscar el departamento a eliminar
