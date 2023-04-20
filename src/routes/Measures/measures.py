@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, request, flash, session
 from src.routes.auth import has_role, require_permissions, error_display
-from manage import init_db
+#from manage import init_db
 from src.lib.class_create_button import ListMeasuresList
 
 from src.models.Measures import Measures
@@ -159,7 +159,7 @@ def add_new_measure():
 
 
 
-
+'''
 # TESTING
 @app.route('/restart_bbdd')
 def restart_bbdd():
@@ -168,3 +168,4 @@ def restart_bbdd():
     db.drop_all()
     init_db()
     return ''
+'''
