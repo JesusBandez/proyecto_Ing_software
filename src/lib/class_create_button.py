@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from src.lib.generate_action import generate_action
 from src.routes.auth import has_role, is_project_manager
 from src.models.User import User
+from src.models.Measures import Measures
+
 from src.models import db
 
 
@@ -422,6 +424,6 @@ class ListMaterialSupplies(ListBody):
         ]
 
     def data(self,x):
-        # TODO: Mostrar la 'measure' con su nombre y no con su id
         r = db.session.query(User).filter(User.id == x.responsible).first()
-        return [x.id, x.action, x.activity, x.category, x.description, x.quantity, x.measure ,r.first_name + " " + r.last_name, f'{x.total_amount()}$']
+        unit = db.session.query(Measures).filter(Measures.id == x.measure).first()
+        return [x.id, x.action, x.activity, x.category, x.description, x.quantity, unit ,r.first_name + " " + r.last_name, f'{x.total_amount()}$']
