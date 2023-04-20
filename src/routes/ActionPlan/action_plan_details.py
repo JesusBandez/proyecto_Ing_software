@@ -1,7 +1,7 @@
 from flask import render_template, request, session, redirect, url_for, flash,jsonify
 
 from src.lib.generate_action import generate_action
-from src.lib.class_create_button import ListHumanTalents
+from src.lib.class_create_button import ListHumanTalents, ListMaterialSupplies
 
 from src.routes.auth import has_role, is_project_manager, require_permissions
 from src.models import db
@@ -10,6 +10,7 @@ from src.models.User import User
 from src.models.Logger import Logger
 from src.models.ActionPlan import ActionPlan
 from src.models.HumanTalent import HumanTalent
+from src.models.MaterialsSupplies import MaterialsSupplies
 from datetime import datetime
 
 from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER
@@ -60,7 +61,11 @@ def action_plan_details():
     except:
         talents = plan.human_talents
 
-    list_talents = ListHumanTalents(talents, project_id, plan_id)
+    list_talents = ListHumanTalents(talents, project_id, plan_id)    
+
+    # TODO: Implementar la busqueda de supplies
+    supplies = plan.supplies
+    list_supplies = ListMaterialSupplies(supplies, project_id, plan_id)
     return render_template('action_plans/action_plan_detail.html',
         has_role=has_role,      
         context={ 'plan' : plan,
@@ -71,7 +76,8 @@ def action_plan_details():
             'list_body' : list_talents.list_table()
             },
         supplies_plans_list_context = {
-             
+            'list_header': list_supplies.header,
+            'list_body' : list_supplies.list_table()             
         }
             )
 

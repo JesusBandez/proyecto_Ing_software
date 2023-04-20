@@ -13,7 +13,7 @@ from src.models.MaterialsSupplies import MaterialsSupplies
 from src.models.ActionPlan import ActionPlan
 
 
-ActionPlan.supplies = db.relationship('MaterialsSupplies', backref='rel_action_plan')
+
 
 
 @app.shell_context_processor
@@ -103,7 +103,7 @@ def create_default_human_talent():
     x = db.session.query(ActionPlan).filter_by(id=1).first()
     HUMAN_TALENT = [
         HumanTalent('Preparar la superficie', 'Lijado de superficie', 24, 2, 5, USERS[0].id, 2),
-        HumanTalent('Preparar la superficie', 'Remover la pintura', 24, 2, 5, USERS[1].id, 2) ,
+        HumanTalent('Preparar la superficie', 'Remover la pintura', 24, 2, 5, USERS[1].id, 2),
         HumanTalent('Preparar la superficie', 'Enmasillar', 24, 2, 5, USERS[2].id, 1)
     ]
     db.session.add_all(HUMAN_TALENT)

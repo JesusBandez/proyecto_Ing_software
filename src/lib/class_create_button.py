@@ -393,3 +393,32 @@ class ListHumanTalents(ListBody):
     def data(self,x):
         r = db.session.query(User).filter(User.id == x.responsible).first()
         return [x.id, x.action, x.activity, x.time, x.quantity, r.first_name + " " + r.last_name, x.total_amount]
+
+class ListMaterialSupplies(ListBody):
+    #Material Supplies talents
+    def __init__(self, lists, project_id, plan_id):
+        self.lists = lists
+        self.args = [
+            {"button_class":'btn btn-outline-danger', "text_class" : 'fa fa-trash',
+            "title":"Delete Supply", "name":'remove_human_talent', "method":"post", "disable":not has_role('admin'), 
+            "hiddens" : [{'name' : 'project_id', 'data' : project_id}, {'name' : 'plan_id', 'data' : plan_id}]},
+            {"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-pencil',
+            "title":"Edit Supply", "name":'new_human_talent', "method":"get", "disable": not has_role('admin'),
+            "hiddens" : [{'name' : 'project_id', 'data' : project_id}, {'name' : 'plan_id', 'data' : plan_id}]},
+        ]
+        self.header = [
+            {'label': 'Id', 'class': 'col-1'},
+            {'label': 'Action', 'class': 'col-2'},
+            {'label': 'Activity', 'class': 'col-2'},            
+            {'label': 'Category', 'class': 'col-1'},
+            {'label': 'Description', 'class': 'col-1'},
+            {'label': 'Quantity', 'class': 'col-1'},
+            {'label': 'Measure Unit', 'class': 'col-1'},
+            {'label': 'Responsible', 'class': 'col-1'},
+            {'label': 'Ammount', 'class': 'col-1'},
+            {'label': 'Actions', 'class': 'col-1'}
+        ]
+
+    def data(self,x):
+        r = db.session.query(User).filter(User.id == x.responsible).first()
+        return [x.id, x.action, x.activity, x.category, x.description, x.quantity, x.measure ,r.first_name + " " + r.last_name, x.total_amount]
