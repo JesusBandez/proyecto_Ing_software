@@ -8,7 +8,7 @@ class HumanTalent(db.Model):
     quantity = db.Column(db.Integer())
     cost = db.Column(db.Float())
     responsible = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    total_amount = db.Column(db.Float())
+
 
     plan = db.Column(db.Integer, db.ForeignKey('action_plan.id'), nullable=False)
 
@@ -18,10 +18,12 @@ class HumanTalent(db.Model):
         self.time = time
         self.quantity = quantity
         self.cost = cost
-        self.responsible = responsible
-        self.total_amount = float(quantity)*float(cost)
+        self.responsible = responsible  
         self.plan = action_plan
         
 
     def __repr__(self):
         return f"Human Talent Action: {self.action}, Responsible: {self.responsible}"
+
+    def total_amount(self):
+        return self.quantity*self.cost

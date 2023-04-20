@@ -28,3 +28,6 @@ class MaterialsSupplies(db.Model):
         
     def __repr__(self):
         return f"Materials Supplies Action: {self.action}, Responsible: {self.responsible}"
+
+    def total_amount(self):
+        return self.quantity*self.cost

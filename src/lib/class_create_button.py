@@ -394,7 +394,7 @@ class ListHumanTalents(ListBody):
 
     def data(self,x):
         r = db.session.query(User).filter(User.id == x.responsible).first()
-        return [x.id, x.action, x.activity, x.time, x.quantity, r.first_name + " " + r.last_name, f'{x.total_amount}$']
+        return [x.id, x.action, x.activity, x.time, x.quantity, r.first_name + " " + r.last_name, f'{x.total_amount()}$']
 
 class ListMaterialSupplies(ListBody):
     #Material Supplies talents
@@ -424,4 +424,4 @@ class ListMaterialSupplies(ListBody):
     def data(self,x):
         # TODO: Mostrar la 'measure' con su nombre y no con su id
         r = db.session.query(User).filter(User.id == x.responsible).first()
-        return [x.id, x.action, x.activity, x.category, x.description, x.quantity, x.measure ,r.first_name + " " + r.last_name, f'{x.total_amount}$']
+        return [x.id, x.action, x.activity, x.category, x.description, x.quantity, x.measure ,r.first_name + " " + r.last_name, f'{x.total_amount()}$']
