@@ -64,9 +64,10 @@ def deleting(user_id):
 @require_permissions
 def delete_user():
     "Elimina a un usuario del sistema"
-        
-    user_id = request.form['id']
-    z = deleting(user_id)
+    user = db.session.query(User).filter_by(id=request.form['id']).first()
+    if not (user.supplies or user.human_talents or user.action_plans):
+        user_id = request.form['id']
+        z = deleting(user_id)
     
     return redirect(url_for('users_lists'))
 

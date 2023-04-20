@@ -96,11 +96,11 @@
             style="background-color: #2A4494; color:#f0f0f0;" title="Search"><i class="fas fa-search"></i></button>
 
           {% if not has_role('admin')%}
-          <a class="btn btn-secondary disabled" disabled title="Register new action plan"><i
+          <a class="btn btn-secondary disabled" disabled title="Register new Human Talent"><i
               class="fa-solid fa-plus"></i></a>
           {% else %}
           <a href="{{url_for('new_human_talent', project_id=context['project_id'], plan_id=context['plan'].id)}}" class="btn btn-light"
-            style="background-color: #2A4494; color:#f0f0f0;" title="Register new action plan"><i
+            style="background-color: #2A4494; color:#f0f0f0;" title="Register new Human Talent"><i
               class="fa-solid fa-plus"></i></a>
           {% endif %}
         </div>
@@ -108,7 +108,7 @@
     </div>
   </div>
 </div>
-{% with list_context=talents_list_context %}
+{% with list_context=talents_list_context, name='human_talent' %}
   {% include 'generics/generic_list.html' %}
 {% endwith %}
 <div class="text-center">
@@ -147,11 +147,11 @@
               style="background-color: #2A4494; color:#f0f0f0;" title="Search"><i class="fas fa-search"></i></button>
   
             {% if not has_role('admin')%}
-            <a class="btn btn-secondary disabled" disabled title="Register new action plan"><i
+            <a class="btn btn-secondary disabled" disabled title="Register new supply"><i
                 class="fa-solid fa-plus"></i></a>
             {% else %}
             <a href="{{url_for('new_supply', project_id=context['project_id'], plan_id=context['plan'].id)}}" class="btn btn-light"
-              style="background-color: #2A4494; color:#f0f0f0;" title="Register new action plan"><i
+              style="background-color: #2A4494; color:#f0f0f0;" title="Register new supply"><i
                 class="fa-solid fa-plus"></i></a>
             {% endif %}
           </div>
@@ -159,7 +159,7 @@
       </div>
     </div>
   </div>
-{% with list_context=supplies_plans_list_context %}
+{% with list_context=supplies_plans_list_context, name='supplies' %}
   {% include 'generics/generic_list.html' %}
 {% endwith %}
 <div class="text-center mb-5">
