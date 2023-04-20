@@ -108,7 +108,7 @@
     </div>
   </div>
 </div>
-{% with list_context=talents_list_context %}
+{% with list_context=talents_list_context, name='human_talent' %}
   {% include 'generics/generic_list.html' %}
 {% endwith %}
 <div class="text-center">
@@ -160,7 +160,7 @@
     </div>
   </div>
 {% with list_context=supplies_plans_list_context %}
-  {% include 'generics/generic_list.html' %}
+  {% include 'generics/generic_list.html', name='supplies' %}
 {% endwith %}
 <div class="text-center mb-5">
   <h5>Total Supplies Cost: {{context['total_supplies_cost']}}$</h5>

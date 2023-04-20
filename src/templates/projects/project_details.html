@@ -128,7 +128,7 @@
 <div class="container">
   <div style="text-align: right;">
     <div class="container" style="width:50%;display:flex;">
-      <form class="input-group flex p-2" action="{{url_for('project_details',id=context['id'])}}" method="post">
+      <form class="input-group flex p-2" action="{{url_for('project_details',id=context['id'])+'#actionplan'}}" method="post">
         <div class="d-inline p-2 text-white">
           <select class="form-select" name="typeSearch">
             <option selected>Search by: </option>
@@ -158,7 +158,7 @@
     </div>
   </div>
 </div>
-  {% with list_context=actions_plans_list_context %}
+  {% with list_context=actions_plans_list_context, name='actionplans' %}
     {% include 'generics/generic_list.html' %}
   {% endwith %}
 
@@ -188,7 +188,7 @@
   </div>  
 </div>
 
-{% with list_context=users_list_context %}
+{% with list_context=users_list_context, name='users_in_project' %}
   {% include 'generics/generic_list.html' %}
 {% endwith %}
 
