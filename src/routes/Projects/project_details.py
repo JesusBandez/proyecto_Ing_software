@@ -20,7 +20,8 @@ def searchActionPlan(typeS,search,project_id):
     elif typeS == "action":
         plan = db.session.query(ActionPlan).filter(ActionPlan.project == project_id, ActionPlan.action.contains(search))
     elif typeS == "responsible":
-        plan = db.session.query(ActionPlan).filter(ActionPlan.project == project_id, ActionPlan.responsible.contains(search))
+        user = db.session.query(User).filter((User.first_name + User.last_name).contains(search)).first()
+        plan = db.session.query(ActionPlan).filter(ActionPlan.project == project_id, ActionPlan.responsible.contains(user.id))
     return plan
 
 

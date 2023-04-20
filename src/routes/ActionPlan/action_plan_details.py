@@ -11,10 +11,27 @@ from src.models.Logger import Logger
 from src.models.ActionPlan import ActionPlan
 from src.models.HumanTalent import HumanTalent
 from src.models.MaterialsSupplies import MaterialsSupplies
+from src.models.Measures import Measures
+
 from datetime import datetime
 
 from src.errors import Errors, ERROR_MUST_BE_ADMIN, ERROR_MUST_BE_ADMIN_AND_MANAGER
 from . import app
+
+@app.route("/ajaxlivesearchmeasure",methods=["POST","GET"])
+def ajaxlivesearchmeasure():
+    if request.method == 'POST':
+        search_word = request.form['search']
+
+        if search_word != '':
+            measures = db.session.query(Measures).filter(Measures.unit.contains(search_word)).all()
+        else:
+            measures = db.session.query(Measures).all()
+        all_info = []
+        for measure in measures:
+            all_info.append(measure)
+    return jsonify({'htmlresponse': render_template('action_plans/table_for_measures.html', all_info=all_info)})
+     
 
 
 @app.route("/ajaxlivesearchresp",methods=["POST","GET"])
@@ -31,6 +48,21 @@ def ajaxlivesearchresp():
             all_info.append(user)
     return jsonify({'htmlresponse': render_template('action_plans/table_for_responsible.html', all_info=all_info)})
      
+def searchSupplies(typeS,search,plan_id):
+    if typeS == "activity-s":
+        supply = db.session.query(MaterialsSupplies).filter(MaterialsSupplies.action_plan == plan_id, MaterialsSupplies.activity.contains(search))
+    elif typeS == "action-s":
+        supply = db.session.query(MaterialsSupplies).filter(MaterialsSupplies.action_plan == plan_id, MaterialsSupplies.action.contains(search))
+    elif typeS == "responsible-s":
+        user = db.session.query(User).filter((User.first_name + User.last_name).contains(search)).first()
+        supply = db.session.query(MaterialsSupplies).filter(MaterialsSupplies.action_plan == plan_id, MaterialsSupplies.responsible.contains(user.id))
+    elif typeS == "category":
+        supply = db.session.query(MaterialsSupplies).filter(MaterialsSupplies.action_plan == plan_id, MaterialsSupplies.category.contains(search))
+    elif typeS == "description":
+        supply = db.session.query(MaterialsSupplies).filter(MaterialsSupplies.action_plan == plan_id, MaterialsSupplies.description.contains(search))
+    elif typeS == "measureunit":
+        supply = db.session.query(MaterialsSupplies).filter(MaterialsSupplies.action_plan == plan_id, MaterialsSupplies.measure.contains(search))
+    return supply
 
 
 def searchTalents(typeS,search,plan_id):
@@ -39,7 +71,8 @@ def searchTalents(typeS,search,plan_id):
     elif typeS == "action":
         talents = db.session.query(HumanTalent).filter(HumanTalent.plan == plan_id, HumanTalent.action.contains(search))
     elif typeS == "responsible":
-        talents = db.session.query(HumanTalent).filter(HumanTalent.plan == plan_id, HumanTalent.responsible.contains(search))
+        user = db.session.query(User).filter((User.first_name + User.last_name).contains(search)).first()
+        talents = db.session.query(HumanTalent).filter(HumanTalent.plan == plan_id, HumanTalent.responsible.contains(user.id))
     return talents
 
 
@@ -55,16 +88,26 @@ def action_plan_details():
     try:
         typeS = request.form['typeSearch']
         search = request.form['search']
-        talents = searchTalents(typeS,search,int(plan_id))
-        if talents.count() == 0:
-            talents = plan.human_talents
+        print(typeS)
+        searchHT = ["action","activity","responsible"]
+        talents = plan.human_talents
+        if typeS in searchHT:
+            talents = searchTalents(typeS,search,int(plan_id))
+            if talents.count() == 0:
+                talents = plan.human_talents
+        else:
+            supplies = searchSupplies(typeS,search,int(plan_id))
+            if supplies.count() == 0:
+                supplies = plan.supplies
+
     except:
         talents = plan.human_talents
+        supplies = plan.supplies
 
     list_talents = ListHumanTalents(talents, project_id, plan_id)    
 
     # TODO: Implementar la busqueda de supplies
-    supplies = plan.supplies
+    #supplies = plan.supplies
     list_supplies = ListMaterialSupplies(supplies, project_id, plan_id)
     return render_template('action_plans/action_plan_detail.html',
         has_role=has_role,      
@@ -199,9 +242,9 @@ def add_new_supply():
     category = request.form['category']
     description = request.form['description']
     quantity = request.form['quantity']
-    measure = request.form['measure']
+    measure = request.form['measure_selection']
     cost = request.form['cost']
-    responsible = request.form['responsible']
+    responsible = request.form['responsible_selection']
 
     supply_to_edit = request.form.get('supply_to_edit')    
 

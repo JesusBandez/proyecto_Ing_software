@@ -43,17 +43,165 @@
                                 value="{{context['supply'].quantity | default('')}}" required />
                             </div>
                             <div>
-                                <label style="font-weight:bold;" for="measure">Measure:</label><br>                            
-                            <input type="number" class="form-control rounded" placeholder="0" aria-label="measure"
-                                aria-describedby="measure-addon" name="measure" min="0.1" step="0.1"
-                                value="{{context['supply'].measure | default('')}}" required />
+                                <label style="font-weight:bold;" for="measure">Measure:</label><br>
                             </div>
+
+                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+                                <script type="text/javascript">
+                                    window.onload = init;
+                                    var responsible_url = "/ajaxlivesearchresp";
+                                    var measure_url = "/ajaxlivesearchmeasure";
+                                    function init(){
+                                      load_data('',measure_url);
+                                      load_data('',responsible_url);
+                                      $('#search_text').keyup(function(){
+                                        var search = $(this).val();
+                                        console.log(search);
+                                        if(search != undefined){
+                                        load_data(search);
+                                       }else{
+                                        load_data('');
+                                       }
+                                      });
+                                    };
+                                    function load_data(search,url)
+                                      {
+                                       $.ajax({
+                                        url:url,
+                                        method:"POST",
+                                        data:{ search : search },
+                                        type : 'POST',
+                                        success:function(data)
+                                        {
+                                            if (url == responsible_url){
+                                                $('#result').html(data);
+                                                $("#result").append(data.htmlresponse);
+                                            }
+                                            else{
+                                                $('#result2').html(data);
+                                                $("#result2").append(data.htmlresponse);
+                                            }
+                                        }
+                                       });
+                                      }
+                                    function handleChange(value,url){
+                                        if(value != undefined){
+                                        load_data(value,url);
+                                       }else{
+                                        load_data('',url);
+
+                                       }
+                                    }
+                                    function handleSave(url){
+                                        if (url == responsible_url){
+                                            document.getElementById("responsible_selection").value = selected;
+                                            }
+                                        else{
+                                            document.getElementById("measure_selection").value = selected;
+                                        }
+                                    }
+                                </script>
+
+                            <input type="text" id="measure_selection" name="measure_selection" class="form-control" placeholder="Add a Measure Unit" 
+                                  aria-label="Add a Measure Unit" onkeydown="event.preventDefault()" autocomplete="off" 
+                                  value="{{context['supply'].measure | default('')}}" required>
+
+
+                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal2"
+                                style="background-color: #2A4494; color:#f0f0f0;">
+                                  Select a responsible:
+                                </button>
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Select a measure unit:</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        
+                                          <div class="d-inline p-2 text-white">
+                                          <input
+                                            type="search"
+                                            class="form-control rounded"
+                                            placeholder="Search by unit name"
+                                            aria-label="Search"
+                                            aria-describedby="search-addon"
+                                            name="search_text"
+                                            onchange='handleChange(this.value,"/ajaxlivesearchmeasure");'
+                                          />
+                                        </div>
+
+                                        <div id="result2"></div>
+
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="handleSave('/ajaxlivesearchmeasure');" data-bs-dismiss="modal">Save changes</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+
                             <div>
                                 <label style="font-weight:bold;" for="responsible">Responsible:</label><br>                            
-                            <input type="number" class="form-control rounded" placeholder="0" aria-label="responsible"
-                                aria-describedby="responsible-addon" name="responsible" min="0.1" step="0.1"
-                                value="{{context['supply'].responsible | default('')}}" required />
                             </div>
+
+
+                            <input type="text" id="responsible_selection" name="responsible_selection" class="form-control" placeholder="Add a Responsible" 
+                                  aria-label="Add a Responsible" onkeydown="event.preventDefault()" autocomplete="off" 
+                                  value="{{context['supply'].responsible | default('')}}" required>
+
+
+                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                style="background-color: #2A4494; color:#f0f0f0;">
+                                  Select a responsible:
+                                </button>
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Select a Responsible:</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        
+                                          <div class="d-inline p-2 text-white">
+                                          <input
+                                            type="search"
+                                            class="form-control rounded"
+                                            placeholder="Search by name of the user"
+                                            aria-label="Search"
+                                            aria-describedby="search-addon"
+                                            name="search_text"
+                                            onchange='handleChange(this.value,"/ajaxlivesearchresp");'
+                                          />
+                                        </div>
+
+                                        <div id="result"></div>
+
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="handleSave('/ajaxlivesearchresp');" data-bs-dismiss="modal">Save changes</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+
+
+
                             <div>
                                 <label style="font-weight:bold;" for="cost">Cost ($):</label><br>                                
                                 <input type="number" class="form-control rounded" placeholder="0.00$"

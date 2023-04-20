@@ -1,0 +1,28 @@
+<script type="text/javascript">
+var selected = null;
+$('input[type="checkbox"]').on('change', function() {
+   selected = this.id;
+   $('input[type="checkbox"]').not(this).prop('checked', false);
+});
+</script>
+<table class="table">
+  <thead>
+    <tr>
+      <td></td>
+      <td>Dimension</td>
+      <td>Unit</td>
+    </tr>
+  </thead>
+  <tbody>
+    <div class="form-check">
+      {%- for unit in all_info %}   
+      <tr>
+        <td><input class="form-check-input" type="checkbox" id="{{unit.id}}" value="" aria-label="..."></td>
+        <td>{{unit.dimension}}</td>
+        <td>{{unit.unit}}</td>
+      </tr>
+      {% endfor -%}
+    </div>
+  </tbody>
+</table>
+
