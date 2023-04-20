@@ -111,10 +111,13 @@ def action_plan_details():
     #supplies = plan.supplies
     list_supplies = ListMaterialSupplies(supplies, project_id, plan_id)
 
+    resp = db.session.query(User).filter(User.id == plan.responsible).first()
+
 
     return render_template('action_plans/action_plan_detail.html',
         has_role=has_role,      
         context={ 'plan' : plan,
+            'responsible_name' : resp.first_name + " " + resp.last_name,
             'project_id' : project_id,
             'total_talent_cost' : plan.human_talent_costs(),
             'total_supplies_cost' : plan.supplies_costs(),
