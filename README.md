@@ -35,9 +35,9 @@ SAGTMA se encuentra en fase de pruebas. El desarrollo se elaboró con Python 3.1
 
 La documentación de SAGTMA se puede encontrar en:
 
-* Guía de usuario: En esta guía se encuentra una serie de explicaciones acerca del funcionamiento de la interfaz del sistema.
+* Guía de usuario: En [esta guía](https://github.com/JesusBandez/proyecto_Ing_software/blob/iteracion-4/Guia-Usuario.md) se encuentra una serie de explicaciones acerca del funcionamiento de la interfaz del sistema.
 
-* Guía del programador: En esta guía se encuentran los detalles de la implementación, el diseño y cómo se debe correr el sistema.
+* Guía del programador: En [esta guía](https://github.com/JesusBandez/proyecto_Ing_software/blob/iteracion-4/Guia-Programador.md) se encuentran los detalles de la implementación, el diseño y cómo se debe correr el sistema.
 
 ## Pruebas
 
@@ -64,6 +64,7 @@ En caso de realizar la corrida en Windows, debe modificarse python3 por python.
 
 Las pruebas incluyen unit tests y pruebas con Selenium, para garantizar la calidad de código y la ausencia de errores.
 Para más información acerca de la ejecución del sistema, visitar la [guía del programador](https://github.com/JesusBandez/proyecto_Ing_software/blob/iteracion-4/Guia-Programador.md).
+
 
 ## Autores
 
