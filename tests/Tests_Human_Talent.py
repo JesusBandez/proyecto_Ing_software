@@ -10,93 +10,70 @@ from selenium.webdriver.common.keys import Keys
 
 from time import sleep
 
-#action plan
-#create_action_plan(action, activity, start_date, close_date, quantity, responsible, project) return [action_plan,True]
-#deleting(action_plan_id) return [log,action_plan]
-
-#actionplan detail
-#searchSupplies(typeS,search,plan_id) 
-#searchTalents(typeS,search,plan_id):
-class Tests_Action_Plan_Unit(Tests_Base):
-
-    def test_create_action_plan(self):
-      with app.app_context():
-        start_date = datetime.strptime("2023-01-12", r'%Y-%m-%d')
-        close_date = datetime.strptime("2023-01-14", r'%Y-%m-%d')
-        AP = action_plan.create_action_plan("Arreglar carro", "Cambiar aceite", start_date, close_date, 1, 1, 2)
-        self.assertEqual(AP[1],True)
-        deleted = action_plan.deleting(AP[0].id)
-        self.assertEqual(deleted[1].id,AP[0].id)
+class Tests_Human_Talent_Selenium(Tests_Base):
         
-    def test_search_supplies(self):
-      with app.app_context():
-        start_date = datetime.strptime("2023-01-12", r'%Y-%m-%d')
-        close_date = datetime.strptime("2023-01-14", r'%Y-%m-%d')
-        AP = action_plan.create_action_plan("Arreglar carro", "Cambiar aceite", start_date, close_date, 1, 1, 2)
-        self.assertEqual(AP[1],True)
-        s = action_plan_details.searchSupplies("action-s","Arreglar",AP[0].id)
-        self.assertNotEqual(s,[])
-
-    def test_search_talents(self):
-      with app.app_context():
-        start_date = datetime.strptime("2023-01-12", r'%Y-%m-%d')
-        close_date = datetime.strptime("2023-01-14", r'%Y-%m-%d')
-        AP = action_plan.create_action_plan("Arreglar carro", "Cambiar aceite", start_date, close_date, 1, 1, 2)
-        self.assertEqual(AP[1],True)
-        x = action_plan_details.searchTalents("action","Arreglar",AP[0].id)
-        self.assertNotEqual(x,[])
-
-
-class Tests_Action_Plan_Selenium(Tests_Base):
-        
-    def test_remove_action_plan(self):
-      "Eliminar action plan"
-      # Buscar el plan a eliminar
+    def test_remove_human_talent(self):
+      "Eliminar human talent"
+      # Buscar el human talent a eliminar
       user = {'username': '1', 'password': '1'}
       
       with session(user) as sesion:
         sesion.get(f'{self.home_page}/projects/list')
         sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Project Details"][value="1"]').click()
-        remove_button = sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Delete action plan"][value="3"]')
+        details_button = sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="View plan details"][value="3"]')
+        sesion.execute_script("arguments[0].scrollIntoView();", details_button)
+        sleep(0.7)
+        details_button.click()
+
+        remove_button = sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Delete Human Talent"][value="5"]')
         sesion.execute_script("arguments[0].scrollIntoView();", remove_button)
         sleep(0.7)
         remove_button.click()
-        # Comprobar que se ha eliminado el plan
-        action_plans = sesion.find_elements(By.CSS_SELECTOR, r"div[name='actionplans'] tbody td")
-  
-        self.assertTrue(any(
-          action_plan.get_attribute("innerHTML").strip()=='Empty list' for action_plan in action_plans))
+
+        # Comprobar que se ha eliminado el human talent
+        action_plans = sesion.find_elements(By.CSS_SELECTOR, r"div[name='human_talent'] tbody tr")
+
+        self.assertTrue(len(action_plans)==1)
     
-    def test_add_action_plan(self):
-      "Agregar action plan"
-      # Crear el action plan
+    def test_add_human_talent(self):
+      "Agregar ahuman_talent"
+      # Crear el human_talent
       user = {'username': '1', 'password': '1'}
       with session(user) as sesion:
         sesion.get(f'{self.home_page}/projects/list')
         sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Project Details"][value="1"]').click()
+        details_button = sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="View plan details"][value="3"]')
+        sesion.execute_script("arguments[0].scrollIntoView();", details_button)
+        sleep(0.7)
+        details_button.click()
 
-        add_button = sesion.find_element(By.CSS_SELECTOR, r"[title='Register new action plan']")
+        add_button = sesion.find_element(By.CSS_SELECTOR, r"[title='Register new Human Talent']")
         sesion.execute_script("arguments[0].scrollIntoView();", add_button)
-        sleep(0.9)
-
+        sleep(0.7)
         add_button.click()
+
+
         sesion.find_element(By.ID, 'action').send_keys('testing')
         sesion.find_element(By.ID, 'activity').send_keys('testing')
-        sesion.find_element(By.ID, 's_date').send_keys("2009-05-05")
-        sesion.find_element(By.ID, 'c_date').send_keys('2009-05-05')
+        sesion.find_element(By.NAME, "time").send_keys('2.0')
         sesion.find_element(By.NAME, "quantity").send_keys('2.0')
+        # Select responsible
         sesion.find_element(By.CSS_SELECTOR, r'[data-bs-toggle="modal"]').click()
         sesion.find_element(By.CSS_SELECTOR, r'tbody tr input[id="1"]').click()
         sleep(0.9)
         sesion.find_element(By.CSS_SELECTOR, r'.btn-primary[data-bs-dismiss="modal"]').click()   
         sleep(0.9)
-        sesion.find_element(By.CSS_SELECTOR, r'input.btn').click()
+        sesion.find_element(By.NAME, "cost").send_keys('3.0')
+
+        submit = sesion.find_element(By.CSS_SELECTOR, r"input.btn")
+        sesion.execute_script("arguments[0].scrollIntoView();", submit)
+        sleep(0.9)
+        submit.click()
 
         # Comprobar que existe en la base
-        plans = sesion.find_elements(By.CSS_SELECTOR, r"div[name='actionplans'] tbody td")
-
+        humans = sesion.find_elements(By.CSS_SELECTOR, r"div[name='human_talent'] tbody td")
         self.assertTrue(any(
-          plan.get_attribute("innerHTML").strip()=='testing' for plan in plans))
+          human.get_attribute("innerHTML").strip()=='testing' for human in humans))
 
 
     def test_edit_action_plan(self):
