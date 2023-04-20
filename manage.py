@@ -24,8 +24,6 @@ def make_shell_context():
         init_db_records=init_db_records,
         init_db=init_db)
 
-def create_action_plans():
-    a = ActionPlan('1', '1', date.today(), date.today(), 2, 1, 20)
 
 def create_default_users():
     users = [User('fadmin', 'ladmin', '1', '1', 'admin', 'Enginer'),
@@ -43,11 +41,11 @@ def create_default_projects():
     USERS = db.session.query(User).all()
     projects = [
         Project("Alineacion de vehiculo", date.today(), date.today() + timedelta(days=1), CARS[0].license_plate, DEPARTMENTS[2].id,
-        'Necesita alineacion', 'Hay que alinearlo', 'Golpe en el capo', USERS[0].id, 30.0),
+        'Necesita alineacion', 'Hay que alinearlo', 'Golpe en el capo', USERS[0].id),
         Project("Rellenado de carroceria", date.today(), date.today() + timedelta(days=1), CARS[1].license_plate, DEPARTMENTS[1].id,
-        'Raya en el capo', 'Aplicacion de masilla de relleno y pintura', 'N/A', USERS[1].id,20),
+        'Raya en el capo', 'Aplicacion de masilla de relleno y pintura', 'N/A', USERS[1].id),
         Project("Limpieza", date.today(), date.today() + timedelta(days=1), CARS[2].license_plate, DEPARTMENTS[3].id,
-        'Tapiceria embarrada de grasa', 'Limpieza completa', 'Asientos rotos', USERS[2].id, 32),
+        'Tapiceria embarrada de grasa', 'Limpieza completa', 'Asientos rotos', USERS[2].id),
     ]
 
     db.session.add_all(projects)
@@ -91,9 +89,9 @@ def create_default_measures():
 def create_default_action_plans():
     USERS = db.session.query(User).all()
     ACTION_PLANS = [
-        ActionPlan('Preparar la superficie', 'Lijado de superficie', date.today(), date.today() + timedelta(days=1), 20, USERS[0].id, 50, 2),
-        ActionPlan('Preparar la superficie', 'Remover la pintura', date.today(), date.today() + timedelta(days=2), 20, USERS[1].id, 100, 2),
-        ActionPlan('Preparar la superficie', 'Enmasillar', date.today(), date.today() + timedelta(days=5), 20, USERS[2].id, 120, 1)
+        ActionPlan('Preparar la superficie', 'Lijado de superficie', date.today(), date.today() + timedelta(days=1), 20, USERS[0].id, 2),
+        ActionPlan('Preparar la superficie', 'Remover la pintura', date.today(), date.today() + timedelta(days=2), 20, USERS[1].id, 2),
+        ActionPlan('Preparar la superficie', 'Enmasillar', date.today(), date.today() + timedelta(days=5), 20, USERS[2].id, 1)
     ]
     db.session.add_all(ACTION_PLANS)
     db.session.commit()
