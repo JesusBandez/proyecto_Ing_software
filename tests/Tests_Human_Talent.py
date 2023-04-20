@@ -76,52 +76,67 @@ class Tests_Human_Talent_Selenium(Tests_Base):
           human.get_attribute("innerHTML").strip()=='testing' for human in humans))
 
 
-    def test_edit_action_plan(self):
-      "Editar action plan"
-      # Editar el action plan
+    def test_edit_human_talent(self):
+      "Editar ahuman_talent"
+      # Editarlo el human_talent
       user = {'username': '1', 'password': '1'}
       with session(user) as sesion:
         sesion.get(f'{self.home_page}/projects/list')
         sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Project Details"][value="1"]').click()
+        details_button = sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="View plan details"][value="3"]')
+        sesion.execute_script("arguments[0].scrollIntoView();", details_button)
+        sleep(0.7)
+        details_button.click()
 
-        add_button = sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Edit the action_plan"][value="3"]')
-        sesion.execute_script("arguments[0].scrollIntoView();", add_button)
-        sleep(0.9)
+        Edit_button = sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Edit Human Talent"][value="5"]')
+        sesion.execute_script("arguments[0].scrollIntoView();", Edit_button)
+        sleep(0.7)
+        Edit_button.click()
 
-        add_button.click()
 
         sesion.find_element(By.ID, 'action').clear()
         sesion.find_element(By.ID, 'action').send_keys('edited')
-
         sesion.find_element(By.ID, 'activity').clear()
-        sesion.find_element(By.ID, 'activity').send_keys('edited')
-        sesion.find_element(By.CSS_SELECTOR, r'input.btn').click()
+        sesion.find_element(By.ID, 'activity').send_keys('testing')       
+
+        submit = sesion.find_element(By.CSS_SELECTOR, r"input.btn")
+        sesion.execute_script("arguments[0].scrollIntoView();", submit)
+        sleep(0.9)
+        submit.click()
 
         # Comprobar que existe en la base
-        plans = sesion.find_elements(By.CSS_SELECTOR, r"div[name='actionplans'] tbody td")
-
+        humans = sesion.find_elements(By.CSS_SELECTOR, r"div[name='human_talent'] tbody td")
         self.assertTrue(any(
-          plan.get_attribute("innerHTML").strip()=='edited' for plan in plans))
+          human.get_attribute("innerHTML").strip()=='edited' for human in humans))
 
-    def test_search_action_plan(self):
+    def test_search_human_talent(self):
       "Busqueda de action plan"
 
       # Dar a la busqueda
-      with session() as sesion:
+      user = {'username': '1', 'password': '1'}
+      with session(user) as sesion:
         sesion.get(f'{self.home_page}/projects/list')
-        sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Project Details"][value="2"]').click()
+        sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="Project Details"][value="1"]').click()
+        details_button = sesion.find_element(By.CSS_SELECTOR, r'[name="id"][title="View plan details"][value="3"]')
+        sesion.execute_script("arguments[0].scrollIntoView();", details_button)
+        sleep(0.7)
+       
+        details_button.click()
 
-        sesion.find_element(By.CSS_SELECTOR, r'[type="search"]').send_keys('Lija')
-        select = Select(sesion.find_element(By.CSS_SELECTOR, r'[name="typeSearch"]'))
+        search = sesion.find_elements(By.CSS_SELECTOR, r'[type="search"]')[0]
+        sesion.execute_script("arguments[0].scrollIntoView();", search)
+        sleep(0.7)
+        search.send_keys('Dejar')
+        select = Select(sesion.find_elements(By.CSS_SELECTOR, r'[name="typeSearch"]')[0])
         select.select_by_value("activity")
 
-        button = sesion.find_element(By.CSS_SELECTOR, r'[type="submit"]')
+        button = sesion.find_elements(By.CSS_SELECTOR, r'[type="submit"]')[0]
         sesion.execute_script("arguments[0].scrollIntoView();", button)
         sleep(0.9)        
         button.click()
 
         # Comprobar que se han filtrado las medidas
-        plans = sesion.find_elements(By.CSS_SELECTOR, r"div[name='actionplans'] tbody tr")
+        plans = sesion.find_elements(By.CSS_SELECTOR, r"div[name='human_talent'] tbody tr")
         self.assertEqual(len(plans), 1)        
 
 if __name__ == "__main__":
