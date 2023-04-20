@@ -1,6 +1,6 @@
 # Sistema Automatizado de Gestión del Taller Mecánica Automotriz de Alta Gama (SAGTMA) - Holiday Int.
 
-Repositorio del Sistema Automatizado de Gestión del Taller Mecánica Automotriz de Alta Gama (SAGTMA), proyecto de desarrollo de la asignatura Ingeniería de Software I (CI-3715) durante el trimestre Enero-Marzo 2023 en la Universidad Simón Bolívar. Este proyecto fue elaborado mediante el método ágil eXtreme Programing, para información acerca de la aplicación de este método, ver la sección de [Método Ágil](https://github.com/JesusBandez/proyecto_Ing_software/).
+Repositorio del Sistema Automatizado de Gestión del Taller Mecánica Automotriz de Alta Gama (SAGTMA), proyecto de desarrollo de la asignatura Ingeniería de Software I (CI-3715) durante el trimestre Enero-Marzo 2023 en la Universidad Simón Bolívar. Este proyecto fue elaborado mediante el método ágil eXtreme Programing, para información acerca de la aplicación de este método, ver la sección de [Método Ágil](https://github.com/JesusBandez/proyecto_Ing_software/blob/master/Metodo-Agil.md).
 
 ## Sobre SAGTMA
 
