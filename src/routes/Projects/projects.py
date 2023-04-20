@@ -1,7 +1,7 @@
 from flask import after_this_request, render_template, request, send_file, session, redirect, url_for, flash, send_from_directory,jsonify
 from src.lib.generate_action import generate_action
 from src.lib.class_create_button import ListProjects
-
+from src.lib.class_create_button import ListProjectsUser, ListActionPlansList
 from src.routes.auth import has_role, is_project_manager, require_permissions
 from src.routes.Projects import project_details
 from src.models import db
@@ -245,8 +245,11 @@ def print_project():
 
     department_description = (
         project.associated_department.description if project.associated_department else 'N/A')
+    action_plans = project.action_plans
+    list_action_plans = ListActionPlansList(action_plans, project_id)
 
-    rendered = render_template('projects/project_details.html',        
+    rendered = render_template('projects/project_details.html',
+        has_role=has_role,    
         context={
             'id' : project.id,
             'description' : project.description,
@@ -263,10 +266,15 @@ def print_project():
             'available' : project.available,
             'generate_action' : generate_action
         },   
-        list_context= {
+        users_list_context= {
                 'list_header': users_projects_list_header,
                 'list_body' : users_list_body
-            }) 
+            },
+        actions_plans_list_context = {
+                'list_header': list_action_plans.header,
+                'list_body' : list_action_plans.list_table()
+        }    
+            ) 
     
     if (os.name == 'nt') :
         pathToWkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
