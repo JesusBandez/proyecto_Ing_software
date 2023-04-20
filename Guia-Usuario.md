@@ -270,7 +270,7 @@ Al abrir Departamentos, es posible observar una lista con los departamentos exis
 Al abrir Unidades de Medida, es posible observar una lista con las unidades de medida existentes para el taller. Se puede agregar un nuevo proyecto con el botón con un símbolo de regla y se puede editar un departamento en particular al dar click en el botón con forma de lápiz en la tabla.
 
 
-<img src="images/edit_dept.png" alt="edit_dept"/>
+<img src="images/units_list.png" alt="units_list"/>
 
 
 ## Agregar una unidad de medida
