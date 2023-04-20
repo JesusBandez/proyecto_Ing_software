@@ -400,10 +400,10 @@ class ListMaterialSupplies(ListBody):
         self.lists = lists
         self.args = [
             {"button_class":'btn btn-outline-danger', "text_class" : 'fa fa-trash',
-            "title":"Delete Supply", "name":'remove_human_talent', "method":"post", "disable":not has_role('admin'), 
+            "title":"Delete Supply", "name":'remove_supply', "method":"post", "disable":not has_role('admin'), 
             "hiddens" : [{'name' : 'project_id', 'data' : project_id}, {'name' : 'plan_id', 'data' : plan_id}]},
             {"button_class":'btn btn-outline-primary', "text_class" : 'fa-solid fa-pencil',
-            "title":"Edit Supply", "name":'new_human_talent', "method":"get", "disable": not has_role('admin'),
+            "title":"Edit Supply", "name":'new_supply', "method":"get", "disable": not has_role('admin'),
             "hiddens" : [{'name' : 'project_id', 'data' : project_id}, {'name' : 'plan_id', 'data' : plan_id}]},
         ]
         self.header = [
@@ -420,5 +420,6 @@ class ListMaterialSupplies(ListBody):
         ]
 
     def data(self,x):
+        # TODO: Mostrar la 'measure' con su nombre y no con su id
         r = db.session.query(User).filter(User.id == x.responsible).first()
         return [x.id, x.action, x.activity, x.category, x.description, x.quantity, x.measure ,r.first_name + " " + r.last_name, x.total_amount]

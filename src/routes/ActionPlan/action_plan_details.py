@@ -163,3 +163,91 @@ def remove_human_talent():
 
     return redirect(url_for('action_plan_details', project_id=project_id, id=plan_id)
         + '#humantalent')
+
+
+
+@app.route('/projects/action_plan_details/new_supply')
+def new_supply():
+    """ Muestra el formulario para un nuevo material"""
+    supply_to_edit = request.args.get('id')
+    project_id = request.args.get('project_id')
+    action_plan_id = request.args.get('plan_id')
+
+    supply = None
+    if supply_to_edit:
+        supply = db.session.query(MaterialsSupplies).filter_by(id=supply_to_edit).first()
+        title = 'Edit Suply'
+    else:
+        title = 'Add Suply'
+
+    return render_template('action_plans/new_supply.html', 
+        context={
+            'supply': supply,
+            'project_id' : project_id,
+            'title' : title,
+            'action_plan_id' : action_plan_id,
+        })
+
+@app.route('/projects/action_plan_details/add_new_supply', methods=['POST'])
+def add_new_supply():
+    """ Agrega el material al sistema"""    
+    project_id = request.form.get('project_id')
+    action_plan_id = request.form.get('action_plan_id')
+
+    action = request.form['action']
+    activity = request.form['activity']
+    category = request.form['category']
+    description = request.form['description']
+    quantity = request.form['quantity']
+    measure = request.form['measure']
+    cost = request.form['cost']
+    responsible = request.form['responsible']
+
+    supply_to_edit = request.form.get('supply_to_edit')    
+
+
+    if not supply_to_edit:
+        human_talent = MaterialsSupplies(action, activity, category, description,
+            quantity, measure, cost, responsible, action_plan_id)
+        log = Logger('Adding supply')
+        db.session.add(log)
+        db.session.add(human_talent)
+
+    else:
+        changes = {
+            'action': action,
+            'activity': activity,
+            'category': category,
+            'description' : description,
+            'quantity': quantity,
+            'measure' : measure,
+            'cost': cost,
+            'responsible': responsible,
+        }
+        db.session.query(MaterialsSupplies).filter_by(
+            id=supply_to_edit).update(changes)
+        log = Logger('Editing Human talent')
+        db.session.add(log)
+
+
+    db.session.commit()    
+
+    return redirect(url_for('action_plan_details', project_id=project_id, id=action_plan_id)
+        + '#supplies')
+
+@app.route('/projects/action_plan_details/remove_supply', methods=['POST'])
+def remove_supply():
+    """ Elimina un supply"""
+    project_id = request.form.get('project_id')
+    plan_id = request.form.get('plan_id')
+
+    supply = db.session.query(MaterialsSupplies).filter_by(id=request.form.get('id')).first()
+
+    log = Logger('Deleting action plan')
+
+    db.session.add(log)
+    db.session.delete(supply)
+    db.session.commit()
+
+    return redirect(url_for('action_plan_details', project_id=project_id, id=plan_id)
+        + '#supplies')
