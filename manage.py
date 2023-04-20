@@ -104,7 +104,10 @@ def create_default_human_talent():
     HUMAN_TALENT = [
         HumanTalent('Preparar la superficie', 'Lijado de superficie', 24, 2, 5, USERS[0].id, 2),
         HumanTalent('Preparar la superficie', 'Remover la pintura', 24, 2, 5, USERS[1].id, 2),
-        HumanTalent('Preparar la superficie', 'Enmasillar', 24, 2, 5, USERS[2].id, 1)
+        HumanTalent('Preparar la superficie', 'Enmasillar', 24, 2, 5, USERS[2].id, 1),
+        HumanTalent('Preparar la superficie', 'Dejar secando', 24, 2, 5, USERS[2].id, 1),
+        HumanTalent('Preparar la superficie', 'Dejar secando', 24, 2, 5, USERS[2].id, 3),
+        HumanTalent('Preparar la superficie', 'Dejar secando', 24, 2, 5, USERS[2].id, 3),
     ]
     db.session.add_all(HUMAN_TALENT)
     db.session.commit()
@@ -115,7 +118,11 @@ def create_default_materials():
     MATERIALS = [
         MaterialsSupplies('Preparar la superficie', 'Lijado de superficie', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[0].id, 1),
         MaterialsSupplies('Preparar la superficie', 'Remover la pintura', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[1].id, 1),
-        MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 1)
+        MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 1),
+        MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 2),
+        MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 2),
+        MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 3),
+        MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 3)
     ]
     db.session.add_all(MATERIALS)
     db.session.commit()
