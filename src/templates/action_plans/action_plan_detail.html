@@ -6,8 +6,13 @@
 
 <div class="card border-light mb-3">
   <div class="card-header">
-    <h3 class="text-center my-4">
+    <h3 class="text-end my-4">
       <div class="d-inline p-2">Action Plan '{{context['plan'].id}}' details</div>
+      <div class="d-inline p-2">
+        <a class="btn btn-outline-primary" style="margin-left: 410px;" href="{{url_for('project_details', id=context['project_id'])}}">
+        Go Back
+      </a>
+      </div>
     </h3>
   </div>
   <div class="card-body" style="background-color: #36494E;"></div>
@@ -54,9 +59,9 @@
           </td>
         </tr>
         <tr>
-          <th>Cost</th>
+          <th>Total Cost</th>
           <td>
-            <div class="p-2">{{context['plan'].cost}}</div>
+            <div class="p-2">{{context['total_project_cost']}}$</div>
           </td>
         </tr>        
       </tbody>
@@ -106,6 +111,9 @@
 {% with list_context=talents_list_context %}
   {% include 'generics/generic_list.html' %}
 {% endwith %}
+<div class="text-center">
+  <h5>Total Human Talent Cost: {{context['total_talent_cost']}}$</h5>
+</div>
 
 
 
@@ -154,9 +162,8 @@
 {% with list_context=supplies_plans_list_context %}
   {% include 'generics/generic_list.html' %}
 {% endwith %}
-
-
-
-
+<div class="text-center mb-5">
+  <h5>Total Supplies Cost: {{context['total_supplies_cost']}}$</h5>
+</div>
 
 {% endblock %}

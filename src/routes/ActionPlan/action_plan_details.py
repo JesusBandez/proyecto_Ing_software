@@ -109,10 +109,15 @@ def action_plan_details():
     # TODO: Implementar la busqueda de supplies
     #supplies = plan.supplies
     list_supplies = ListMaterialSupplies(supplies, project_id, plan_id)
+
+
     return render_template('action_plans/action_plan_detail.html',
         has_role=has_role,      
         context={ 'plan' : plan,
             'project_id' : project_id,
+            'total_talent_cost' : plan.human_talent_costs(),
+            'total_supplies_cost' : plan.supplies_costs(),
+            'total_project_cost' : plan.plan_cost()
             },   
         talents_list_context= {
             'list_header': list_talents.header,

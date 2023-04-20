@@ -20,7 +20,7 @@ class Project(db.Model):
     action_plans = db.relationship('ActionPlan', backref='associated_project')
 
     def __init__(self, description, start, finish, car, department,
-            issue,solution,observations, manager_id,amount, available=True):
+            issue,solution,observations, manager_id, available=True):
         self.description = description
         self.start = start
         self.finish = finish
@@ -31,7 +31,10 @@ class Project(db.Model):
         self.solution = solution
         self.observations = observations
         self.manager_id = manager_id
-        self.amount = amount
+
 
     def __repr__(self):
         return f"Project id: {self.id}, Description: {self.description}, Users: {self.users}"
+
+    def project_cost(self):
+        return sum(plan.plan_cost() for plan in self.action_plans)

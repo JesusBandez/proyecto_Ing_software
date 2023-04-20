@@ -95,7 +95,7 @@ class ListProjects(ListBody):
         
         department_description = (
             x.associated_department.description if x.associated_department else 'N/A')
-        return [x.id, car_plate, department_description, manager_name, x.issue, x.solution, x.amount, x.observations]
+        return [x.id, car_plate, department_description, manager_name, x.issue, x.solution, f'{x.project_cost()}$', x.observations]
 
 
 class ListProjectsUser(ListBody):
@@ -365,7 +365,9 @@ class ListActionPlansList(ListBody):
 
     def data(self,x):
         r = db.session.query(User).filter(User.id == x.responsible).first()
-        return [x.id, x.action, x.activity, r.first_name + " " + r.last_name, x.cost]
+            
+        return [x.id, x.action, x.activity, r.first_name + " " + r.last_name, 
+            f'{x.plan_cost()}$']
 
 class ListHumanTalents(ListBody):
     #Human talents
@@ -392,7 +394,7 @@ class ListHumanTalents(ListBody):
 
     def data(self,x):
         r = db.session.query(User).filter(User.id == x.responsible).first()
-        return [x.id, x.action, x.activity, x.time, x.quantity, r.first_name + " " + r.last_name, x.total_amount]
+        return [x.id, x.action, x.activity, x.time, x.quantity, r.first_name + " " + r.last_name, f'{x.total_amount}$']
 
 class ListMaterialSupplies(ListBody):
     #Material Supplies talents
@@ -422,4 +424,4 @@ class ListMaterialSupplies(ListBody):
     def data(self,x):
         # TODO: Mostrar la 'measure' con su nombre y no con su id
         r = db.session.query(User).filter(User.id == x.responsible).first()
-        return [x.id, x.action, x.activity, x.category, x.description, x.quantity, x.measure ,r.first_name + " " + r.last_name, x.total_amount]
+        return [x.id, x.action, x.activity, x.category, x.description, x.quantity, x.measure ,r.first_name + " " + r.last_name, f'{x.total_amount}$']
