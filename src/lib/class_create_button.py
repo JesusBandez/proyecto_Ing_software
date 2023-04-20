@@ -388,7 +388,7 @@ class ListHumanTalents(ListBody):
             {'label': 'Time', 'class': 'col-1'},
             {'label': 'Quantity', 'class': 'col-1'},
             {'label': 'Responsible', 'class': 'col-1'},
-            {'label': 'Ammount', 'class': 'col-1'},
+            {'label': 'Amount', 'class': 'col-1'},
             {'label': 'Actions', 'class': 'col-1'}
         ]
 
@@ -417,7 +417,7 @@ class ListMaterialSupplies(ListBody):
             {'label': 'Quantity', 'class': 'col-1'},
             {'label': 'Measure Unit', 'class': 'col-1'},
             {'label': 'Responsible', 'class': 'col-1'},
-            {'label': 'Ammount', 'class': 'col-1'},
+            {'label': 'Amount', 'class': 'col-1'},
             {'label': 'Actions', 'class': 'col-1'}
         ]
 

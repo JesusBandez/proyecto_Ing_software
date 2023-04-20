@@ -91,6 +91,7 @@ def action_plan_details():
         print(typeS)
         searchHT = ["action","activity","responsible"]
         talents = plan.human_talents
+        supplies = plan.supplies
         if typeS in searchHT:
             talents = searchTalents(typeS,search,int(plan_id))
             if talents.count() == 0:

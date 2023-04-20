@@ -78,7 +78,7 @@
 <div class="container">
   <div style="text-align: right;">
     <div class="container" style="width:50%;display:flex;">
-      <form class="input-group flex p-2" action="{{url_for('action_plan_details',project_id=context['project_id'], id=context['plan'].id)}}" method="post">
+      <form class="input-group flex p-2" action="{{url_for('action_plan_details',project_id=context['project_id'], id=context['plan'].id)}}#humantalent" method="post">
         <div class="d-inline p-2 text-white">
           <select class="form-select" name="typeSearch">
             <option selected>Search by: </option>
@@ -126,7 +126,7 @@
   <div class="container">
     <div style="text-align: right;">
       <div class="container" style="width:50%;display:flex;">
-        <form class="input-group flex p-2" action="{{url_for('action_plan_details',project_id=context['project_id'], id=context['plan'].id)}}" method="post">
+        <form class="input-group flex p-2" action="{{url_for('action_plan_details',project_id=context['project_id'], id=context['plan'].id)}}#supplies" method="post">
           <div class="d-inline p-2 text-white">
             <select class="form-select" name="typeSearch">
               <option selected>Search by: </option>
