@@ -117,7 +117,8 @@ def verify_measure_exist(guser_id, dimension, unit):
     else:
         return False
     measure = db.session.query(Measures).filter_by(id=measure_id).first()
-    if measure != None and dimension != measure.dimension and unit != measure.unit:
+
+    if measure != None and dimension == measure.dimension and unit == measure.unit:
         return True
     return False
 
