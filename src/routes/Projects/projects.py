@@ -52,14 +52,20 @@ def ajaxlivesearch():
      
 
 def search_projects(typeS,search):
-    if typeS == "des":
-        projects = db.session.query(Project).filter(Project.description.contains(search))
-    elif typeS == "start":
-        projects = db.session.query(Project).filter(extract('month', Project.start)==int(search))
-    elif typeS == "finish":
-        projects = db.session.query(Project).filter(extract('month', Project.finish)==int(search))
-    elif typeS == "id":
-        projects = db.session.query(Project).filter(Project.id.ilike(search))
+    if typeS == "car":
+        projects = db.session.query(Project).filter(Project.car.contains(search))
+    elif typeS == "dept":
+        department = db.session.query(Department).filter(Department.description.contains(search)).first()
+        projects = db.session.query(Project).filter(Project.department.contains(department.id))
+    elif typeS == "manager":
+        user = db.session.query(User).filter((User.first_name+User.last_name).contains(search)).first()
+        projects = db.session.query(Project).filter(Project.manager_id.contains(user.id))
+    elif typeS == "issue":
+        projects = db.session.query(Project).filter(Project.issue.ilike(f'%{search}%'))
+    elif typeS == "solution":
+        projects = db.session.query(Project).filter(Project.solution.ilike(f'%{search}%'))
+    elif typeS == "observations":
+        projects = db.session.query(Project).filter(Project.observations.ilike(f'%{search}%'))
     else:
         projects = db.session.query(Project).all()
     return projects
