@@ -63,7 +63,7 @@ Para linux:
 En caso de realizar la corrida en Windows, debe modificarse python3 por python.
 
 Las pruebas incluyen unit tests y pruebas con Selenium, para garantizar la calidad de código y la ausencia de errores.
-Para más información acerca de la ejecución del sistema, visitar la guía del programador.
+Para más información acerca de la ejecución del sistema, visitar la [guía del programador](https://github.com/JesusBandez/proyecto_Ing_software/blob/iteracion-4/Guia-Programador.md).
 
 ## Autores
 
