@@ -144,7 +144,6 @@ class Tests_Action_Plan_Selenium(Tests_Base):
         button.click()
 
         # Comprobar que se han filtrado las medidas
-        input()
         plans = sesion.find_elements(By.CSS_SELECTOR, r"div[name='actionplans'] tbody tr")
         self.assertEqual(len(plans), 1)        
 
