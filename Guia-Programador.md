@@ -16,7 +16,18 @@ Se requiere de los siguientes paquetes para que el sistema pueda correrse en el 
 ## Base de datos
 La base de datos fue diseñada de la siguiente manera:
 
-
+| Entidades        | Atributos                                                                                                                      | Métodos                    |
+|------------------|--------------------------------------------------------------------------------------------------------------------------------|----------------------------|
+| User             | first_name, last_name, username, password, role, job, status, managed_projects, action_plans, human_talents, supplies          | repr, init                 |
+| Project          | description, start, finish, available, issue, solution, observations, users, amount, car, department, manager_id, action_plans | repr, init                 |
+| Car              | license_plate, brand, model, year, serial_car, serial_engine, color, issue, owner, associated_projects                         | repr, init                 |
+| Clients          | ci, first_name, last_name, birth_date, mail, phone, address, cars                                                              | repr, init                 |
+| Logger           | event, date, hour                                                                                                              | repr, init                 |
+| Department       | description, associated_projects                                                                                               | repr, init                 |
+| Measures         | dimension, unit                                                                                                                | repr, init                 |
+| ActionPlan       | action, activity, start_date, finish_date, hours, responsible, cost, project, human_talents, supplies                          | repr, init                 |
+| HumanTalent      | action, activity, time, quantity, cost, responsible, plan                                                                      | repr, init, total_amount   |
+| MaterialSupplies | action, activity, category, description, quantity, measure, cost, responsible, total_amount, action_plan                       | repr, init, total_amount() |
 
 
 ## Ejecución de pruebas
