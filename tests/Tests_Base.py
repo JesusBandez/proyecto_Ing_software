@@ -3,11 +3,12 @@ import sys
 import unittest
 
 sys.path.append(os.path.abspath('..'))
-import requests
+
 from selenium import webdriver
 from main import app
 from src.models import db
 from manage import init_db
+import requests
 
 home_page = "http://127.0.0.1:5000"
 
@@ -60,9 +61,15 @@ class Tests_Base(unittest.TestCase):
           'role': 'admin',
           'job': 'Enginer', 
         }
+        with app.app_context():
+          db.drop_all()
+          init_db()
         requests.get(f'{home_page}/restart_bbdd')
-
     def tearDown(self):
+
+        with app.app_context():
+          db.drop_all()
+          init_db()
         requests.get(f'{home_page}/restart_bbdd')
 
 
