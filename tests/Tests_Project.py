@@ -18,7 +18,7 @@ class Tests_Project_Unit(Tests_Base):
         start_date = datetime.strptime("2022-12-15", r'%Y-%m-%d')
         close_date = datetime.strptime("2023-04-20", r'%Y-%m-%d')
         project = projects.adding_new_project(False, description, start_date, close_date,"ASD14XZ","Painting","2","Pintar color negro",
-          "Pintar",100,"")
+          "Pintar","")
         self.assertEqual(project,self.db.session.query(Project).filter_by(description=description).first())
 
     def test_create_and_remove_project(self):
@@ -27,7 +27,7 @@ class Tests_Project_Unit(Tests_Base):
         start_date = datetime.strptime("2022-12-15", r'%Y-%m-%d')
         close_date = datetime.strptime("2023-04-20", r'%Y-%m-%d')
         project = projects.adding_new_project(False, description, start_date, close_date,"ASD14XZ","Reparaciones","2","Cambio de aceite",
-          "Cambiar aceite",400,"")
+          "Cambiar aceite","")
         self.assertEqual(project,self.db.session.query(Project).filter_by(description=description).first())
         project_removed = projects.removing_project(project.id)
         self.assertEqual(None,self.db.session.query(Project).filter_by(id=project_removed.id).first())
@@ -38,7 +38,7 @@ class Tests_Project_Unit(Tests_Base):
         start_date = datetime.strptime("2022-12-15", r'%Y-%m-%d')
         close_date = datetime.strptime("2023-04-20", r'%Y-%m-%d')
         project = projects.adding_new_project(False, description, start_date, close_date,"ASD14XZ","Painting","2","Pintar color negro",
-          "Pintar",100,"")
+          "Pintar","")
         before_availability = project.available
         current_project = projects.change_availability(project.id)
         self.assertEqual(project.id, current_project.id)
@@ -57,7 +57,7 @@ class Tests_Project_Unit(Tests_Base):
         start_date = datetime.strptime("2022-12-15", r'%Y-%m-%d')
         close_date = datetime.strptime("2023-04-20", r'%Y-%m-%d')
         project = projects.adding_new_project(False, description, start_date, close_date,"ASD14XZ","Painting","2","Pintar color negro",
-          "Pintar",100,"")
+          "Pintar","")
         project_changed = project_details.adding_user_to_project(project.id,2)
         user = None
         for users in project_changed.users:
@@ -76,7 +76,7 @@ class Tests_Project_Unit(Tests_Base):
         start_date = datetime.strptime("2022-12-15", r'%Y-%m-%d')
         close_date = datetime.strptime("2023-04-20", r'%Y-%m-%d')
         project = projects.adding_new_project(False, description, start_date, close_date,"ASD14XZ","Painting","2","Pintar color negro",
-          "Pintar",100,"")
+          "Pintar","")
         project_changed = project_details.adding_user_to_project(project.id,2)
         removed = project_details.removing_user_from_project(project_changed.id,2)
         self.assertEqual(len(removed.users),0)
@@ -92,7 +92,7 @@ class Tests_Project_Unit(Tests_Base):
         start_date = datetime.strptime("2022-12-15", r'%Y-%m-%d')
         close_date = datetime.strptime("2023-04-20", r'%Y-%m-%d')
         project = projects.adding_new_project(False, description, start_date, close_date,"ASD14XZ","Painting","2","Pintar color negro",
-          "Pintar",100,"")
+          "Pintar","")
         project_changed = project_details.adding_user_to_project(project.id,2)
         self.assertEqual(project_changed,False)
 
@@ -107,7 +107,7 @@ class Tests_Project_Unit(Tests_Base):
         start_date = datetime.strptime("2022-12-15", r'%Y-%m-%d')
         close_date = datetime.strptime("2023-04-20", r'%Y-%m-%d')
         project = projects.adding_new_project(False, description, start_date, close_date,"ASD14XZ","Painting","2","Pintar color negro",
-          "Pintar",100,"")
+          "Pintar","")
         project_changed = project_details.removing_user_from_project(project.id,2)
         self.assertEqual(project_changed,False)
 
