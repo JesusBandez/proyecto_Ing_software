@@ -73,3 +73,8 @@ Para más información acerca de la ejecución del sistema, visitar la [guía de
 * Luis Blanco (17-10066)
 
 
+### Agile Coach
+
+* Prof. Jean Carlos Guzmán (Universidad Simón Bolívar)
+
+
