@@ -68,8 +68,8 @@ Para más información acerca de la ejecución del sistema, visitar la [guía de
 
 ## Autores
 
-* Jesús Bandez
-* Adelina Figueira 
-* Luis Blanco
+* Jesús Bandez (17-10046)
+* Adelina Figueira (15-10484)
+* Luis Blanco (17-10066)
 
 
