@@ -228,9 +228,9 @@ def new_supply():
     supply = None
     if supply_to_edit:
         supply = db.session.query(MaterialsSupplies).filter_by(id=supply_to_edit).first()
-        title = 'Edit Suply'
+        title = 'Edit Supply'
     else:
-        title = 'Add Suply'
+        title = 'Add Supply'
 
     return render_template('action_plans/new_supply.html', 
         context={

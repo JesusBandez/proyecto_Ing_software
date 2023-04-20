@@ -18,3 +18,7 @@ Los siguientes ejemplos asumen que la terminal se encuentra en el directorio act
 #### Ejecutar una prueba especifica de un modulo en especifico
 
 `python3 -m unittest Tests_Department.py -k test_remove_department`
+
+
+python -m unittest Tests_Measure.py
+python -m unittest Tests_Action_Plan.py
