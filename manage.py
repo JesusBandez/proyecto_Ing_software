@@ -119,8 +119,8 @@ def create_default_materials():
         MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 1),
         MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 2),
         MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 2),
-        MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 3),
-        MaterialsSupplies('Preparar la superficie', 'Enmasillar', 'Insumo', 'Disco de lija', 5, MEASURES[0].id, 5, USERS[2].id, 3)
+        MaterialsSupplies('Preparar la superficie', 'Comprobar Resultado', 'Insumo', 'Pulitura', 5, MEASURES[0].id, 5, USERS[2].id, 3),
+        MaterialsSupplies('Preparar la superficie', 'Comprobar Resultado', 'Herramienta', 'Pulidora', 5, MEASURES[0].id, 5, USERS[2].id, 3)
     ]
     db.session.add_all(MATERIALS)
     db.session.commit()
