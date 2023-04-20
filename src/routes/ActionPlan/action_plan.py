@@ -29,6 +29,11 @@ def deleting(action_plan_id):
     log = Logger('Deleting action plan')
 
     db.session.add(log)
+    for element in action_plan.supplies:        
+        db.session.delete(element)
+    for element in action_plan.human_talents:        
+        db.session.delete(element)
+
     db.session.delete(action_plan)
     db.session.commit()
     return [log,action_plan]

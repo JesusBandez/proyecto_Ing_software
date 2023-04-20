@@ -185,6 +185,8 @@ def removing_project(project_id):
     project = db.session.query(Project).filter_by(id=project_id).first()
 
     log = Logger('Editing project')
+    for plan in project.action_plans:
+        db.session.delete(plan)
 
     db.session.add(log)
     db.session.delete(project)
