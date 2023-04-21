@@ -70,7 +70,7 @@ Para más información acerca de la ejecución del sistema, visitar la [guía de
 
 * Jesús Bandez (17-10046) jesusbandezt@gmail.com
 * Adelina Figueira (15-10484) adelinafigueiraf@gmail.com
-* Luis Blanco (17-10066) 
+* Luis Blanco (17-10066) lblancog23@gmail.com
 
 
 ### Agile Coach
