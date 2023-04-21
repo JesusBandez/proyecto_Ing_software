@@ -11,7 +11,7 @@ Como se trata del desarrollo ágil, se realizaron cinco iteraciones incrementale
 
 * **Iteración 3**: Generar proyectos automotrices y gestionar el portafolio de proyectos, permitir la creación de departamentos
 
-* **Iteración 4**: Generar las unidades de medidas, costos detallados e insumos utilizados en los proyectos y que estos puedan asignarse a los proyectos. Generar planes de acción de un proyecto con Acciones, Actividades, Tiempo y Costos y vincular los insumos y talento humano a un plan de acción.
+* **Release**: Generar las unidades de medidas, costos detallados e insumos utilizados en los proyectos y que estos puedan asignarse a los proyectos. Generar planes de acción de un proyecto con Acciones, Actividades, Tiempo y Costos y vincular los insumos y talento humano a un plan de acción.
 
 
 El desarrollo de estas iteraciones fue incremental, ya que se fueron conociendo poco a poco las funcionalidades necesarias para el sistema. También se mejoraron versiones anteriores de código para el cumplimiento de funcionalidades posteriores y se refactorizó el código múltiples veces.
